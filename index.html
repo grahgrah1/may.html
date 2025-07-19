@@ -2,27 +2,57 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>toon.com</title>
+  <title>ชาเขียวตูน 🍵</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: linear-gradient(to top right, #fbe8ec, #e0f7fa);
-      font-family: 'Arial', sans-serif;
+      height: 100vh;
+      font-family: sans-serif;
+      background-color: #fefee2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
       overflow: hidden;
-      text-align: center;
     }
-    h1 {
-      margin-top: 40px;
-      font-size: 2.5em;
-      color: #ff69b4;
+
+    h2 {
+      cursor: pointer;
+      margin: 8px;
+      background: #ffffffcc;
+      padding: 5px 15px;
+      border-radius: 15px;
+      transition: transform 0.2s;
     }
-    .flower {
+
+    h2:hover {
+      transform: scale(1.05);
+      color: #4caf50;
+    }
+
+    .emoji {
       position: absolute;
-      font-size: 2em;
-      animation: floatUp 2s ease-out forwards;
+      font-size: 2rem;
+      animation: floatUp 1s ease-out forwards;
       pointer-events: none;
     }
+
+    #score {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ffffffdd;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      box-shadow: 0 0 10px gold;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Animation Emoji */
     @keyframes floatUp {
       0% {
         opacity: 1;
@@ -33,31 +63,65 @@
         transform: translateY(-100px) scale(1.5);
       }
     }
+
+    /* 🍵 ชาเขียว ซ้าย + ขวา */
+    .greentea {
+      position: fixed;
+      bottom: 0;
+      width: 130px;
+      opacity: 0.85;
+      animation: floatTea 4s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    .left {
+      left: 10px;
+    }
+
+    .right {
+      right: 10px;
+      transform: scaleX(-1); /* สะท้อนรูป */
+    }
+
+    @keyframes floatTea {
+      0%, 100% { transform: translateY(0) scaleX(1); }
+      50% { transform: translateY(-10px) scaleX(1); }
+    }
   </style>
 </head>
 <body>
-  <h1>💖  อย่ายอมแพ้ 💖</h1>
+
+  <div id="score">คะแนน: 0</div>
+
+  <h1 style="background: #ffffffcc; padding: 10px 20px; border-radius: 15px;">ตูนสร้างเอง</h1>
+
+  <h2 onclick="popEmoji(event)">จองกุก (Jungkook)</h2>
+  <h2 onclick="popEmoji(event)">พัค ซอจุน</h2>
+  <h2 onclick="popEmoji(event)">อี มินโฮ</h2>
+  <h2 onclick="popEmoji(event)">ชา อึนอู</h2>
+  <h2 onclick="popEmoji(event)">กงยู</h2>
+
+  <!-- 🍵 รูปชาเขียววางซ้าย + ขวา -->
+  <img class="greentea left" src="https://i.imgur.com/WuT4AxH.png" alt="ชาเขียว">
+  <img class="greentea right" src="https://i.imgur.com/WuT4AxH.png" alt="ชาเขียว">
 
   <script>
-    const flowers = ['🌸', '🌼', '🌷', '💐', '🌻'];
+    const emojis = ["💖", "✨", "🎉", "💘", "🩷", "🎈", "💫"];
+    let score = 0;
 
-    document.body.addEventListener('click', (e) => {
-      const flower = document.createElement('div');
-      flower.className = 'flower';
-      flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
-      flower.style.left = `${e.clientX - 10}px`;
-      flower.style.top = `${e.clientY - 20}px`;
-      document.body.appendChild(flower);
+    function popEmoji(e) {
+      const emoji = document.createElement("div");
+      emoji.className = "emoji";
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = `${e.clientX}px`;
+      emoji.style.top = `${e.clientY}px`;
+      document.body.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 1000);
 
-      setTimeout(() => {
-        flower.remove();
-      }, 2000);
-    });
+      score++;
+      document.getElementById("score").textContent = `คะแนน: ${score}`;
+    }
   </script>
-  <img src="https://tse2.mm.bing.net/th/id/OIP.j5NJlMso8PiVl-KM26t6jQHaHW?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" width="300" alt="แงง">
-
 
 </body>
 </html>
-
-
