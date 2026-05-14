@@ -1,58 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>AI ตรวจตราส่งดอก</title>
+
+<style>
+body{
+  font-family: sans-serif;
+  background:#f2f2f2;
+  text-align:center;
+  padding:40px;
+}
+.box{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  max-width:520px;
+  margin:auto;
+  box-shadow:0 5px 20px rgba(0,0,0,0.12);
+}
+h1{ color:#d8232a; }
+img{
+  max-width:100%;
+  margin-top:20px;
+  border-radius:12px;
+}
+#result{
+  margin-top:25px;
+  font-size:28px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>🔍 AI ตรวจตราส่งดอก</h1>
+
+  <input type="file" id="imageUpload" accept="image/*">
+
+  <br>
+
+  <img id="preview">
+
+  <div id="result">กำลังโหลดโมเดล...</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
+
 <script>
-const MODEL_URL =
-"https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
+const MODEL_URL = "https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
 
 let model;
 
 async function loadModel(){
+  try{
     model = await tmImage.load(
-        MODEL_URL + "model.json",
-        MODEL_URL + "metadata.json"
+      MODEL_URL + "model.json",
+      MODEL_URL + "metadata.json"
     );
 
-    document.getElementById("result").innerHTML =
-    "พร้อมตรวจภาพแล้ว ✅";
+    document.getElementById("result").innerHTML = "พร้อมตรวจภาพแล้ว ✅";
+  }catch(error){
+    document.getElementById("result").innerHTML = "โหลดโมเดลไม่สำเร็จ ❌";
+    console.log(error);
+  }
 }
 
 loadModel();
 
-document
-.getElementById("imageUpload")
-.addEventListener("change", async function(event){
+document.getElementById("imageUpload").addEventListener("change", function(event){
+  const file = event.target.files[0];
+  if(!file) return;
 
-    const file = event.target.files[0];
-    if(!file) return;
+  const img = document.getElementById("preview");
+  img.src = window.URL.createObjectURL(file);
 
+  img.onload = async function(){
     if(!model){
-        document.getElementById("result").innerHTML =
-        "กำลังโหลดโมเดล รอสักครู่...";
-        return;
+      document.getElementById("result").innerHTML = "โมเดลยังโหลดไม่เสร็จ รอสักครู่...";
+      return;
     }
 
-    const img = document.getElementById("preview");
+    const prediction = await model.predict(img);
 
-    img.src = window.URL.createObjectURL(file);
+    prediction.sort((a,b) => b.probability - a.probability);
 
-    img.onload = async () => {
+    const top = prediction[0];
+    const percent = (top.probability * 100).toFixed(2);
 
-        const prediction = await model.predict(img);
-
-        prediction.sort((a,b)=>
-            b.probability - a.probability
-        );
-
-        const top = prediction[0];
-        const percent = (top.probability * 100).toFixed(2);
-
-        const result = document.getElementById("result");
-
-        if(top.className === "ส่งดอก"){
-            result.innerHTML = `✅ ส่งดอก (${percent}%)`;
-            result.className = "success";
-        }else{
-            result.innerHTML = `❌ ไม่ใช่ส่งดอก (${percent}%)`;
-            result.className = "fail";
-        }
-    };
+    document.getElementById("result").innerHTML =
+      top.className + " " + percent + "%";
+  };
 });
 </script>
+
+</body>
+</html>
