@@ -57,15 +57,13 @@ img{
 
 </div>
 
-<!-- โหลด TFJS ก่อน -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
 
-<!-- โหลด TM -->
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
 <script>
 
-const URL = "https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
+const MODEL_URL = "https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
 
 let model;
 
@@ -79,15 +77,13 @@ async function init(){
 
     result.innerHTML = "กำลังโหลดโมเดล...";
 
-    // โหลดโมเดล
     model = await tmImage.load(
-      URL + "model.json",
-      URL + "metadata.json"
+      MODEL_URL + "model.json",
+      MODEL_URL + "metadata.json"
     );
 
     result.innerHTML = "พร้อมใช้งาน ✅";
 
-    // เปิดปุ่มอัปโหลด
     upload.disabled = false;
 
   }catch(err){
@@ -108,7 +104,8 @@ upload.addEventListener("change", async function(e){
 
   if(!file) return;
 
-  preview.src = URL.createObjectURL(file);
+  // แสดงรูป
+  preview.src = window.URL.createObjectURL(file);
 
   preview.style.display = "block";
 
@@ -124,7 +121,8 @@ upload.addEventListener("change", async function(e){
 
       const top = prediction[0];
 
-      const percent = (top.probability * 100).toFixed(2);
+      const percent =
+      (top.probability * 100).toFixed(2);
 
       result.innerHTML =
       `${top.className} ${percent}%`;
