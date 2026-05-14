@@ -1,127 +1,145 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>ชาเขียวตูน 🍵</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      font-family: sans-serif;
-      background-color: #fefee2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    h2 {
-      cursor: pointer;
-      margin: 8px;
-      background: #ffffffcc;
-      padding: 5px 15px;
-      border-radius: 15px;
-      transition: transform 0.2s;
-    }
+<title>AI ตรวจส่งดอก</title>
 
-    h2:hover {
-      transform: scale(1.05);
-      color: #4caf50;
-    }
+<style>
 
-    .emoji {
-      position: absolute;
-      font-size: 2rem;
-      animation: floatUp 1s ease-out forwards;
-      pointer-events: none;
-    }
+body{
+    font-family: sans-serif;
+    background:#f5f5f5;
+    text-align:center;
+    padding:40px;
+}
 
-    #score {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #ffffffdd;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 1.2rem;
-      box-shadow: 0 0 10px gold;
-      font-weight: bold;
-      color: #333;
-    }
+h1{
+    color:#d32f2f;
+}
 
-    /* Animation Emoji */
-    @keyframes floatUp {
-      0% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-100px) scale(1.5);
-      }
-    }
+.upload-box{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    max-width:500px;
+    margin:auto;
+    box-shadow:0 5px 20px rgba(0,0,0,0.1);
+}
 
-    /* 🍵 ชาเขียว ซ้าย + ขวา */
-    .greentea {
-      position: fixed;
-      bottom: 0;
-      width: 130px;
-      opacity: 0.85;
-      animation: floatTea 4s ease-in-out infinite;
-      z-index: 0;
-    }
+img{
+    margin-top:20px;
+    max-width:100%;
+    border-radius:12px;
+}
 
-    .left {
-      left: 10px;
-    }
+#result{
+    margin-top:20px;
+    font-size:30px;
+    font-weight:bold;
+}
 
-    .right {
-      right: 10px;
-      transform: scaleX(-1); /* สะท้อนรูป */
-    }
+.success{
+    color:green;
+}
 
-    @keyframes floatTea {
-      0%, 100% { transform: translateY(0) scaleX(1); }
-      50% { transform: translateY(-10px) scaleX(1); }
-    }
-  </style>
+.fail{
+    color:red;
+}
+
+</style>
 </head>
+
 <body>
 
-  <div id="score">คะแนน: 0</div>
+<div class="upload-box">
 
-  <h1 style="background: #ffffffcc; padding: 10px 20px; border-radius: 15px;">ตูนสร้างเอง</h1>
+<h1>🔍 AI ตรวจตราส่งดอก</h1>
 
-  <h2 onclick="popEmoji(event)">จองกุก (Jungkook)</h2>
-  <h2 onclick="popEmoji(event)">พัค ซอจุน</h2>
-  <h2 onclick="popEmoji(event)">อี มินโฮ</h2>
-  <h2 onclick="popEmoji(event)">ชา อึนอู</h2>
-  <h2 onclick="popEmoji(event)">กงยู</h2>
+<input type="file" id="imageUpload" accept="image/*">
 
-  <!-- 🍵 รูปชาเขียววางซ้าย + ขวา -->
-  <img class="greentea left" src="https://i.imgur.com/WuT4AxH.png" alt="ชาเขียว">
-  <img class="greentea right" src="https://i.imgur.com/WuT4AxH.png" alt="ชาเขียว">
+<br>
 
-  <script>
-    const emojis = ["💖", "✨", "🎉", "💘", "🩷", "🎈", "💫"];
-    let score = 0;
+<img id="preview">
 
-    function popEmoji(e) {
-      const emoji = document.createElement("div");
-      emoji.className = "emoji";
-      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      emoji.style.left = `${e.clientX}px`;
-      emoji.style.top = `${e.clientY}px`;
-      document.body.appendChild(emoji);
-      setTimeout(() => emoji.remove(), 1000);
+<div id="result">
+รออัปโหลดภาพ
+</div>
 
-      score++;
-      document.getElementById("score").textContent = `คะแนน: ${score}`;
-    }
-  </script>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
+
+<script>
+
+const URL =
+"https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
+
+let model;
+
+async function loadModel(){
+
+    model = await tmImage.load(
+        URL + "model.json",
+        URL + "metadata.json"
+    );
+
+    console.log("โหลดโมเดลสำเร็จ");
+}
+
+loadModel();
+
+document
+.getElementById("imageUpload")
+.addEventListener("change", async function(event){
+
+    const file = event.target.files[0];
+
+    if(!file) return;
+
+    const img = document.getElementById("preview");
+
+    img.src = URL.createObjectURL(file);
+
+    img.onload = async () => {
+
+        const prediction = await model.predict(img);
+
+        prediction.sort((a,b)=>
+            b.probability - a.probability
+        );
+
+        const top = prediction[0];
+
+        const result =
+        document.getElementById("result");
+
+        const percent =
+        (top.probability * 100).toFixed(2);
+
+        if(top.className === "ส่งดอก"){
+
+            result.innerHTML =
+            `✅ ส่งดอก (${percent}%)`;
+
+            result.className = "success";
+
+        }else{
+
+            result.innerHTML =
+            `❌ ไม่ใช่ส่งดอก (${percent}%)`;
+
+            result.className = "fail";
+        }
+
+    };
+
+});
+
+</script>
 
 </body>
 </html>
