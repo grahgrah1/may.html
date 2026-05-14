@@ -2,6 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI ตรวจตราส่งดอก</title>
 
 <style>
@@ -19,16 +20,31 @@ body{
   margin:auto;
   box-shadow:0 5px 20px rgba(0,0,0,0.12);
 }
-h1{ color:#d8232a; }
+h1{ 
+  color:#d8232a; 
+}
+input{
+  margin-top:15px;
+}
 img{
   max-width:100%;
   margin-top:20px;
   border-radius:12px;
+  display:none;
 }
 #result{
   margin-top:25px;
   font-size:28px;
   font-weight:bold;
+}
+.success{
+  color:green;
+}
+.danger{
+  color:#d8232a;
+}
+.loading{
+  color:#555;
 }
 </style>
 </head>
@@ -42,9 +58,9 @@ img{
 
   <br>
 
-  <img id="preview">
+  <img id="preview" alt="ภาพตัวอย่าง">
 
-  <div id="result">กำลังโหลดโมเดล...</div>
+  <div id="result" class="loading">กำลังโหลดโมเดล...</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
@@ -54,6 +70,9 @@ img{
 const MODEL_URL = "https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
 
 let model;
+const resultBox = document.getElementById("result");
+const imageUpload = document.getElementById("imageUpload");
+const preview = document.getElementById("preview");
 
 async function loadModel(){
   try{
@@ -62,37 +81,56 @@ async function loadModel(){
       MODEL_URL + "metadata.json"
     );
 
-    document.getElementById("result").innerHTML = "พร้อมตรวจภาพแล้ว ✅";
+    resultBox.innerHTML = "พร้อมตรวจภาพแล้ว ✅";
+    resultBox.className = "success";
+
   }catch(error){
-    document.getElementById("result").innerHTML = "โหลดโมเดลไม่สำเร็จ ❌";
-    console.log(error);
+    resultBox.innerHTML = "โหลดโมเดลไม่สำเร็จ ❌";
+    resultBox.className = "danger";
+    console.error(error);
   }
 }
 
 loadModel();
 
-document.getElementById("imageUpload").addEventListener("change", function(event){
+imageUpload.addEventListener("change", function(event){
   const file = event.target.files[0];
   if(!file) return;
 
-  const img = document.getElementById("preview");
-  img.src = window.URL.createObjectURL(file);
+  preview.src = window.URL.createObjectURL(file);
+  preview.style.display = "block";
 
-  img.onload = async function(){
+  resultBox.innerHTML = "กำลังตรวจภาพ...";
+  resultBox.className = "loading";
+
+  preview.onload = async function(){
     if(!model){
-      document.getElementById("result").innerHTML = "โมเดลยังโหลดไม่เสร็จ รอสักครู่...";
+      resultBox.innerHTML = "โมเดลยังโหลดไม่เสร็จ รอสักครู่...";
+      resultBox.className = "loading";
       return;
     }
 
-    const prediction = await model.predict(img);
+    try{
+      const prediction = await model.predict(preview);
 
-    prediction.sort((a,b) => b.probability - a.probability);
+      prediction.sort((a,b) => b.probability - a.probability);
 
-    const top = prediction[0];
-    const percent = (top.probability * 100).toFixed(2);
+      const top = prediction[0];
+      const percent = (top.probability * 100).toFixed(2);
 
-    document.getElementById("result").innerHTML =
-      top.className + " " + percent + "%";
+      resultBox.innerHTML = `${top.className} ${percent}%`;
+
+      if(percent >= 80){
+        resultBox.className = "success";
+      }else{
+        resultBox.className = "danger";
+      }
+
+    }catch(error){
+      resultBox.innerHTML = "ตรวจภาพไม่สำเร็จ ❌";
+      resultBox.className = "danger";
+      console.error(error);
+    }
   };
 });
 </script>
