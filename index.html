@@ -4,80 +4,132 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AI ตรวจตราส่งดอก</title>
+<title>AI ตรวจประเภทตั๋วจำนำ</title>
 
 <style>
 
 body{
-  font-family:"Prompt",sans-serif;
-  background:
-    radial-gradient(circle at top,#ffd56b 0%,transparent 28%),
-    linear-gradient(135deg,#7a0000,#c1121f 45%,#8b0000);
-  text-align:center;
+  margin:0;
   padding:40px;
   min-height:100vh;
+
+  font-family:"Prompt",sans-serif;
+
+  background:
+  radial-gradient(circle at top,#ffd56b 0%,transparent 25%),
+  linear-gradient(135deg,#6e0000,#b60000 45%,#7a0000);
+
+  text-align:center;
 }
 
 .box{
-  background:linear-gradient(180deg,#fffaf0,#ffffff);
-  padding:35px;
-  border-radius:28px;
-  max-width:620px;
+
+  max-width:650px;
   margin:auto;
 
-  box-shadow:
-    0 12px 35px rgba(0,0,0,0.35),
-    inset 0 0 0 3px #d4af37;
+  background:
+  linear-gradient(180deg,#fffdf5,#fff);
 
-  border:4px solid #b8860b;
+  border-radius:30px;
+
+  padding:35px;
+
+  border:4px solid #d4af37;
+
+  box-shadow:
+  0 15px 40px rgba(0,0,0,0.35),
+  inset 0 0 0 3px rgba(255,215,0,0.3);
+
+}
+
+.logo{
+
+  font-size:60px;
+  margin-bottom:10px;
+
 }
 
 h1{
-  color:#c40000;
-  font-size:38px;
-  margin-bottom:25px;
-  text-shadow:1px 1px 0 #ffd700;
+
+  color:#b00000;
+  margin:0;
+
+  font-size:42px;
+
+  text-shadow:
+  1px 1px 0 #ffd700;
+
+}
+
+.subtitle{
+
+  margin-top:10px;
+  color:#7a0000;
+  font-size:18px;
+
+}
+
+.uploadBox{
+
+  margin-top:30px;
+
 }
 
 input[type="file"]{
+
   background:#fff8dc;
+
   border:2px solid #d4af37;
-  padding:10px;
-  border-radius:12px;
-  font-weight:bold;
+
+  border-radius:14px;
+
+  padding:12px;
+
   cursor:pointer;
+
+  font-weight:bold;
+
 }
 
-img{
-  max-width:100%;
+#preview{
+
+  width:100%;
+
   margin-top:25px;
-  border-radius:18px;
+
+  border-radius:20px;
+
   display:none;
 
   border:5px solid #d4af37;
 
   box-shadow:
-    0 8px 25px rgba(0,0,0,0.25);
+  0 8px 20px rgba(0,0,0,0.25);
+
 }
 
 #result{
-  margin-top:28px;
+
+  margin-top:25px;
+
+  padding:20px;
+
+  border-radius:20px;
+
   font-size:34px;
+
   font-weight:900;
 
-  padding:18px;
-
-  border-radius:18px;
-
   background:
-    linear-gradient(135deg,#fff3b0,#ffd700);
-
-  color:#8b0000;
+  linear-gradient(135deg,#fff3b0,#ffd700);
 
   border:3px solid #b8860b;
 
+  color:#7a0000;
+
   box-shadow:
-    0 6px 18px rgba(0,0,0,0.2);
+  0 8px 20px rgba(0,0,0,0.15);
+
 }
 
 .success{
@@ -85,18 +137,66 @@ img{
 }
 
 .danger{
-  color:#b00000 !important;
+  color:#c00000 !important;
 }
 
 .loading{
   color:#8b5a00 !important;
 }
 
-.footer{
+.allResults{
+
   margin-top:25px;
+
+  text-align:left;
+
+  background:white;
+
+  border-radius:18px;
+
+  padding:20px;
+
+  border:2px solid #d4af37;
+
+}
+
+.item{
+
+  margin-bottom:14px;
+
+}
+
+.bar{
+
+  height:14px;
+
+  background:#eee;
+
+  border-radius:999px;
+
+  overflow:hidden;
+
+  margin-top:5px;
+
+}
+
+.fill{
+
+  height:100%;
+
+  background:
+  linear-gradient(90deg,#b00000,#ffd700);
+
+}
+
+.footer{
+
+  margin-top:30px;
+
   color:white;
-  opacity:0.8;
-  font-size:14px;
+
+  opacity:0.85;
+
 }
 
 </style>
@@ -106,7 +206,15 @@ img{
 
 <div class="box">
 
-<h1>🔍 AI ตรวจตราส่งดอก</h1>
+<div class="logo">🏮</div>
+
+<h1>AI ตรวจประเภทตั๋วจำนำ</h1>
+
+<div class="subtitle">
+ระบบ AI สำหรับโรงรับจำนำ
+</div>
+
+<div class="uploadBox">
 
 <input
 type="file"
@@ -114,7 +222,7 @@ id="imageUpload"
 accept="image/*"
 disabled>
 
-<br>
+</div>
 
 <img id="preview">
 
@@ -122,27 +230,27 @@ disabled>
 กำลังโหลด AI...
 </div>
 
+<div id="allResults" class="allResults" style="display:none">
+</div>
+
 </div>
 
 <div class="footer">
-ระบบ AI โรงรับจำนำ
+Yong Long Pawnshop AI System
 </div>
 
 <!-- TensorFlow -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
 
-<!-- Teachable Machine -->
+<!-- TM -->
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
 <script>
 
 const MODEL_URL =
-"https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
+"https://teachablemachine.withgoogle.com/models/8Ohqq2rSR/";
 
 let model;
-
-const result =
-document.getElementById("result");
 
 const upload =
 document.getElementById("imageUpload");
@@ -150,22 +258,26 @@ document.getElementById("imageUpload");
 const preview =
 document.getElementById("preview");
 
+const result =
+document.getElementById("result");
+
+const allResults =
+document.getElementById("allResults");
+
 async function init(){
 
   try{
 
     result.innerHTML =
-    "กำลังโหลดโมเดล...";
+    "กำลังโหลดโมเดล AI...";
 
     result.className = "loading";
 
-    // โหลดโมเดล
     model = await tmImage.load(
       MODEL_URL + "model.json",
       MODEL_URL + "metadata.json"
     );
 
-    // เปิดปุ่มอัปโหลด
     upload.disabled = false;
 
     result.innerHTML =
@@ -196,7 +308,6 @@ async function(e){
 
   if(!file) return;
 
-  // แสดงภาพ
   preview.src =
   window.URL.createObjectURL(file);
 
@@ -211,11 +322,9 @@ async function(e){
 
       result.className = "loading";
 
-      // AI Predict
       const prediction =
       await model.predict(preview);
 
-      // เรียงเปอร์เซ็นต์
       prediction.sort(
         (a,b)=>
         b.probability-a.probability
@@ -227,22 +336,67 @@ async function(e){
       (top.probability * 100)
       .toFixed(2);
 
-      // ตรวจชื่อคลาส
-      if(top.className === "ส่งดอก"){
+      let icon = "📄";
+      let color = "success";
 
-        result.innerHTML =
-        `✅ ส่งดอก ${percent}%`;
-
-        result.className = "success";
-
-      }else{
-
-        result.innerHTML =
-        `❌ ไม่ส่งดอก ${percent}%`;
-
-        result.className = "danger";
-
+      if(top.className === "จำนำ"){
+        icon = "🏦";
       }
+      else if(top.className === "ส่งดอก"){
+        icon = "💰";
+      }
+      else if(top.className === "เพิ่มเงิน"){
+        icon = "➕";
+      }
+      else if(top.className === "ลดเงิน"){
+        icon = "➖";
+        color = "danger";
+      }
+      else if(top.className === "ไถ่ถอน"){
+        icon = "✅";
+      }
+
+      result.innerHTML =
+      `${icon} ${top.className}<br>${percent}%`;
+
+      result.className = color;
+
+      // แสดงทุกคลาส
+      allResults.style.display = "block";
+
+      let html = "";
+
+      prediction.forEach(p=>{
+
+        const pPercent =
+        (p.probability * 100)
+        .toFixed(2);
+
+        html += `
+
+        <div class="item">
+
+          <strong>
+          ${p.className}
+          </strong>
+
+          ${pPercent}%
+
+          <div class="bar">
+            <div
+            class="fill"
+            style="
+            width:${pPercent}%">
+            </div>
+          </div>
+
+        </div>
+
+        `;
+
+      });
+
+      allResults.innerHTML = html;
 
     }catch(err){
 
