@@ -7,7 +7,7 @@
 
 <style>
 body{
-  font-family: sans-serif;
+  font-family:sans-serif;
   background:#f2f2f2;
   text-align:center;
   padding:40px;
@@ -20,12 +20,7 @@ body{
   margin:auto;
   box-shadow:0 5px 20px rgba(0,0,0,0.12);
 }
-h1{ 
-  color:#d8232a; 
-}
-input{
-  margin-top:15px;
-}
+h1{ color:#d8232a; }
 img{
   max-width:100%;
   margin-top:20px;
@@ -34,18 +29,12 @@ img{
 }
 #result{
   margin-top:25px;
-  font-size:28px;
+  font-size:26px;
   font-weight:bold;
 }
-.success{
-  color:green;
-}
-.danger{
-  color:#d8232a;
-}
-.loading{
-  color:#555;
-}
+.success{ color:green; }
+.danger{ color:#d8232a; }
+.loading{ color:#555; }
 </style>
 </head>
 
@@ -54,7 +43,7 @@ img{
 <div class="box">
   <h1>🔍 AI ตรวจตราส่งดอก</h1>
 
-  <input type="file" id="imageUpload" accept="image/*">
+  <input type="file" id="imageUpload" accept="image/*" disabled>
 
   <br>
 
@@ -63,29 +52,37 @@ img{
   <div id="result" class="loading">กำลังโหลดโมเดล...</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
 <script>
 const MODEL_URL = "https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
 
-let model;
+let model = null;
+
 const resultBox = document.getElementById("result");
 const imageUpload = document.getElementById("imageUpload");
 const preview = document.getElementById("preview");
 
 async function loadModel(){
   try{
+    resultBox.innerHTML = "กำลังโหลดโมเดล...";
+    resultBox.className = "loading";
+
+    await tf.ready();
+
     model = await tmImage.load(
       MODEL_URL + "model.json",
       MODEL_URL + "metadata.json"
     );
 
+    imageUpload.disabled = false;
+
     resultBox.innerHTML = "พร้อมตรวจภาพแล้ว ✅";
     resultBox.className = "success";
 
   }catch(error){
-    resultBox.innerHTML = "โหลดโมเดลไม่สำเร็จ ❌";
+    resultBox.innerHTML = "โหลดโมเดลไม่สำเร็จ ❌<br>ให้เช็กอินเทอร์เน็ตหรือลิงก์โมเดล";
     resultBox.className = "danger";
     console.error(error);
   }
@@ -93,24 +90,24 @@ async function loadModel(){
 
 loadModel();
 
-imageUpload.addEventListener("change", function(event){
+imageUpload.addEventListener("change", async function(event){
   const file = event.target.files[0];
   if(!file) return;
 
-  preview.src = window.URL.createObjectURL(file);
+  if(!model){
+    resultBox.innerHTML = "โมเดลยังไม่พร้อม ❌";
+    resultBox.className = "danger";
+    return;
+  }
+
+  preview.src = URL.createObjectURL(file);
   preview.style.display = "block";
 
-  resultBox.innerHTML = "กำลังตรวจภาพ...";
-  resultBox.className = "loading";
-
   preview.onload = async function(){
-    if(!model){
-      resultBox.innerHTML = "โมเดลยังโหลดไม่เสร็จ รอสักครู่...";
-      resultBox.className = "loading";
-      return;
-    }
-
     try{
+      resultBox.innerHTML = "กำลังตรวจภาพ...";
+      resultBox.className = "loading";
+
       const prediction = await model.predict(preview);
 
       prediction.sort((a,b) => b.probability - a.probability);
@@ -118,9 +115,9 @@ imageUpload.addEventListener("change", function(event){
       const top = prediction[0];
       const percent = (top.probability * 100).toFixed(2);
 
-      resultBox.innerHTML = `${top.className} ${percent}%`;
+      resultBox.innerHTML = `${top.className}<br>${percent}%`;
 
-      if(percent >= 80){
+      if(top.probability >= 0.8){
         resultBox.className = "success";
       }else{
         resultBox.className = "danger";
