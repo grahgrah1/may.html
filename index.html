@@ -1,93 +1,17 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>AI ตรวจส่งดอก</title>
-
-<style>
-
-body{
-    font-family: sans-serif;
-    background:#f5f5f5;
-    text-align:center;
-    padding:40px;
-}
-
-h1{
-    color:#d32f2f;
-}
-
-.upload-box{
-    background:white;
-    padding:30px;
-    border-radius:20px;
-    max-width:500px;
-    margin:auto;
-    box-shadow:0 5px 20px rgba(0,0,0,0.1);
-}
-
-img{
-    margin-top:20px;
-    max-width:100%;
-    border-radius:12px;
-}
-
-#result{
-    margin-top:20px;
-    font-size:30px;
-    font-weight:bold;
-}
-
-.success{
-    color:green;
-}
-
-.fail{
-    color:red;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="upload-box">
-
-<h1>🔍 AI ตรวจตราส่งดอก</h1>
-
-<input type="file" id="imageUpload" accept="image/*">
-
-<br>
-
-<img id="preview">
-
-<div id="result">
-รออัปโหลดภาพ
-</div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest"></script>
-
 <script>
-
-const URL =
+const MODEL_URL =
 "https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
 
 let model;
 
 async function loadModel(){
-
     model = await tmImage.load(
-        URL + "model.json",
-        URL + "metadata.json"
+        MODEL_URL + "model.json",
+        MODEL_URL + "metadata.json"
     );
 
-    console.log("โหลดโมเดลสำเร็จ");
+    document.getElementById("result").innerHTML =
+    "พร้อมตรวจภาพแล้ว ✅";
 }
 
 loadModel();
@@ -97,12 +21,17 @@ document
 .addEventListener("change", async function(event){
 
     const file = event.target.files[0];
-
     if(!file) return;
+
+    if(!model){
+        document.getElementById("result").innerHTML =
+        "กำลังโหลดโมเดล รอสักครู่...";
+        return;
+    }
 
     const img = document.getElementById("preview");
 
-    img.src = URL.createObjectURL(file);
+    img.src = window.URL.createObjectURL(file);
 
     img.onload = async () => {
 
@@ -113,33 +42,17 @@ document
         );
 
         const top = prediction[0];
+        const percent = (top.probability * 100).toFixed(2);
 
-        const result =
-        document.getElementById("result");
-
-        const percent =
-        (top.probability * 100).toFixed(2);
+        const result = document.getElementById("result");
 
         if(top.className === "ส่งดอก"){
-
-            result.innerHTML =
-            `✅ ส่งดอก (${percent}%)`;
-
+            result.innerHTML = `✅ ส่งดอก (${percent}%)`;
             result.className = "success";
-
         }else{
-
-            result.innerHTML =
-            `❌ ไม่ใช่ส่งดอก (${percent}%)`;
-
+            result.innerHTML = `❌ ไม่ใช่ส่งดอก (${percent}%)`;
             result.className = "fail";
         }
-
     };
-
 });
-
 </script>
-
-</body>
-</html>
