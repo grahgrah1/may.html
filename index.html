@@ -12,124 +12,135 @@ body{
   text-align:center;
   padding:40px;
 }
+
 .box{
   background:white;
   padding:30px;
   border-radius:20px;
-  max-width:520px;
+  max-width:500px;
   margin:auto;
-  box-shadow:0 5px 20px rgba(0,0,0,0.12);
+  box-shadow:0 5px 20px rgba(0,0,0,0.15);
 }
-h1{ color:#d8232a; }
+
+h1{
+  color:#d8232a;
+}
+
 img{
   max-width:100%;
   margin-top:20px;
   border-radius:12px;
   display:none;
 }
+
 #result{
-  margin-top:25px;
-  font-size:26px;
+  margin-top:20px;
+  font-size:28px;
   font-weight:bold;
 }
-.success{ color:green; }
-.danger{ color:#d8232a; }
-.loading{ color:#555; }
 </style>
 </head>
 
 <body>
 
 <div class="box">
-  <h1>🔍 AI ตรวจตราส่งดอก</h1>
 
-  <input type="file" id="imageUpload" accept="image/*" disabled>
+<h1>🔍 AI ตรวจตราส่งดอก</h1>
 
-  <br>
+<input type="file" id="imageUpload" accept="image/*" disabled>
 
-  <img id="preview" alt="ภาพตัวอย่าง">
+<br>
 
-  <div id="result" class="loading">กำลังโหลดโมเดล...</div>
+<img id="preview">
+
+<div id="result">กำลังโหลด AI...</div>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<!-- โหลด TFJS ก่อน -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+
+<!-- โหลด TM -->
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
 <script>
-const MODEL_URL = "https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
 
-let model = null;
+const URL = "https://teachablemachine.withgoogle.com/models/0zaFwUMQ3/";
 
-const resultBox = document.getElementById("result");
-const imageUpload = document.getElementById("imageUpload");
+let model;
+
+const result = document.getElementById("result");
+const upload = document.getElementById("imageUpload");
 const preview = document.getElementById("preview");
 
-async function loadModel(){
+async function init(){
+
   try{
-    resultBox.innerHTML = "กำลังโหลดโมเดล...";
-    resultBox.className = "loading";
 
-    await tf.ready();
+    result.innerHTML = "กำลังโหลดโมเดล...";
 
+    // โหลดโมเดล
     model = await tmImage.load(
-      MODEL_URL + "model.json",
-      MODEL_URL + "metadata.json"
+      URL + "model.json",
+      URL + "metadata.json"
     );
 
-    imageUpload.disabled = false;
+    result.innerHTML = "พร้อมใช้งาน ✅";
 
-    resultBox.innerHTML = "พร้อมตรวจภาพแล้ว ✅";
-    resultBox.className = "success";
+    // เปิดปุ่มอัปโหลด
+    upload.disabled = false;
 
-  }catch(error){
-    resultBox.innerHTML = "โหลดโมเดลไม่สำเร็จ ❌<br>ให้เช็กอินเทอร์เน็ตหรือลิงก์โมเดล";
-    resultBox.className = "danger";
-    console.error(error);
+  }catch(err){
+
+    console.error(err);
+
+    result.innerHTML = "โหลดโมเดลไม่สำเร็จ ❌";
+
   }
+
 }
 
-loadModel();
+init();
 
-imageUpload.addEventListener("change", async function(event){
-  const file = event.target.files[0];
+upload.addEventListener("change", async function(e){
+
+  const file = e.target.files[0];
+
   if(!file) return;
 
-  if(!model){
-    resultBox.innerHTML = "โมเดลยังไม่พร้อม ❌";
-    resultBox.className = "danger";
-    return;
-  }
-
   preview.src = URL.createObjectURL(file);
+
   preview.style.display = "block";
 
   preview.onload = async function(){
+
     try{
-      resultBox.innerHTML = "กำลังตรวจภาพ...";
-      resultBox.className = "loading";
+
+      result.innerHTML = "กำลังตรวจภาพ...";
 
       const prediction = await model.predict(preview);
 
-      prediction.sort((a,b) => b.probability - a.probability);
+      prediction.sort((a,b)=>b.probability-a.probability);
 
       const top = prediction[0];
+
       const percent = (top.probability * 100).toFixed(2);
 
-      resultBox.innerHTML = `${top.className}<br>${percent}%`;
+      result.innerHTML =
+      `${top.className} ${percent}%`;
 
-      if(top.probability >= 0.8){
-        resultBox.className = "success";
-      }else{
-        resultBox.className = "danger";
-      }
+    }catch(err){
 
-    }catch(error){
-      resultBox.innerHTML = "ตรวจภาพไม่สำเร็จ ❌";
-      resultBox.className = "danger";
-      console.error(error);
+      console.error(err);
+
+      result.innerHTML = "ตรวจภาพไม่สำเร็จ ❌";
+
     }
+
   };
+
 });
+
 </script>
 
 </body>
