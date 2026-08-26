@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D Eye</title>
+  <title>3D Eyeball</title>
+
   <style>
     * {
       margin: 0;
@@ -13,7 +14,11 @@
 
     body {
       overflow: hidden;
-      background: radial-gradient(circle at center, #1f1f1f 0%, #090909 100%);
+      background: radial-gradient(
+        circle at center,
+        #1a1a1a 0%,
+        #050505 70%
+      );
       font-family: Arial, sans-serif;
     }
 
@@ -23,227 +28,785 @@
 
     .title {
       position: fixed;
-      top: 24px;
+      top: 22px;
       left: 50%;
       transform: translateX(-50%);
       color: white;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       letter-spacing: 1px;
       z-index: 10;
+      pointer-events: none;
     }
 
     .hint {
       position: fixed;
-      bottom: 20px;
+      bottom: 18px;
       left: 50%;
       transform: translateX(-50%);
-      color: rgba(255,255,255,0.7);
-      font-size: 14px;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 13px;
       z-index: 10;
+      pointer-events: none;
     }
   </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+    }
+  }
+  </script>
 </head>
+
 <body>
-  <div class="title">3D Eye</div>
-  <div class="hint">ลากเมาส์เพื่อหมุนมุมมองได้</div>
+
+  <div class="title">👁️ 3D EYEBALL</div>
+  <div class="hint">
+    ขยับเมาส์ แล้วลูกตาจะมองตาม
+  </div>
 
   <script type="module">
-    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-    import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+
+    import * as THREE from "three";
+
+
+    // =====================================
+    // SCENE
+    // =====================================
 
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      100
-    );
-    camera.position.set(0, 0, 6);
+    scene.background =
+      new THREE.Color(0x050505);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    document.body.appendChild(renderer.domElement);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.enablePan = false;
-    controls.minDistance = 4;
-    controls.maxDistance = 10;
+    // =====================================
+    // CAMERA
+    // =====================================
 
-    // แสง
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
-    scene.add(ambientLight);
-
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 2.5);
-    dirLight1.position.set(5, 5, 5);
-    scene.add(dirLight1);
-
-    const dirLight2 = new THREE.DirectionalLight(0xffffff, 1.5);
-    dirLight2.position.set(-5, -2, 4);
-    scene.add(dirLight2);
-
-    // กลุ่มดวงตา
-    const eyeGroup = new THREE.Group();
-    scene.add(eyeGroup);
-
-    // ลูกตาสีขาว
-    const eyeballGeometry = new THREE.SphereGeometry(1.45, 64, 64);
-    const eyeballMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      roughness: 0.25,
-      metalness: 0.0,
-      clearcoat: 1,
-      clearcoatRoughness: 0.05
-    });
-
-    const eyeball = new THREE.Mesh(eyeballGeometry, eyeballMaterial);
-    eyeball.scale.y = 0.82; // ทำให้ดูเป็นทรงตา
-    eyeGroup.add(eyeball);
-
-    // ม่านตา
-    const irisGeometry = new THREE.CircleGeometry(0.48, 64);
-    const irisMaterial = new THREE.MeshStandardMaterial({
-      color: 0x4ea3ff,
-      roughness: 0.5,
-      metalness: 0.1
-    });
-
-    const iris = new THREE.Mesh(irisGeometry, irisMaterial);
-    iris.position.z = 1.18;
-    eyeGroup.add(iris);
-
-    // รูม่านตา
-    const pupilGeometry = new THREE.CircleGeometry(0.18, 64);
-    const pupilMaterial = new THREE.MeshStandardMaterial({
-      color: 0x050505
-    });
-
-    const pupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
-    pupil.position.z = 1.19;
-    eyeGroup.add(pupil);
-
-    // แสงสะท้อนในตา
-    const shineGeometry = new THREE.CircleGeometry(0.08, 32);
-    const shineMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.95
-    });
-
-    const shine = new THREE.Mesh(shineGeometry, shineMaterial);
-    shine.position.set(0.14, 0.12, 1.20);
-    eyeGroup.add(shine);
-
-    // เปลือกตาบน
-    const upperLidShape = new THREE.Shape();
-    upperLidShape.moveTo(-1.75, 0);
-    upperLidShape.quadraticCurveTo(0, 1.05, 1.75, 0);
-    upperLidShape.lineTo(1.75, 0.95);
-    upperLidShape.quadraticCurveTo(0, 1.65, -1.75, 0.95);
-    upperLidShape.closePath();
-
-    const upperLidGeometry = new THREE.ShapeGeometry(upperLidShape);
-    const lidMaterial = new THREE.MeshStandardMaterial({
-      color: 0xd9b0a0,
-      roughness: 0.9,
-      side: THREE.DoubleSide
-    });
-
-    const upperLid = new THREE.Mesh(upperLidGeometry, lidMaterial);
-    upperLid.position.z = 1.28;
-    upperLid.position.y = 0.15;
-    eyeGroup.add(upperLid);
-
-    // เปลือกตาล่าง
-    const lowerLidShape = new THREE.Shape();
-    lowerLidShape.moveTo(-1.75, 0);
-    lowerLidShape.quadraticCurveTo(0, -1.05, 1.75, 0);
-    lowerLidShape.lineTo(1.75, -0.95);
-    lowerLidShape.quadraticCurveTo(0, -1.65, -1.75, -0.95);
-    lowerLidShape.closePath();
-
-    const lowerLidGeometry = new THREE.ShapeGeometry(lowerLidShape);
-    const lowerLid = new THREE.Mesh(lowerLidGeometry, lidMaterial);
-    lowerLid.position.z = 1.27;
-    lowerLid.position.y = -0.15;
-    eyeGroup.add(lowerLid);
-
-    // เส้นขอบตา
-    const eyeOutlineShape = new THREE.Shape();
-    eyeOutlineShape.moveTo(-1.8, 0);
-    eyeOutlineShape.quadraticCurveTo(0, 1.0, 1.8, 0);
-    eyeOutlineShape.quadraticCurveTo(0, -1.0, -1.8, 0);
-
-    const outlinePoints = eyeOutlineShape.getPoints(100);
-    const outlineGeometry = new THREE.BufferGeometry().setFromPoints(outlinePoints);
-    const outlineMaterial = new THREE.LineBasicMaterial({ color: 0x111111 });
-    const outline = new THREE.LineLoop(outlineGeometry, outlineMaterial);
-    outline.position.z = 1.31;
-    eyeGroup.add(outline);
-
-    // พื้นหลังจุดแสงเบา ๆ
-    const starsGeometry = new THREE.BufferGeometry();
-    const starCount = 400;
-    const starPositions = [];
-
-    for (let i = 0; i < starCount; i++) {
-      starPositions.push(
-        (Math.random() - 0.5) * 30,
-        (Math.random() - 0.5) * 20,
-        (Math.random() - 0.5) * 30
+    const camera =
+      new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth /
+        window.innerHeight,
+        0.1,
+        100
       );
+
+    camera.position.set(
+      0,
+      0,
+      6
+    );
+
+
+    // =====================================
+    // RENDERER
+    // =====================================
+
+    const renderer =
+      new THREE.WebGLRenderer({
+        antialias: true
+      });
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+    renderer.setPixelRatio(
+      Math.min(
+        window.devicePixelRatio,
+        2
+      )
+    );
+
+    renderer.outputColorSpace =
+      THREE.SRGBColorSpace;
+
+    document.body.appendChild(
+      renderer.domElement
+    );
+
+
+    // =====================================
+    // LIGHT
+    // =====================================
+
+    const ambientLight =
+      new THREE.AmbientLight(
+        0xffffff,
+        1.8
+      );
+
+    scene.add(
+      ambientLight
+    );
+
+
+    const mainLight =
+      new THREE.DirectionalLight(
+        0xffffff,
+        5
+      );
+
+    mainLight.position.set(
+      5,
+      5,
+      6
+    );
+
+    scene.add(
+      mainLight
+    );
+
+
+    const fillLight =
+      new THREE.DirectionalLight(
+        0x77aaff,
+        1.8
+      );
+
+    fillLight.position.set(
+      -5,
+      2,
+      4
+    );
+
+    scene.add(
+      fillLight
+    );
+
+
+    const rimLight =
+      new THREE.PointLight(
+        0xffffff,
+        12,
+        25
+      );
+
+    rimLight.position.set(
+      0,
+      0,
+      8
+    );
+
+    scene.add(
+      rimLight
+    );
+
+
+    // =====================================
+    // EYE GROUP
+    // =====================================
+
+    const eyeGroup =
+      new THREE.Group();
+
+    scene.add(
+      eyeGroup
+    );
+
+
+    // =====================================
+    // EYEBALL
+    // =====================================
+
+    const eyeballGeometry =
+      new THREE.SphereGeometry(
+        1.55,
+        128,
+        128
+      );
+
+
+    const eyeballMaterial =
+      new THREE.MeshPhysicalMaterial({
+
+        color: 0xfafafa,
+
+        roughness: 0.18,
+
+        metalness: 0,
+
+        clearcoat: 1,
+
+        clearcoatRoughness: 0.03
+
+      });
+
+
+    const eyeball =
+      new THREE.Mesh(
+        eyeballGeometry,
+        eyeballMaterial
+      );
+
+
+    eyeball.scale.y =
+      0.92;
+
+
+    eyeGroup.add(
+      eyeball
+    );
+
+
+    // =====================================
+    // IRIS GROUP
+    // =====================================
+
+    const irisGroup =
+      new THREE.Group();
+
+    eyeGroup.add(
+      irisGroup
+    );
+
+
+    // =====================================
+    // IRIS OUTER
+    // =====================================
+
+    const irisOuterGeometry =
+      new THREE.CircleGeometry(
+        0.58,
+        128
+      );
+
+
+    const irisOuterMaterial =
+      new THREE.MeshPhysicalMaterial({
+
+        color: 0x1f8fff,
+
+        roughness: 0.35,
+
+        metalness: 0.05,
+
+        clearcoat: 0.8
+
+      });
+
+
+    const irisOuter =
+      new THREE.Mesh(
+        irisOuterGeometry,
+        irisOuterMaterial
+      );
+
+
+    irisOuter.position.z =
+      1.57;
+
+
+    irisGroup.add(
+      irisOuter
+    );
+
+
+    // =====================================
+    // IRIS RING
+    // =====================================
+
+    const irisRingGeometry =
+      new THREE.RingGeometry(
+        0.26,
+        0.53,
+        128
+      );
+
+
+    const irisRingMaterial =
+      new THREE.MeshBasicMaterial({
+
+        color: 0x63c0ff,
+
+        transparent: true,
+
+        opacity: 0.45,
+
+        side: THREE.DoubleSide
+
+      });
+
+
+    const irisRing =
+      new THREE.Mesh(
+        irisRingGeometry,
+        irisRingMaterial
+      );
+
+
+    irisRing.position.z =
+      1.575;
+
+
+    irisGroup.add(
+      irisRing
+    );
+
+
+    // =====================================
+    // INNER IRIS
+    // =====================================
+
+    const irisInnerGeometry =
+      new THREE.CircleGeometry(
+        0.32,
+        128
+      );
+
+
+    const irisInnerMaterial =
+      new THREE.MeshBasicMaterial({
+        color: 0x0f5ca8
+      });
+
+
+    const irisInner =
+      new THREE.Mesh(
+        irisInnerGeometry,
+        irisInnerMaterial
+      );
+
+
+    irisInner.position.z =
+      1.58;
+
+
+    irisGroup.add(
+      irisInner
+    );
+
+
+    // =====================================
+    // PUPIL
+    // =====================================
+
+    const pupilGeometry =
+      new THREE.CircleGeometry(
+        0.22,
+        128
+      );
+
+
+    const pupilMaterial =
+      new THREE.MeshBasicMaterial({
+        color: 0x000000
+      });
+
+
+    const pupil =
+      new THREE.Mesh(
+        pupilGeometry,
+        pupilMaterial
+      );
+
+
+    pupil.position.z =
+      1.59;
+
+
+    irisGroup.add(
+      pupil
+    );
+
+
+    // =====================================
+    // PUPIL CORE
+    // =====================================
+
+    const pupilCoreGeometry =
+      new THREE.CircleGeometry(
+        0.12,
+        64
+      );
+
+
+    const pupilCoreMaterial =
+      new THREE.MeshBasicMaterial({
+        color: 0x000000
+      });
+
+
+    const pupilCore =
+      new THREE.Mesh(
+        pupilCoreGeometry,
+        pupilCoreMaterial
+      );
+
+
+    pupilCore.position.z =
+      1.595;
+
+
+    irisGroup.add(
+      pupilCore
+    );
+
+
+    // =====================================
+    // LIGHT REFLECTION 1
+    // =====================================
+
+    const reflection1Geometry =
+      new THREE.CircleGeometry(
+        0.11,
+        32
+      );
+
+
+    const reflection1Material =
+      new THREE.MeshBasicMaterial({
+
+        color: 0xffffff,
+
+        transparent: true,
+
+        opacity: 0.95
+
+      });
+
+
+    const reflection1 =
+      new THREE.Mesh(
+        reflection1Geometry,
+        reflection1Material
+      );
+
+
+    reflection1.position.set(
+      0.18,
+      0.18,
+      1.605
+    );
+
+
+    irisGroup.add(
+      reflection1
+    );
+
+
+    // =====================================
+    // LIGHT REFLECTION 2
+    // =====================================
+
+    const reflection2Geometry =
+      new THREE.CircleGeometry(
+        0.045,
+        32
+      );
+
+
+    const reflection2Material =
+      new THREE.MeshBasicMaterial({
+
+        color: 0xffffff,
+
+        transparent: true,
+
+        opacity: 0.75
+
+      });
+
+
+    const reflection2 =
+      new THREE.Mesh(
+        reflection2Geometry,
+        reflection2Material
+      );
+
+
+    reflection2.position.set(
+      -0.10,
+      -0.08,
+      1.605
+    );
+
+
+    irisGroup.add(
+      reflection2
+    );
+
+
+    // =====================================
+    // STARS
+    // =====================================
+
+    const starsGeometry =
+      new THREE.BufferGeometry();
+
+
+    const starCount =
+      500;
+
+
+    const starPositions =
+      [];
+
+
+    for (
+      let i = 0;
+      i < starCount;
+      i++
+    ) {
+
+      starPositions.push(
+
+        (Math.random() - 0.5) * 30,
+
+        (Math.random() - 0.5) * 20,
+
+        (Math.random() - 0.5) * 30
+
+      );
+
     }
+
 
     starsGeometry.setAttribute(
+
       "position",
-      new THREE.Float32BufferAttribute(starPositions, 3)
+
+      new THREE.Float32BufferAttribute(
+        starPositions,
+        3
+      )
+
     );
 
-    const starsMaterial = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 0.03,
-      transparent: true,
-      opacity: 0.7
-    });
 
-    const stars = new THREE.Points(starsGeometry, starsMaterial);
-    scene.add(stars);
+    const starsMaterial =
+      new THREE.PointsMaterial({
 
-    // อนิเมชันให้ตามองไปมา
-    const irisGroup = new THREE.Group();
-    scene.add(irisGroup);
+        color: 0xffffff,
 
-    irisGroup.add(iris);
-    irisGroup.add(pupil);
-    irisGroup.add(shine);
+        size: 0.03,
+
+        transparent: true,
+
+        opacity: 0.6
+
+      });
+
+
+    const stars =
+      new THREE.Points(
+        starsGeometry,
+        starsMaterial
+      );
+
+
+    scene.add(
+      stars
+    );
+
+
+    // =====================================
+    // MOUSE
+    // =====================================
+
+    let mouseX = 0;
+
+    let mouseY = 0;
+
+
+    window.addEventListener(
+      "mousemove",
+      (event) => {
+
+        mouseX =
+          (
+            event.clientX /
+            window.innerWidth
+            -
+            0.5
+          ) * 2;
+
+
+        mouseY =
+          -(
+            event.clientY /
+            window.innerHeight
+            -
+            0.5
+          ) * 2;
+
+      }
+    );
+
+
+    // =====================================
+    // TOUCH
+    // =====================================
+
+    window.addEventListener(
+      "touchmove",
+      (event) => {
+
+        const touch =
+          event.touches[0];
+
+
+        mouseX =
+          (
+            touch.clientX /
+            window.innerWidth
+            -
+            0.5
+          ) * 2;
+
+
+        mouseY =
+          -(
+            touch.clientY /
+            window.innerHeight
+            -
+            0.5
+          ) * 2;
+
+      },
+
+      {
+        passive: true
+      }
+    );
+
+
+    // =====================================
+    // ANIMATION
+    // =====================================
 
     function animate() {
-      requestAnimationFrame(animate);
 
-      const t = performance.now() * 0.001;
+      requestAnimationFrame(
+        animate
+      );
 
-      // ลูกตาขยับเบา ๆ
-      irisGroup.position.x = Math.sin(t * 1.2) * 0.12;
-      irisGroup.position.y = Math.cos(t * 0.9) * 0.08;
 
-      // ดวงตาหมุนเบา ๆ
-      eyeGroup.rotation.y = Math.sin(t * 0.4) * 0.12;
-      eyeGroup.rotation.x = Math.cos(t * 0.3) * 0.05;
+      const time =
+        performance.now() *
+        0.001;
 
-      controls.update();
-      renderer.render(scene, camera);
+
+      // =================================
+      // LEFT / RIGHT
+      // =================================
+
+      eyeGroup.rotation.y +=
+
+        (
+          mouseX * 0.38
+          -
+          eyeGroup.rotation.y
+        )
+
+        * 0.06;
+
+
+      // =================================
+      // UP / DOWN
+      //
+      // ตรงนี้แก้แล้ว
+      // ต้องใช้ -mouseY
+      // เพราะแกน X ของ Three.js
+      // หมุนตรงข้ามกับหน้าจอ
+      // =================================
+
+      eyeGroup.rotation.x +=
+
+        (
+          -mouseY * 0.24
+          -
+          eyeGroup.rotation.x
+        )
+
+        * 0.06;
+
+
+      // =================================
+      // IRIS FOLLOW MOUSE
+      // =================================
+
+      irisGroup.position.x +=
+
+        (
+          mouseX * 0.10
+          -
+          irisGroup.position.x
+        )
+
+        * 0.08;
+
+
+      irisGroup.position.y +=
+
+        (
+          mouseY * 0.07
+          -
+          irisGroup.position.y
+        )
+
+        * 0.08;
+
+
+      // =================================
+      // FLOATING
+      // =================================
+
+      eyeGroup.position.y =
+        Math.sin(
+          time * 1.2
+        ) * 0.04;
+
+
+      // =================================
+      // STAR MOVEMENT
+      // =================================
+
+      stars.rotation.y +=
+        0.0008;
+
+
+      renderer.render(
+        scene,
+        camera
+      );
+
     }
+
 
     animate();
 
-    window.addEventListener("resize", () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+
+    // =====================================
+    // RESIZE
+    // =====================================
+
+    window.addEventListener(
+      "resize",
+      () => {
+
+        camera.aspect =
+          window.innerWidth /
+          window.innerHeight;
+
+
+        camera.updateProjectionMatrix();
+
+
+        renderer.setSize(
+          window.innerWidth,
+          window.innerHeight
+        );
+
+      }
+    );
+
   </script>
+
 </body>
 </html>
