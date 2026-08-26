@@ -1,20 +1,137 @@
-const scene = new THREE.Scene();
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Website</title>
 
-const camera =
-new THREE.PerspectiveCamera(
-75,
-window.innerWidth/window.innerHeight,
-0.1,
-1000
-);
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-const renderer =
-new THREE.WebGLRenderer();
+    body {
+      overflow: hidden;
+      background: #111;
+    }
 
-const cube =
-new THREE.Mesh(
-new THREE.BoxGeometry(),
-new THREE.MeshBasicMaterial()
-);
+    canvas {
+      display: block;
+    }
 
-scene.add(cube);
+    .title {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 32px;
+      font-weight: bold;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="title">My 3D Website</div>
+
+  <script type="module">
+    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, 2)
+    );
+
+    document.body.appendChild(renderer.domElement);
+
+    // สร้างกล่อง 3D
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+
+    const material = new THREE.MeshStandardMaterial({
+      color: 0xd4af37,
+      metalness: 0.8,
+      roughness: 0.25
+    });
+
+    const cube = new THREE.Mesh(
+      geometry,
+      material
+    );
+
+    scene.add(cube);
+
+    // แสง
+    const light1 = new THREE.DirectionalLight(
+      0xffffff,
+      4
+    );
+
+    light1.position.set(5, 5, 5);
+    scene.add(light1);
+
+    const light2 = new THREE.AmbientLight(
+      0xffffff,
+      1
+    );
+
+    scene.add(light2);
+
+    camera.position.z = 5;
+
+    function animate() {
+
+      requestAnimationFrame(animate);
+
+      cube.rotation.x += 0.005;
+      cube.rotation.y += 0.01;
+
+      renderer.render(
+        scene,
+        camera
+      );
+    }
+
+    animate();
+
+    window.addEventListener(
+      "resize",
+      () => {
+
+        camera.aspect =
+          window.innerWidth /
+          window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+          window.innerWidth,
+          window.innerHeight
+        );
+      }
+    );
+  </script>
+
+</body>
+</html>
