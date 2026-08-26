@@ -7,599 +7,1091 @@
 <title>Gold & Pawn Manager</title>
 
 <style>
+
 :root {
-  --bg: #f5f5f3;
-  --card: #ffffff;
-  --red: #8f1018;
-  --red2: #b71923;
-  --gold: #c49a3a;
-  --gold-light: #f7edcf;
-  --text: #191919;
-  --muted: #777;
-  --border: #e7e3dc;
-  --shadow: 0 10px 30px rgba(0,0,0,.07);
+  --bg:#f5f5f3;
+  --card:#ffffff;
+  --red:#8f1018;
+  --red2:#b71923;
+  --gold:#c49a3a;
+  --gold-light:#f7edcf;
+  --text:#191919;
+  --muted:#777;
+  --border:#e7e3dc;
+  --green:#13864a;
+  --shadow:0 10px 30px rgba(0,0,0,.07);
 }
 
 * {
-  box-sizing: border-box;
+  box-sizing:border-box;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, "Noto Sans Thai", sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  margin:0;
+  font-family:Arial,"Noto Sans Thai",sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
 
 button,
 input,
 select {
-  font: inherit;
+  font:inherit;
 }
 
-header {
-  background: linear-gradient(
-    135deg,
-    #6f0910,
-    #9f121b 55%,
-    #741018
-  );
+/* =====================================================
+   HEADER
+===================================================== */
 
-  color: white;
-  padding: 24px 5%;
-  box-shadow: 0 5px 25px rgba(0,0,0,.15);
+header {
+  background:
+    linear-gradient(
+      135deg,
+      #65080f,
+      #971019 55%,
+      #741018
+    );
+
+  color:white;
+
+  padding:20px 5%;
+
+  box-shadow:
+    0 5px 25px
+    rgba(0,0,0,.15);
 }
 
 .header-inner {
-  max-width: 1450px;
-  margin: auto;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  max-width:1450px;
+
+  margin:auto;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:
+    space-between;
+
+  gap:20px;
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
 }
 
 .logo {
-  width: 52px;
-  height: 52px;
 
-  display: grid;
-  place-items: center;
+  width:52px;
 
-  border-radius: 16px;
-  background: rgba(255,255,255,.12);
+  height:52px;
 
-  font-size: 28px;
+  display:grid;
+
+  place-items:center;
+
+  border-radius:16px;
+
+  background:
+    rgba(255,255,255,.12);
+
+  font-size:28px;
 }
 
 .brand h1 {
-  margin: 0;
-  font-size: 22px;
+
+  margin:0;
+
+  font-size:22px;
 }
 
 .brand p {
-  margin: 4px 0 0;
-  font-size: 12px;
-  color: rgba(255,255,255,.65);
+
+  margin:4px 0 0;
+
+  font-size:12px;
+
+  color:
+    rgba(255,255,255,.65);
 }
 
-.gold-price {
-  min-width: 220px;
-  padding: 12px 16px;
+/* =====================================================
+   LIVE GOLD PRICE
+===================================================== */
 
-  border-radius: 14px;
-  background: rgba(255,255,255,.10);
+.gold-price-box {
 
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  min-width:330px;
+
+  padding:13px 16px;
+
+  border-radius:17px;
+
+  background:
+    rgba(255,255,255,.11);
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+
+  backdrop-filter:
+    blur(10px);
 }
 
-.gold-price label {
-  display: block;
-  font-size: 11px;
-  color: rgba(255,255,255,.65);
+.gold-price-top {
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:
+    space-between;
+
+  gap:10px;
+
+  margin-bottom:8px;
 }
 
-.gold-price input {
-  width: 130px;
+.gold-price-title {
 
-  border: 0;
-  outline: none;
+  font-size:11px;
 
-  background: transparent;
-  color: white;
-
-  font-size: 21px;
-  font-weight: bold;
+  color:
+    rgba(255,255,255,.68);
 }
+
+.live-badge {
+
+  display:flex;
+
+  align-items:center;
+
+  gap:5px;
+
+  padding:4px 7px;
+
+  border-radius:20px;
+
+  background:
+    rgba(35,210,110,.16);
+
+  color:#9bffc2;
+
+  font-size:9px;
+
+  font-weight:bold;
+}
+
+.live-dot {
+
+  width:6px;
+
+  height:6px;
+
+  border-radius:50%;
+
+  background:#45ef88;
+
+  box-shadow:
+    0 0 8px #45ef88;
+}
+
+.gold-main-price {
+
+  display:flex;
+
+  align-items:
+    flex-end;
+
+  gap:8px;
+}
+
+.gold-main-price span {
+
+  margin-bottom:4px;
+
+  font-size:11px;
+
+  color:
+    rgba(255,255,255,.65);
+}
+
+.gold-main-price strong {
+
+  font-size:27px;
+
+  line-height:1;
+
+  letter-spacing:-1px;
+}
+
+.gold-main-price small {
+
+  margin-bottom:3px;
+
+  font-size:11px;
+
+  color:
+    rgba(255,255,255,.75);
+}
+
+.gold-buy-row {
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:
+    space-between;
+
+  margin-top:9px;
+
+  padding-top:8px;
+
+  border-top:
+    1px solid
+    rgba(255,255,255,.10);
+
+  font-size:11px;
+}
+
+.gold-buy-label {
+
+  color:
+    rgba(255,255,255,.60);
+}
+
+.gold-buy-value {
+
+  font-weight:bold;
+}
+
+.gold-meta {
+
+  margin-top:8px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:
+    space-between;
+
+  gap:8px;
+
+  color:
+    rgba(255,255,255,.50);
+
+  font-size:9px;
+}
+
+.refresh-price {
+
+  border:0;
+
+  color:white;
+
+  background:
+    rgba(255,255,255,.10);
+
+  border-radius:8px;
+
+  padding:5px 8px;
+
+  cursor:pointer;
+}
+
+.refresh-price:hover {
+
+  background:
+    rgba(255,255,255,.18);
+}
+
+.refresh-price.loading {
+
+  opacity:.5;
+
+  pointer-events:none;
+}
+
+.gold-source {
+
+  margin-top:5px;
+
+  font-size:8px;
+
+  color:
+    rgba(255,255,255,.42);
+}
+
+.gold-source a {
+
+  color:
+    rgba(255,255,255,.58);
+
+  text-decoration:none;
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
 
 main {
-  width: min(1450px, 94%);
-  margin: auto;
-  padding: 28px 0 80px;
+
+  width:
+    min(1450px,94%);
+
+  margin:auto;
+
+  padding:
+    28px 0 80px;
 }
 
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+/* =====================================================
+   KPI
+===================================================== */
 
-  margin-bottom: 24px;
+.kpi-grid {
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:16px;
+
+  margin-bottom:24px;
 }
 
 .kpi {
-  padding: 22px;
 
-  border-radius: 20px;
-  background: var(--card);
+  padding:22px;
 
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  border-radius:20px;
+
+  background:
+    var(--card);
+
+  border:
+    1px solid
+    var(--border);
+
+  box-shadow:
+    var(--shadow);
 }
 
 .kpi-icon {
-  width: 42px;
-  height: 42px;
 
-  display: grid;
-  place-items: center;
+  width:42px;
 
-  border-radius: 13px;
-  background: var(--gold-light);
+  height:42px;
 
-  margin-bottom: 18px;
-  font-size: 21px;
+  display:grid;
+
+  place-items:center;
+
+  border-radius:13px;
+
+  background:
+    var(--gold-light);
+
+  margin-bottom:18px;
+
+  font-size:21px;
 }
 
 .kpi-label {
-  color: var(--muted);
-  font-size: 12px;
+
+  color:
+    var(--muted);
+
+  font-size:12px;
 }
 
 .kpi-value {
-  margin-top: 7px;
-  font-size: 26px;
-  font-weight: 800;
+
+  margin-top:7px;
+
+  font-size:26px;
+
+  font-weight:800;
 }
 
 .kpi-sub {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 11px;
+
+  margin-top:6px;
+
+  color:
+    var(--muted);
+
+  font-size:11px;
 }
 
+/* =====================================================
+   LAYOUT
+===================================================== */
+
 .layout {
-  display: grid;
-  grid-template-columns: 390px 1fr;
-  gap: 20px;
-  align-items: start;
+
+  display:grid;
+
+  grid-template-columns:
+    390px 1fr;
+
+  gap:20px;
+
+  align-items:start;
 }
 
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  box-shadow: var(--shadow);
+
+  background:
+    var(--card);
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:20px;
+
+  box-shadow:
+    var(--shadow);
 }
 
+/* =====================================================
+   FORM
+===================================================== */
+
 .form-card {
-  position: sticky;
-  top: 20px;
-  padding: 22px;
+
+  position:sticky;
+
+  top:20px;
+
+  padding:22px;
 }
 
 .form-card h2 {
-  margin: 0 0 6px;
-  font-size: 20px;
+
+  margin:0 0 6px;
+
+  font-size:20px;
 }
 
 .form-card > p {
-  margin: 0 0 22px;
-  color: var(--muted);
-  font-size: 12px;
+
+  margin:
+    0 0 22px;
+
+  color:
+    var(--muted);
+
+  font-size:12px;
 }
 
 .form-group {
-  margin-bottom: 15px;
+
+  margin-bottom:15px;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 7px;
 
-  font-size: 12px;
-  font-weight: bold;
+  display:block;
+
+  margin-bottom:7px;
+
+  font-size:12px;
+
+  font-weight:bold;
 }
 
 .form-group input,
 .form-group select {
-  width: 100%;
 
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  width:100%;
 
-  padding: 12px 13px;
+  border:
+    1px solid
+    var(--border);
 
-  outline: none;
-  background: #fff;
+  border-radius:12px;
 
-  transition: .2s;
+  padding:
+    12px 13px;
+
+  outline:none;
+
+  background:#fff;
+
+  transition:.2s;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(196,154,58,.12);
+
+  border-color:
+    var(--gold);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(196,154,58,.12);
 }
 
 .two-column {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:10px;
 }
 
+/* =====================================================
+   COST
+===================================================== */
+
 .cost-preview {
-  margin: 18px 0;
-  padding: 17px;
 
-  border-radius: 15px;
+  margin:
+    18px 0;
 
-  background: linear-gradient(
-    135deg,
-    #fff8df,
-    #f7edcf
-  );
+  padding:17px;
 
-  border: 1px solid #ead59b;
+  border-radius:15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff8df,
+      #f7edcf
+    );
+
+  border:
+    1px solid
+    #ead59b;
 }
 
 .cost-preview span {
-  display: block;
-  color: #765d24;
-  font-size: 11px;
+
+  display:block;
+
+  color:#765d24;
+
+  font-size:11px;
 }
 
 .cost-preview strong {
-  display: block;
-  margin-top: 6px;
 
-  color: #7c5b16;
-  font-size: 27px;
+  display:block;
+
+  margin-top:6px;
+
+  color:#7c5b16;
+
+  font-size:27px;
 }
+
+/* =====================================================
+   IMAGE
+===================================================== */
 
 .image-preview {
-  display: none;
 
-  width: 100%;
-  height: 150px;
+  display:none;
 
-  margin-top: 10px;
+  width:100%;
 
-  border-radius: 14px;
-  object-fit: cover;
+  height:150px;
 
-  border: 1px solid var(--border);
+  margin-top:10px;
+
+  border-radius:14px;
+
+  object-fit:cover;
+
+  border:
+    1px solid
+    var(--border);
 }
 
+/* =====================================================
+   BUTTONS
+===================================================== */
+
 .primary-button {
-  width: 100%;
 
-  border: 0;
-  border-radius: 13px;
+  width:100%;
 
-  padding: 13px 16px;
+  border:0;
 
-  background: var(--red);
-  color: white;
+  border-radius:13px;
 
-  font-weight: bold;
-  cursor: pointer;
+  padding:
+    13px 16px;
+
+  background:
+    var(--red);
+
+  color:white;
+
+  font-weight:bold;
+
+  cursor:pointer;
 }
 
 .primary-button:hover {
-  background: var(--red2);
+
+  background:
+    var(--red2);
 }
 
 .secondary-button {
-  width: 100%;
-  margin-top: 8px;
 
-  border: 1px solid var(--border);
-  border-radius: 13px;
+  width:100%;
 
-  padding: 12px;
+  margin-top:8px;
 
-  background: #fff;
-  cursor: pointer;
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:13px;
+
+  padding:12px;
+
+  background:#fff;
+
+  cursor:pointer;
 }
+
+/* =====================================================
+   RIGHT
+===================================================== */
 
 .right-column {
-  display: grid;
-  gap: 20px;
+
+  display:grid;
+
+  gap:20px;
 }
 
+/* =====================================================
+   CHART
+===================================================== */
+
 .chart-card {
-  padding: 22px;
+
+  padding:22px;
 }
 
 .section-header {
-  margin-bottom: 17px;
+
+  margin-bottom:17px;
 }
 
 .section-header h2 {
-  margin: 0;
-  font-size: 18px;
+
+  margin:0;
+
+  font-size:18px;
 }
 
 .section-header p {
-  margin: 5px 0 0;
-  color: var(--muted);
-  font-size: 11px;
+
+  margin:
+    5px 0 0;
+
+  color:
+    var(--muted);
+
+  font-size:11px;
 }
 
 canvas {
-  width: 100%;
-  height: 250px;
-  border-radius: 14px;
+
+  width:100%;
+
+  height:250px;
+
+  border-radius:14px;
 }
 
+/* =====================================================
+   TABLE
+===================================================== */
+
 .table-card {
-  overflow: hidden;
+
+  overflow:hidden;
 }
 
 .toolbar {
-  padding: 20px;
 
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  padding:20px;
 
-  border-bottom: 1px solid var(--border);
+  display:flex;
+
+  justify-content:
+    space-between;
+
+  gap:12px;
+
+  border-bottom:
+    1px solid
+    var(--border);
 }
 
 .toolbar-left {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
 
-  flex: 1;
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:9px;
+
+  flex:1;
 }
 
 .toolbar input,
 .toolbar select {
-  border: 1px solid var(--border);
-  border-radius: 11px;
 
-  padding: 10px 12px;
-  outline: none;
-  background: #fff;
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:11px;
+
+  padding:
+    10px 12px;
+
+  outline:none;
+
+  background:#fff;
 }
 
 .search {
-  min-width: 250px;
-  flex: 1;
+
+  min-width:250px;
+
+  flex:1;
 }
 
 .export-button {
-  border: 0;
-  border-radius: 11px;
 
-  padding: 10px 15px;
+  border:0;
 
-  background: #171717;
-  color: white;
+  border-radius:11px;
 
-  cursor: pointer;
+  padding:
+    10px 15px;
+
+  background:#171717;
+
+  color:white;
+
+  cursor:pointer;
 }
 
 .table-wrapper {
-  overflow-x: auto;
+
+  overflow-x:auto;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 950px;
+
+  width:100%;
+
+  border-collapse:
+    collapse;
+
+  min-width:950px;
 }
 
 th {
-  padding: 13px 15px;
 
-  text-align: left;
-  background: #faf9f6;
+  padding:
+    13px 15px;
 
-  color: #777;
-  font-size: 11px;
+  text-align:left;
 
-  border-bottom: 1px solid var(--border);
+  background:#faf9f6;
+
+  color:#777;
+
+  font-size:11px;
+
+  border-bottom:
+    1px solid
+    var(--border);
 }
 
 td {
-  padding: 14px 15px;
-  border-bottom: 1px solid #efede8;
-  font-size: 13px;
+
+  padding:
+    14px 15px;
+
+  border-bottom:
+    1px solid
+    #efede8;
+
+  font-size:13px;
 }
 
 tbody tr:hover {
-  background: #fffdf7;
+
+  background:#fffdf7;
 }
 
 .product-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
 }
 
 .product-image {
-  width: 45px;
-  height: 45px;
 
-  border-radius: 10px;
-  object-fit: cover;
-  background: #eee;
+  width:45px;
+
+  height:45px;
+
+  border-radius:10px;
+
+  object-fit:cover;
+
+  background:#eee;
 }
 
 .no-image {
-  width: 45px;
-  height: 45px;
 
-  display: grid;
-  place-items: center;
+  width:45px;
 
-  border-radius: 10px;
-  background: #f0eee9;
-  color: #aaa;
+  height:45px;
+
+  display:grid;
+
+  place-items:center;
+
+  border-radius:10px;
+
+  background:#f0eee9;
+
+  color:#aaa;
 }
 
 .code {
-  font-weight: bold;
+
+  font-weight:bold;
 }
 
+/* =====================================================
+   BADGES
+===================================================== */
+
 .badge {
-  display: inline-block;
 
-  padding: 6px 9px;
-  border-radius: 30px;
+  display:inline-block;
 
-  font-size: 10px;
-  font-weight: bold;
+  padding:
+    6px 9px;
+
+  border-radius:30px;
+
+  font-size:10px;
+
+  font-weight:bold;
 }
 
 .badge-shop {
-  background: #e9f6ee;
-  color: #247243;
+
+  background:#e9f6ee;
+
+  color:#247243;
 }
 
 .badge-pawn {
-  background: #fff0de;
-  color: #9a5816;
+
+  background:#fff0de;
+
+  color:#9a5816;
 }
 
 .karat-badge {
-  display: inline-block;
 
-  min-width: 45px;
+  display:inline-block;
 
-  padding: 6px 10px;
+  min-width:45px;
 
-  text-align: center;
+  padding:
+    6px 10px;
 
-  border-radius: 30px;
+  text-align:center;
 
-  background: #fff4cb;
-  color: #806015;
+  border-radius:30px;
 
-  border: 1px solid #ecd58c;
+  background:#fff4cb;
 
-  font-size: 11px;
-  font-weight: 800;
+  color:#806015;
+
+  border:
+    1px solid
+    #ecd58c;
+
+  font-size:11px;
+
+  font-weight:800;
 }
 
 .cost-baht {
-  color: var(--red);
-  font-weight: 800;
+
+  color:
+    var(--red);
+
+  font-weight:800;
 }
 
 .actions {
-  display: flex;
-  gap: 6px;
+
+  display:flex;
+
+  gap:6px;
 }
 
 .action-btn {
-  width: 34px;
-  height: 34px;
 
-  border: 0;
-  border-radius: 9px;
+  width:34px;
 
-  cursor: pointer;
+  height:34px;
+
+  border:0;
+
+  border-radius:9px;
+
+  cursor:pointer;
 }
 
 .edit-btn {
-  background: #fff1cb;
+
+  background:#fff1cb;
 }
 
 .delete-btn {
-  background: #ffe2e2;
+
+  background:#ffe2e2;
 }
 
 .empty {
-  padding: 55px 20px;
 
-  text-align: center;
-  color: var(--muted);
+  padding:
+    55px 20px;
+
+  text-align:center;
+
+  color:
+    var(--muted);
 }
 
-@media (max-width: 1050px) {
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:1050px) {
 
   .kpi-grid {
-    grid-template-columns: 1fr 1fr;
+
+    grid-template-columns:
+      1fr 1fr;
   }
 
   .layout {
-    grid-template-columns: 1fr;
+
+    grid-template-columns:
+      1fr;
   }
 
   .form-card {
-    position: static;
+
+    position:static;
   }
 }
 
-@media (max-width: 600px) {
+@media(max-width:700px) {
 
   header {
-    padding: 15px;
+
+    padding:15px;
   }
 
   .header-inner {
-    flex-direction: column;
-    align-items: stretch;
+
+    flex-direction:column;
+
+    align-items:stretch;
   }
 
-  .gold-price {
-    width: 100%;
+  .gold-price-box {
+
+    width:100%;
+
+    min-width:0;
   }
 
   .kpi-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
+
+    grid-template-columns:
+      1fr 1fr;
+
+    gap:9px;
   }
 
   .kpi {
-    padding: 16px;
+
+    padding:16px;
   }
 
   .kpi-value {
-    font-size: 19px;
+
+    font-size:19px;
   }
 
   .toolbar {
-    flex-direction: column;
+
+    flex-direction:column;
   }
 
   .toolbar-left {
-    flex-direction: column;
+
+    flex-direction:column;
   }
 
   .toolbar input,
   .toolbar select,
   .search {
-    width: 100%;
-    min-width: 0;
+
+    width:100%;
+
+    min-width:0;
   }
+
 }
+
 </style>
 </head>
 
 <body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header>
 
@@ -612,6 +1104,7 @@ tbody tr:hover {
     </div>
 
     <div>
+
       <h1>
         Gold & Pawn Manager
       </h1>
@@ -619,31 +1112,98 @@ tbody tr:hover {
       <p>
         ระบบจัดการต้นทุนทองคำและสินค้าหลุดจำนำ
       </p>
+
     </div>
 
   </div>
 
 
-  <div class="gold-price">
+  <!-- LIVE GOLD -->
 
-    <div>
+  <div class="gold-price-box">
 
-      <label>
-        ราคาทองวันนี้
-      </label>
+    <div class="gold-price-top">
 
-      <input
-        id="goldPrice"
-        type="text"
-        inputmode="numeric"
-        value="71900"
-      >
+      <div class="gold-price-title">
+        ราคาทองคำแท่ง 96.5% วันนี้
+      </div>
+
+      <div class="live-badge">
+
+        <div class="live-dot"></div>
+
+        LIVE
+
+      </div>
 
     </div>
 
-    <strong>
-      บาท
-    </strong>
+
+    <div class="gold-main-price">
+
+      <span>
+        ขายออก
+      </span>
+
+      <strong id="goldSellPrice">
+        --
+      </strong>
+
+      <small>
+        บาท
+      </small>
+
+    </div>
+
+
+    <div class="gold-buy-row">
+
+      <div class="gold-buy-label">
+        รับซื้อ
+      </div>
+
+      <div
+        class="gold-buy-value"
+        id="goldBuyPrice"
+      >
+        --
+      </div>
+
+    </div>
+
+
+    <div class="gold-meta">
+
+      <span id="goldPriceStatus">
+        กำลังโหลดราคาทอง...
+      </span>
+
+      <button
+        type="button"
+        class="refresh-price"
+        id="refreshGoldButton"
+      >
+        ↻ รีเฟรช
+      </button>
+
+    </div>
+
+
+    <div class="gold-source">
+
+      <span id="goldSourceText">
+        ข้อมูลอ้างอิงราคาทองประเทศไทย
+      </span>
+
+      <a
+        id="goldSourceLink"
+        target="_blank"
+        rel="noopener"
+      >
+        แหล่งข้อมูล
+      </a>
+
+    </div>
 
   </div>
 
@@ -652,8 +1212,14 @@ tbody tr:hover {
 </header>
 
 
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
 <main>
 
+
+<!-- KPI -->
 
 <section class="kpi-grid">
 
@@ -758,6 +1324,10 @@ tbody tr:hover {
 <section class="layout">
 
 
+<!-- =====================================================
+     ADD PRODUCT
+===================================================== -->
+
 <aside class="card form-card">
 
 <h2 id="formTitle">
@@ -807,7 +1377,6 @@ tbody tr:hover {
 
 <div class="two-column">
 
-
 <div class="form-group">
 
 <label>
@@ -856,7 +1425,6 @@ tbody tr:hover {
 >
 
 </div>
-
 
 </div>
 
@@ -933,6 +1501,10 @@ tbody tr:hover {
 </aside>
 
 
+<!-- =====================================================
+     RIGHT
+===================================================== -->
+
 <div class="right-column">
 
 
@@ -950,10 +1522,9 @@ tbody tr:hover {
 
 </div>
 
+
 <canvas
   id="costChart"
-  width="1000"
-  height="260"
 ></canvas>
 
 </section>
@@ -965,6 +1536,7 @@ tbody tr:hover {
 <div class="toolbar">
 
 <div class="toolbar-left">
+
 
 <input
   class="search"
@@ -1061,19 +1633,44 @@ tbody tr:hover {
 <thead>
 
 <tr>
-  <th>สินค้า</th>
-  <th>ประเภท</th>
-  <th>กะรัต</th>
-  <th>น้ำหนัก</th>
-  <th>ต้นทุน</th>
-  <th>ต้นทุน/บาท</th>
-  <th>วันที่</th>
+
+  <th>
+    สินค้า
+  </th>
+
+  <th>
+    ประเภท
+  </th>
+
+  <th>
+    กะรัต
+  </th>
+
+  <th>
+    น้ำหนัก
+  </th>
+
+  <th>
+    ต้นทุน
+  </th>
+
+  <th>
+    ต้นทุน/บาท
+  </th>
+
+  <th>
+    วันที่
+  </th>
+
   <th></th>
+
 </tr>
 
 </thead>
 
-<tbody id="tableBody"></tbody>
+
+<tbody id="tableBody">
+</tbody>
 
 </table>
 
@@ -1100,27 +1697,601 @@ tbody tr:hover {
 <script>
 
 /* =====================================================
-   DATA
+   STORAGE
 ===================================================== */
 
 const STORAGE_KEY =
   "goldPawnManagerDataV2";
 
-const GOLD_PRICE_KEY =
-  "goldPawnGoldPrice";
+
+const GOLD_LIVE_CACHE_KEY =
+  "goldPawnLivePriceCacheV1";
 
 
-let products = [];
+let products =
+  [];
+
 
 let editingId =
   null;
+
 
 let selectedImage =
   "";
 
 
 /* =====================================================
+   LIVE GOLD API
+
+   สร้าง URL แยกส่วน
+===================================================== */
+
+const GOLD_API_URL =
+  [
+    "https:",
+    "",
+    "www.thaigoldtoday.com",
+    "api",
+    "gold-price"
+  ].join("/");
+
+
+const GOLD_API_FALLBACK =
+  [
+    "https:",
+    "",
+    "api.chnwt.dev",
+    "thai-gold-api",
+    "latest"
+  ].join("/");
+
+
+const GOLD_SOURCE_URL =
+  [
+    "https:",
+    "",
+    "www.thaigoldtoday.com"
+  ].join("/");
+
+
+/* =====================================================
    ELEMENTS
+===================================================== */
+
+const goldSellPrice =
+  document.getElementById(
+    "goldSellPrice"
+  );
+
+
+const goldBuyPrice =
+  document.getElementById(
+    "goldBuyPrice"
+  );
+
+
+const goldPriceStatus =
+  document.getElementById(
+    "goldPriceStatus"
+  );
+
+
+const refreshGoldButton =
+  document.getElementById(
+    "refreshGoldButton"
+  );
+
+
+const goldSourceText =
+  document.getElementById(
+    "goldSourceText"
+  );
+
+
+const goldSourceLink =
+  document.getElementById(
+    "goldSourceLink"
+  );
+
+
+goldSourceLink.href =
+  GOLD_SOURCE_URL;
+
+
+/* =====================================================
+   GOLD PRICE FORMAT
+===================================================== */
+
+function formatGoldPrice(value) {
+
+  const number =
+    Number(value);
+
+
+  if (
+    !Number.isFinite(number)
+  ) {
+
+    return "--";
+
+  }
+
+
+  return number
+    .toLocaleString(
+      "th-TH",
+      {
+        minimumFractionDigits:0,
+        maximumFractionDigits:2
+      }
+    );
+
+}
+
+
+/* =====================================================
+   FORMAT UPDATE TIME
+===================================================== */
+
+function formatGoldDate(
+  value
+) {
+
+  if (!value) {
+
+    return "";
+
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return value;
+
+  }
+
+
+  return new Intl.DateTimeFormat(
+    "th-TH",
+    {
+
+      timeZone:
+        "Asia/Bangkok",
+
+      day:
+        "2-digit",
+
+      month:
+        "2-digit",
+
+      year:
+        "numeric",
+
+      hour:
+        "2-digit",
+
+      minute:
+        "2-digit"
+
+    }
+  )
+  .format(
+    date
+  );
+
+}
+
+
+/* =====================================================
+   DISPLAY LIVE GOLD
+===================================================== */
+
+function renderLiveGoldPrice(
+  data,
+  cached = false
+) {
+
+  goldSellPrice.textContent =
+    formatGoldPrice(
+      data.sell
+    );
+
+
+  goldBuyPrice.textContent =
+    formatGoldPrice(
+      data.buy
+    ) +
+    " บาท";
+
+
+  let status =
+    cached
+    ?
+    "ข้อมูลล่าสุดที่บันทึกไว้"
+    :
+    "อัปเดต";
+
+
+  if (
+    data.updatedAt
+  ) {
+
+    status +=
+      " " +
+      formatGoldDate(
+        data.updatedAt
+      );
+
+  }
+
+
+  if (
+    data.round
+  ) {
+
+    status +=
+      ` • ครั้งที่ ${data.round}`;
+
+  }
+
+
+  goldPriceStatus.textContent =
+    status;
+
+
+  goldSourceText.textContent =
+    data.source ||
+    "ข้อมูลราคาทองประเทศไทย";
+
+}
+
+
+/* =====================================================
+   PRIMARY API
+===================================================== */
+
+async function fetchPrimaryGoldPrice() {
+
+  const response =
+    await fetch(
+      GOLD_API_URL +
+      "?t=" +
+      Date.now(),
+      {
+        cache:"no-store"
+      }
+    );
+
+
+  if (
+    !response.ok
+  ) {
+
+    throw new Error(
+      "Primary API error"
+    );
+
+  }
+
+
+  const json =
+    await response.json();
+
+
+  const current =
+    json.current;
+
+
+  if (
+    !current ||
+    !Number.isFinite(
+      Number(
+        current.sellBar
+      )
+    )
+  ) {
+
+    throw new Error(
+      "Invalid primary data"
+    );
+
+  }
+
+
+  return {
+
+    buy:
+      Number(
+        current.buyBar
+      ),
+
+    sell:
+      Number(
+        current.sellBar
+      ),
+
+    round:
+      current.updateRound ||
+      "",
+
+    updatedAt:
+      current.updatedAt ||
+      "",
+
+    source:
+      "ข้อมูล: ราคาทอง.today • อ้างอิงสมาคมค้าทองคำ"
+
+  };
+
+}
+
+
+/* =====================================================
+   FALLBACK API
+===================================================== */
+
+async function fetchFallbackGoldPrice() {
+
+  const response =
+    await fetch(
+      GOLD_API_FALLBACK +
+      "?t=" +
+      Date.now(),
+      {
+        cache:"no-store"
+      }
+    );
+
+
+  if (
+    !response.ok
+  ) {
+
+    throw new Error(
+      "Fallback API error"
+    );
+
+  }
+
+
+  const json =
+    await response.json();
+
+
+  const responseData =
+    json.response;
+
+
+  const bar =
+    responseData
+      ?.price
+      ?.gold_bar;
+
+
+  if (
+    !bar
+  ) {
+
+    throw new Error(
+      "Invalid fallback data"
+    );
+
+  }
+
+
+  const buy =
+    Number(
+      String(
+        bar.buy
+      )
+      .replace(
+        /,/g,
+        ""
+      )
+    );
+
+
+  const sell =
+    Number(
+      String(
+        bar.sell
+      )
+      .replace(
+        /,/g,
+        ""
+      )
+    );
+
+
+  if (
+    !Number.isFinite(buy) ||
+    !Number.isFinite(sell)
+  ) {
+
+    throw new Error(
+      "Invalid fallback price"
+    );
+
+  }
+
+
+  return {
+
+    buy,
+
+    sell,
+
+    round:
+      "",
+
+    updatedAt:
+      responseData.update_date +
+      " " +
+      responseData.update_time,
+
+    source:
+      "Thai Gold API • อ้างอิงสมาคมค้าทองคำ"
+
+  };
+
+}
+
+
+/* =====================================================
+   FETCH LIVE GOLD
+===================================================== */
+
+async function fetchLiveGoldPrice() {
+
+  refreshGoldButton.classList.add(
+    "loading"
+  );
+
+
+  goldPriceStatus.textContent =
+    "กำลังอัปเดตราคาทอง...";
+
+
+  try {
+
+    let data;
+
+
+    try {
+
+      data =
+        await fetchPrimaryGoldPrice();
+
+    }
+
+    catch (
+      primaryError
+    ) {
+
+      console.warn(
+        "Primary gold API failed:",
+        primaryError
+      );
+
+
+      data =
+        await fetchFallbackGoldPrice();
+
+    }
+
+
+    renderLiveGoldPrice(
+      data
+    );
+
+
+    localStorage.setItem(
+      GOLD_LIVE_CACHE_KEY,
+      JSON.stringify(
+        data
+      )
+    );
+
+  }
+
+  catch (
+    error
+  ) {
+
+    console.error(
+      "Gold price error:",
+      error
+    );
+
+
+    const cached =
+      localStorage.getItem(
+        GOLD_LIVE_CACHE_KEY
+      );
+
+
+    if (
+      cached
+    ) {
+
+      try {
+
+        renderLiveGoldPrice(
+          JSON.parse(
+            cached
+          ),
+          true
+        );
+
+      }
+
+      catch {
+
+        goldPriceStatus.textContent =
+          "ไม่สามารถโหลดราคาทองได้";
+
+      }
+
+    }
+
+    else {
+
+      goldSellPrice.textContent =
+        "--";
+
+
+      goldBuyPrice.textContent =
+        "--";
+
+
+      goldPriceStatus.textContent =
+        "ไม่สามารถโหลดราคาทองได้";
+
+    }
+
+  }
+
+  finally {
+
+    refreshGoldButton.classList.remove(
+      "loading"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   MANUAL REFRESH
+===================================================== */
+
+refreshGoldButton.addEventListener(
+  "click",
+  fetchLiveGoldPrice
+);
+
+
+/* =====================================================
+   AUTO REFRESH ทุก 60 วินาที
+===================================================== */
+
+setInterval(
+  fetchLiveGoldPrice,
+  60 * 1000
+);
+
+
+/* =====================================================
+   PRODUCT ELEMENTS
 ===================================================== */
 
 const productCode =
@@ -1231,12 +2402,6 @@ const exportButton =
   );
 
 
-const goldPrice =
-  document.getElementById(
-    "goldPrice"
-  );
-
-
 const totalItems =
   document.getElementById(
     "totalItems"
@@ -1312,7 +2477,7 @@ function parseNumber(value) {
 
 
 /* =====================================================
-   FORMAT
+   FORMAT NUMBER
 ===================================================== */
 
 function numberFormat(value) {
@@ -1320,21 +2485,18 @@ function numberFormat(value) {
   return Number(
     value || 0
   )
-    .toLocaleString(
-      "th-TH",
-      {
-        maximumFractionDigits:
-          2
-      }
-    );
+  .toLocaleString(
+    "th-TH",
+    {
+      maximumFractionDigits:2
+    }
+  );
 
 }
 
 
 /* =====================================================
    COST PER BAHT
-
-   ต้นทุน ÷ น้ำหนัก × 15.2
 ===================================================== */
 
 function calculateCostPerBaht(
@@ -1374,7 +2536,7 @@ function calculateCostPerBaht(
 
 
 /* =====================================================
-   LIVE PREVIEW
+   LIVE CALCULATION
 ===================================================== */
 
 function updateCostPreview() {
@@ -1420,7 +2582,9 @@ imageInput.addEventListener(
 
 
     if (!file) {
+
       return;
+
     }
 
 
@@ -1561,7 +2725,9 @@ function saveProduct() {
     );
 
 
-  if (editingId) {
+  if (
+    editingId
+  ) {
 
     const index =
       products.findIndex(
@@ -1723,7 +2889,9 @@ function editProduct(id) {
 
 
   if (!product) {
+
     return;
+
   }
 
 
@@ -1796,8 +2964,11 @@ function editProduct(id) {
 
 
   window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+
+    top:0,
+
+    behavior:"smooth"
+
   });
 
 }
@@ -1824,18 +2995,20 @@ function deleteProduct(id) {
 
 
   if (!product) {
+
     return;
+
   }
 
 
-  const confirmed =
-    confirm(
+  if (
+    !confirm(
       `ต้องการลบสินค้า ${product.code} หรือไม่?`
-    );
+    )
+  ) {
 
-
-  if (!confirmed) {
     return;
+
   }
 
 
@@ -1863,15 +3036,20 @@ function saveData() {
   try {
 
     localStorage.setItem(
+
       STORAGE_KEY,
+
       JSON.stringify(
         products
       )
+
     );
 
   }
 
-  catch (error) {
+  catch (
+    error
+  ) {
 
     console.error(
       error
@@ -1899,54 +3077,19 @@ function loadData() {
 
     products =
       saved
-        ?
-        JSON.parse(
-          saved
-        )
-        :
-        [];
-
-  }
-
-  catch (error) {
-
-    products =
+      ?
+      JSON.parse(
+        saved
+      )
+      :
       [];
 
   }
 
-}
+  catch {
 
-
-/* =====================================================
-   GOLD PRICE
-===================================================== */
-
-goldPrice.addEventListener(
-  "input",
-  () => {
-
-    localStorage.setItem(
-      GOLD_PRICE_KEY,
-      goldPrice.value
-    );
-
-  }
-);
-
-
-function loadGoldPrice() {
-
-  const saved =
-    localStorage.getItem(
-      GOLD_PRICE_KEY
-    );
-
-
-  if (saved) {
-
-    goldPrice.value =
-      saved;
+    products =
+      [];
 
   }
 
@@ -1979,10 +3122,10 @@ function getFilteredProducts() {
 
         const matchCode =
           item.code
-            .toLowerCase()
-            .includes(
-              search
-            );
+          .toLowerCase()
+          .includes(
+            search
+          );
 
 
         const matchType =
@@ -2007,7 +3150,7 @@ function getFilteredProducts() {
     );
 
 
-  switch (
+  switch(
     sortSelect.value
   ) {
 
@@ -2104,10 +3247,10 @@ function renderTable() {
 
   emptyState.style.display =
     list.length
-      ?
-      "none"
-      :
-      "block";
+    ?
+    "none"
+    :
+    "block";
 
 
   list.forEach(
@@ -2123,116 +3266,116 @@ function renderTable() {
         new Date(
           product.createdAt
         )
-          .toLocaleDateString(
-            "th-TH"
-          );
+        .toLocaleDateString(
+          "th-TH"
+        );
 
 
       const imageHTML =
         product.image
-          ?
-          `
-            <img
-              class="product-image"
-              src="${product.image}"
-            >
-          `
-          :
-          `
-            <div class="no-image">
-              🏆
-            </div>
-          `;
+        ?
+        `
+        <img
+          class="product-image"
+          src="${product.image}"
+          alt=""
+        >
+        `
+        :
+        `
+        <div class="no-image">
+          🏆
+        </div>
+        `;
 
 
       const typeClass =
         product.type ===
         "ซื้อหน้าร้าน"
-          ?
-          "badge-shop"
-          :
-          "badge-pawn";
+        ?
+        "badge-shop"
+        :
+        "badge-pawn";
 
 
-      tr.innerHTML = `
+      tr.innerHTML =
+      `
 
-        <td>
+      <td>
 
-          <div class="product-cell">
+        <div class="product-cell">
 
-            ${imageHTML}
+          ${imageHTML}
 
-            <div class="code">
-              ${escapeHTML(product.code)}
-            </div>
-
+          <div class="code">
+            ${escapeHTML(product.code)}
           </div>
 
-        </td>
+        </div>
+
+      </td>
 
 
-        <td>
+      <td>
 
-          <span
-            class="badge ${typeClass}"
+        <span class="badge ${typeClass}">
+          ${product.type}
+        </span>
+
+      </td>
+
+
+      <td>
+
+        <span class="karat-badge">
+          ${product.karat || "24K"}
+        </span>
+
+      </td>
+
+
+      <td>
+        ${numberFormat(product.weight)} g
+      </td>
+
+
+      <td>
+        ${numberFormat(product.cost)}
+      </td>
+
+
+      <td class="cost-baht">
+        ${numberFormat(product.costPerBaht)}
+      </td>
+
+
+      <td>
+        ${date}
+      </td>
+
+
+      <td>
+
+        <div class="actions">
+
+          <button
+            class="action-btn edit-btn"
+            onclick="editProduct('${product.id}')"
           >
-            ${product.type}
-          </span>
-
-        </td>
+            ✏️
+          </button>
 
 
-        <td>
+          <button
+            class="action-btn delete-btn"
+            onclick="deleteProduct('${product.id}')"
+          >
+            🗑️
+          </button>
 
-          <span class="karat-badge">
-            ${product.karat || "24K"}
-          </span>
+        </div>
 
-        </td>
-
-
-        <td>
-          ${numberFormat(product.weight)} g
-        </td>
-
-
-        <td>
-          ${numberFormat(product.cost)}
-        </td>
-
-
-        <td class="cost-baht">
-          ${numberFormat(product.costPerBaht)}
-        </td>
-
-
-        <td>
-          ${date}
-        </td>
-
-
-        <td>
-
-          <div class="actions">
-
-            <button
-              class="action-btn edit-btn"
-              onclick="editProduct('${product.id}')"
-            >
-              ✏️
-            </button>
-
-
-            <button
-              class="action-btn delete-btn"
-              onclick="deleteProduct('${product.id}')"
-            >
-              🗑️
-            </button>
-
-          </div>
-
-        </td>
+      </td>
 
       `;
 
@@ -2259,7 +3402,10 @@ function renderKPI() {
 
   const sumCost =
     products.reduce(
-      (sum,item) =>
+      (
+        sum,
+        item
+      ) =>
         sum +
         Number(
           item.cost
@@ -2270,7 +3416,10 @@ function renderKPI() {
 
   const sumWeight =
     products.reduce(
-      (sum,item) =>
+      (
+        sum,
+        item
+      ) =>
         sum +
         Number(
           item.weight
@@ -2281,14 +3430,14 @@ function renderKPI() {
 
   const avg =
     sumWeight > 0
-      ?
-      Math.ceil(
-        sumCost /
-        sumWeight *
-        15.2
-      )
-      :
-      0;
+    ?
+    Math.ceil(
+      sumCost /
+      sumWeight *
+      15.2
+    )
+    :
+    0;
 
 
   totalItems.textContent =
@@ -2376,11 +3525,11 @@ function drawChart() {
 
   const list =
     getFilteredProducts()
-      .slice(
-        0,
-        20
-      )
-      .reverse();
+    .slice(
+      0,
+      20
+    )
+    .reverse();
 
 
   if (
@@ -2401,9 +3550,13 @@ function drawChart() {
 
 
     ctx.fillText(
+
       "เพิ่มสินค้าเพื่อแสดงกราฟ",
+
       width / 2,
+
       height / 2
+
     );
 
 
@@ -2413,10 +3566,15 @@ function drawChart() {
 
 
   const padding = {
-    left: 55,
-    right: 25,
-    top: 20,
-    bottom: 45
+
+    left:55,
+
+    right:25,
+
+    top:20,
+
+    bottom:45
+
   };
 
 
@@ -2485,10 +3643,6 @@ function drawChart() {
     "#eae7df";
 
 
-  ctx.lineWidth =
-    1;
-
-
   for (
     let i = 0;
     i <= 4;
@@ -2554,22 +3708,21 @@ function drawChart() {
 
 
   const getY =
-    value => {
+    value =>
 
-      return (
-        padding.top +
-        (
-          maxValue -
-          value
-        ) /
-        (
-          maxValue -
-          minValue
-        ) *
-        chartHeight
-      );
+      padding.top +
 
-    };
+      (
+        maxValue -
+        value
+      ) /
+
+      (
+        maxValue -
+        minValue
+      ) *
+
+      chartHeight;
 
 
   ctx.beginPath();
@@ -2584,7 +3737,10 @@ function drawChart() {
 
 
   list.forEach(
-    (item,index) => {
+    (
+      item,
+      index
+    ) => {
 
       const x =
         getX(
@@ -2599,7 +3755,8 @@ function drawChart() {
 
 
       if (
-        index === 0
+        index ===
+        0
       ) {
 
         ctx.moveTo(
@@ -2626,7 +3783,10 @@ function drawChart() {
 
 
   list.forEach(
-    (item,index) => {
+    (
+      item,
+      index
+    ) => {
 
       const x =
         getX(
@@ -2661,7 +3821,7 @@ function drawChart() {
 
 
       ctx.strokeStyle =
-        "#ffffff";
+        "#fff";
 
 
       ctx.lineWidth =
@@ -2697,7 +3857,7 @@ function drawChart() {
 
 
 /* =====================================================
-   CSV
+   CSV EXPORT
 ===================================================== */
 
 exportButton.addEventListener(
@@ -2723,7 +3883,8 @@ function exportCSV() {
   }
 
 
-  const rows = [[
+  const rows =
+  [[
 
     "รหัสสินค้า",
 
@@ -2762,9 +3923,9 @@ function exportCSV() {
         new Date(
           product.createdAt
         )
-          .toLocaleDateString(
-            "th-TH"
-          )
+        .toLocaleDateString(
+          "th-TH"
+        )
 
       ]);
 
@@ -2774,23 +3935,24 @@ function exportCSV() {
 
   const csv =
     "\uFEFF" +
+
     rows.map(
       row =>
+
         row.map(
           value =>
+
             `"${String(value)
-              .replace(
-                /"/g,
-                '""'
-              )}"`
+            .replace(
+              /"/g,
+              '""'
+            )}"`
+
         )
-          .join(
-            ","
-          )
+        .join(",")
+
     )
-      .join(
-        "\n"
-      );
+    .join("\n");
 
 
   const blob =
@@ -2821,11 +3983,8 @@ function exportCSV() {
 
   link.download =
     `gold-data-${new Date()
-      .toISOString()
-      .slice(
-        0,
-        10
-      )}.csv`;
+    .toISOString()
+    .slice(0,10)}.csv`;
 
 
   link.click();
@@ -2845,22 +4004,27 @@ function exportCSV() {
 function escapeHTML(text) {
 
   return String(text)
+
     .replace(
       /&/g,
       "&amp;"
     )
+
     .replace(
       /</g,
       "&lt;"
     )
+
     .replace(
       />/g,
       "&gt;"
     )
+
     .replace(
       /"/g,
       "&quot;"
     )
+
     .replace(
       /'/g,
       "&#039;"
@@ -2890,9 +4054,14 @@ function renderAll() {
 
 loadData();
 
-loadGoldPrice();
-
 renderAll();
+
+
+/*
+  ดึงราคาทองทันทีตอนเปิดเว็บ
+*/
+
+fetchLiveGoldPrice();
 
 
 window.addEventListener(
