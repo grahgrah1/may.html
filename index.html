@@ -17,7 +17,6 @@
   --text: #191919;
   --muted: #777;
   --border: #e7e3dc;
-  --green: #18864b;
   --shadow: 0 10px 30px rgba(0,0,0,.07);
 }
 
@@ -38,18 +37,15 @@ select {
   font: inherit;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 
 header {
-  background:
-    linear-gradient(
-      135deg,
-      #6f0910,
-      #9f121b 55%,
-      #741018
-    );
+  background: linear-gradient(
+    135deg,
+    #6f0910,
+    #9f121b 55%,
+    #741018
+  );
 
   color: white;
   padding: 24px 5%;
@@ -127,9 +123,7 @@ header {
   font-weight: bold;
 }
 
-/* =========================
-   MAIN
-========================= */
+/* MAIN */
 
 main {
   width: min(1450px, 94%);
@@ -137,9 +131,7 @@ main {
   padding: 28px 0 80px;
 }
 
-/* =========================
-   KPI
-========================= */
+/* KPI */
 
 .kpi-grid {
   display: grid;
@@ -170,7 +162,6 @@ main {
   background: var(--gold-light);
 
   margin-bottom: 18px;
-
   font-size: 21px;
 }
 
@@ -181,21 +172,17 @@ main {
 
 .kpi-value {
   margin-top: 7px;
-
   font-size: 26px;
   font-weight: 800;
 }
 
 .kpi-sub {
   margin-top: 6px;
-
   color: var(--muted);
   font-size: 11px;
 }
 
-/* =========================
-   LAYOUT
-========================= */
+/* LAYOUT */
 
 .layout {
   display: grid;
@@ -211,14 +198,11 @@ main {
   box-shadow: var(--shadow);
 }
 
-/* =========================
-   FORM
-========================= */
+/* FORM */
 
 .form-card {
   position: sticky;
   top: 20px;
-
   padding: 22px;
 }
 
@@ -274,35 +258,30 @@ main {
 
 .cost-preview {
   margin: 18px 0;
-
   padding: 17px;
 
   border-radius: 15px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #fff8df,
-      #f7edcf
-    );
+  background: linear-gradient(
+    135deg,
+    #fff8df,
+    #f7edcf
+  );
 
   border: 1px solid #ead59b;
 }
 
 .cost-preview span {
   display: block;
-
   color: #765d24;
   font-size: 11px;
 }
 
 .cost-preview strong {
   display: block;
-
   margin-top: 6px;
 
   color: #7c5b16;
-
   font-size: 27px;
 }
 
@@ -333,18 +312,14 @@ main {
 
   font-weight: bold;
   cursor: pointer;
-
-  transition: .2s;
 }
 
 .primary-button:hover {
   background: var(--red2);
-  transform: translateY(-1px);
 }
 
 .secondary-button {
   width: 100%;
-
   margin-top: 8px;
 
   border: 1px solid var(--border);
@@ -353,35 +328,23 @@ main {
   padding: 12px;
 
   background: #fff;
-  color: var(--text);
-
   cursor: pointer;
 }
 
-/* =========================
-   RIGHT
-========================= */
+/* RIGHT */
 
 .right-column {
   display: grid;
   gap: 20px;
 }
 
-/* =========================
-   CHART
-========================= */
+/* CHART */
 
 .chart-card {
   padding: 22px;
 }
 
 .section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 20px;
-
   margin-bottom: 17px;
 }
 
@@ -399,13 +362,10 @@ main {
 canvas {
   width: 100%;
   height: 250px;
-
   border-radius: 14px;
 }
 
-/* =========================
-   TABLE CARD
-========================= */
+/* TABLE */
 
 .table-card {
   overflow: hidden;
@@ -436,7 +396,6 @@ canvas {
 
   padding: 10px 12px;
   outline: none;
-
   background: #fff;
 }
 
@@ -464,7 +423,6 @@ canvas {
 table {
   width: 100%;
   border-collapse: collapse;
-
   min-width: 950px;
 }
 
@@ -472,7 +430,6 @@ th {
   padding: 13px 15px;
 
   text-align: left;
-
   background: #faf9f6;
 
   color: #777;
@@ -483,9 +440,7 @@ th {
 
 td {
   padding: 14px 15px;
-
   border-bottom: 1px solid #efede8;
-
   font-size: 13px;
 }
 
@@ -505,7 +460,6 @@ tbody tr:hover {
 
   border-radius: 10px;
   object-fit: cover;
-
   background: #eee;
 }
 
@@ -517,7 +471,6 @@ tbody tr:hover {
   place-items: center;
 
   border-radius: 10px;
-
   background: #f0eee9;
   color: #aaa;
 }
@@ -530,7 +483,6 @@ tbody tr:hover {
   display: inline-block;
 
   padding: 6px 9px;
-
   border-radius: 30px;
 
   font-size: 10px;
@@ -579,16 +531,12 @@ tbody tr:hover {
   padding: 55px 20px;
 
   text-align: center;
-
   color: var(--muted);
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media (max-width: 1050px) {
-
   .kpi-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -603,7 +551,6 @@ tbody tr:hover {
 }
 
 @media (max-width: 600px) {
-
   header {
     padding: 15px;
   }
@@ -654,32 +601,27 @@ tbody tr:hover {
   <div class="header-inner">
 
     <div class="brand">
-
-      <div class="logo">
-        🏆
-      </div>
+      <div class="logo">🏆</div>
 
       <div>
         <h1>Gold & Pawn Manager</h1>
         <p>ระบบจัดการต้นทุนทองคำและสินค้าหลุดจำนำ</p>
       </div>
-
     </div>
 
     <div class="gold-price">
-
       <div>
         <label>ราคาทองวันนี้</label>
 
         <input
           id="goldPrice"
-          type="number"
+          type="text"
+          inputmode="numeric"
           value="71900"
         >
       </div>
 
       <strong>บาท</strong>
-
     </div>
 
   </div>
@@ -688,329 +630,293 @@ tbody tr:hover {
 
 <main>
 
-  <!-- KPI -->
+<section class="kpi-grid">
 
-  <section class="kpi-grid">
+  <div class="kpi">
+    <div class="kpi-icon">📦</div>
+    <div class="kpi-label">สินค้าทั้งหมด</div>
+    <div class="kpi-value" id="totalItems">0</div>
+    <div class="kpi-sub">รายการ</div>
+  </div>
 
-    <div class="kpi">
-      <div class="kpi-icon">📦</div>
-      <div class="kpi-label">สินค้าทั้งหมด</div>
-      <div class="kpi-value" id="totalItems">0</div>
-      <div class="kpi-sub">รายการ</div>
+  <div class="kpi">
+    <div class="kpi-icon">💰</div>
+    <div class="kpi-label">ต้นทุนรวม</div>
+    <div class="kpi-value" id="totalCost">0</div>
+    <div class="kpi-sub">บาท</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-icon">⚖️</div>
+    <div class="kpi-label">น้ำหนักรวม</div>
+    <div class="kpi-value" id="totalWeight">0</div>
+    <div class="kpi-sub">กรัม</div>
+  </div>
+
+  <div class="kpi">
+    <div class="kpi-icon">📊</div>
+    <div class="kpi-label">ต้นทุนเฉลี่ย / บาททอง</div>
+    <div class="kpi-value" id="averageCost">0</div>
+    <div class="kpi-sub">บาท</div>
+  </div>
+
+</section>
+
+
+<section class="layout">
+
+<aside class="card form-card">
+
+  <h2 id="formTitle">
+    ➕ เพิ่มรายการทอง
+  </h2>
+
+  <p>
+    กรอกข้อมูลสินค้า ระบบจะคำนวณต้นทุนต่อบาทให้อัตโนมัติ
+  </p>
+
+
+  <div class="form-group">
+    <label>รหัสสินค้า</label>
+
+    <input
+      id="productCode"
+      type="text"
+      placeholder="เช่น A001"
+    >
+  </div>
+
+
+  <div class="form-group">
+    <label>ประเภท</label>
+
+    <select id="productType">
+      <option value="ซื้อหน้าร้าน">
+        ซื้อหน้าร้าน
+      </option>
+
+      <option value="หลุดจำนำ">
+        หลุดจำนำ
+      </option>
+    </select>
+  </div>
+
+
+  <div class="two-column">
+
+    <div class="form-group">
+      <label>เปอร์เซ็นต์ทอง</label>
+
+      <select id="goldPercent">
+        <option value="96.5">96.5%</option>
+        <option value="99.99">99.99%</option>
+        <option value="90">90%</option>
+      </select>
     </div>
 
 
-    <div class="kpi">
-      <div class="kpi-icon">💰</div>
-      <div class="kpi-label">ต้นทุนรวม</div>
-      <div class="kpi-value" id="totalCost">0</div>
-      <div class="kpi-sub">บาท</div>
-    </div>
+    <div class="form-group">
+      <label>น้ำหนัก (กรัม)</label>
 
-
-    <div class="kpi">
-      <div class="kpi-icon">⚖️</div>
-      <div class="kpi-label">น้ำหนักรวม</div>
-      <div class="kpi-value" id="totalWeight">0</div>
-      <div class="kpi-sub">กรัม</div>
-    </div>
-
-
-    <div class="kpi">
-      <div class="kpi-icon">📊</div>
-      <div class="kpi-label">ต้นทุนเฉลี่ย / บาททอง</div>
-      <div class="kpi-value" id="averageCost">0</div>
-      <div class="kpi-sub">บาท</div>
-    </div>
-
-  </section>
-
-
-  <section class="layout">
-
-    <!-- FORM -->
-
-    <aside class="card form-card">
-
-      <h2 id="formTitle">
-        ➕ เพิ่มรายการทอง
-      </h2>
-
-      <p>
-        กรอกข้อมูลสินค้า ระบบจะคำนวณต้นทุนต่อบาทให้อัตโนมัติ
-      </p>
-
-
-      <div class="form-group">
-
-        <label>รหัสสินค้า</label>
-
-        <input
-          id="productCode"
-          type="text"
-          placeholder="เช่น A001"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>ประเภท</label>
-
-        <select id="productType">
-          <option value="ซื้อหน้าร้าน">
-            ซื้อหน้าร้าน
-          </option>
-
-          <option value="หลุดจำนำ">
-            หลุดจำนำ
-          </option>
-        </select>
-
-      </div>
-
-
-      <div class="two-column">
-
-        <div class="form-group">
-
-          <label>เปอร์เซ็นต์ทอง</label>
-
-          <select id="goldPercent">
-            <option value="96.5">96.5%</option>
-            <option value="99.99">99.99%</option>
-            <option value="90">90%</option>
-          </select>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>น้ำหนัก (กรัม)</label>
-
-          <input
-            id="weight"
-            type="number"
-            step="0.01"
-            placeholder="15.08"
-          >
-
-        </div>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>ต้นทุนซื้อ (บาท)</label>
-
-        <input
-          id="cost"
-          type="number"
-          step="1"
-          placeholder="56375"
-        >
-
-      </div>
-
-
-      <div class="cost-preview">
-
-        <span>
-          ต้นทุนต่อ 1 บาททอง
-        </span>
-
-        <strong id="costPerBahtPreview">
-          0 บาท
-        </strong>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>รูปสินค้า</label>
-
-        <input
-          id="imageInput"
-          type="file"
-          accept="image/*"
-        >
-
-        <img
-          id="imagePreview"
-          class="image-preview"
-          alt="Preview"
-        >
-
-      </div>
-
-
-      <button
-        class="primary-button"
-        id="saveButton"
-        type="button"
+      <input
+        id="weight"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        placeholder="เช่น 15.08"
       >
-        บันทึกรายการ
-      </button>
-
-
-      <button
-        class="secondary-button"
-        id="cancelEditButton"
-        type="button"
-        style="display:none"
-      >
-        ยกเลิกการแก้ไข
-      </button>
-
-    </aside>
-
-
-    <!-- RIGHT -->
-
-    <div class="right-column">
-
-      <!-- CHART -->
-
-      <section class="card chart-card">
-
-        <div class="section-header">
-
-          <div>
-            <h2>กราฟต้นทุนต่อบาท</h2>
-            <p>
-              เปรียบเทียบต้นทุนของแต่ละรหัสสินค้า
-            </p>
-          </div>
-
-        </div>
-
-        <canvas
-          id="costChart"
-          width="1000"
-          height="260"
-        ></canvas>
-
-      </section>
-
-
-      <!-- TABLE -->
-
-      <section class="card table-card">
-
-        <div class="toolbar">
-
-          <div class="toolbar-left">
-
-            <input
-              class="search"
-              id="searchInput"
-              type="search"
-              placeholder="🔍 ค้นหารหัสสินค้า..."
-            >
-
-
-            <select id="typeFilter">
-
-              <option value="">
-                ทุกประเภท
-              </option>
-
-              <option value="ซื้อหน้าร้าน">
-                ซื้อหน้าร้าน
-              </option>
-
-              <option value="หลุดจำนำ">
-                หลุดจำนำ
-              </option>
-
-            </select>
-
-
-            <select id="sortSelect">
-
-              <option value="newest">
-                ล่าสุด
-              </option>
-
-              <option value="cost-high">
-                ต้นทุน/บาท สูง → ต่ำ
-              </option>
-
-              <option value="cost-low">
-                ต้นทุน/บาท ต่ำ → สูง
-              </option>
-
-              <option value="weight-high">
-                น้ำหนักมาก → น้อย
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <button
-            class="export-button"
-            id="exportButton"
-            type="button"
-          >
-            ⬇ Export CSV
-          </button>
-
-        </div>
-
-
-        <div class="table-wrapper">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>สินค้า</th>
-                <th>ประเภท</th>
-                <th>ทอง</th>
-                <th>น้ำหนัก</th>
-                <th>ต้นทุน</th>
-                <th>ต้นทุน/บาท</th>
-                <th>วันที่</th>
-                <th></th>
-              </tr>
-
-            </thead>
-
-            <tbody id="tableBody"></tbody>
-
-          </table>
-
-        </div>
-
-
-        <div
-          class="empty"
-          id="emptyState"
-        >
-          📦 ยังไม่มีรายการสินค้า
-        </div>
-
-      </section>
-
     </div>
 
-  </section>
+  </div>
+
+
+  <div class="form-group">
+    <label>ต้นทุนซื้อ (บาท)</label>
+
+    <input
+      id="cost"
+      type="text"
+      inputmode="decimal"
+      autocomplete="off"
+      placeholder="เช่น 56,375"
+    >
+  </div>
+
+
+  <div class="cost-preview">
+
+    <span>
+      ต้นทุนต่อ 1 บาททอง
+    </span>
+
+    <strong id="costPerBahtPreview">
+      0 บาท
+    </strong>
+
+  </div>
+
+
+  <div class="form-group">
+    <label>รูปสินค้า</label>
+
+    <input
+      id="imageInput"
+      type="file"
+      accept="image/*"
+    >
+
+    <img
+      id="imagePreview"
+      class="image-preview"
+      alt="Preview"
+    >
+  </div>
+
+
+  <button
+    class="primary-button"
+    id="saveButton"
+    type="button"
+  >
+    บันทึกรายการ
+  </button>
+
+
+  <button
+    class="secondary-button"
+    id="cancelEditButton"
+    type="button"
+    style="display:none"
+  >
+    ยกเลิกการแก้ไข
+  </button>
+
+</aside>
+
+
+<div class="right-column">
+
+<section class="card chart-card">
+
+  <div class="section-header">
+    <h2>กราฟต้นทุนต่อบาท</h2>
+    <p>เปรียบเทียบต้นทุนของแต่ละรหัสสินค้า</p>
+  </div>
+
+  <canvas
+    id="costChart"
+    width="1000"
+    height="260"
+  ></canvas>
+
+</section>
+
+
+<section class="card table-card">
+
+<div class="toolbar">
+
+  <div class="toolbar-left">
+
+    <input
+      class="search"
+      id="searchInput"
+      type="search"
+      placeholder="🔍 ค้นหารหัสสินค้า..."
+    >
+
+    <select id="typeFilter">
+
+      <option value="">
+        ทุกประเภท
+      </option>
+
+      <option value="ซื้อหน้าร้าน">
+        ซื้อหน้าร้าน
+      </option>
+
+      <option value="หลุดจำนำ">
+        หลุดจำนำ
+      </option>
+
+    </select>
+
+
+    <select id="sortSelect">
+
+      <option value="newest">
+        ล่าสุด
+      </option>
+
+      <option value="cost-high">
+        ต้นทุน/บาท สูง → ต่ำ
+      </option>
+
+      <option value="cost-low">
+        ต้นทุน/บาท ต่ำ → สูง
+      </option>
+
+      <option value="weight-high">
+        น้ำหนักมาก → น้อย
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <button
+    class="export-button"
+    id="exportButton"
+    type="button"
+  >
+    ⬇ Export CSV
+  </button>
+
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+  <th>สินค้า</th>
+  <th>ประเภท</th>
+  <th>ทอง</th>
+  <th>น้ำหนัก</th>
+  <th>ต้นทุน</th>
+  <th>ต้นทุน/บาท</th>
+  <th>วันที่</th>
+  <th></th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+</div>
+
+
+<div
+  class="empty"
+  id="emptyState"
+>
+  📦 ยังไม่มีรายการสินค้า
+</div>
+
+</section>
+
+</div>
+
+</section>
 
 </main>
 
 
 <script>
-
-/* =====================================================
-   DATA
-===================================================== */
 
 const STORAGE_KEY =
   "goldPawnManagerDataV1";
@@ -1019,15 +925,11 @@ const GOLD_PRICE_KEY =
   "goldPawnGoldPrice";
 
 let products = [];
-
 let editingId = null;
-
 let selectedImage = "";
 
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
+/* ELEMENTS */
 
 const productCode =
   document.getElementById("productCode");
@@ -1099,9 +1001,36 @@ const chart =
   document.getElementById("costChart");
 
 
-/* =====================================================
-   FORMAT
-===================================================== */
+/* ==============================
+   แปลงข้อความเป็นตัวเลข
+   รองรับ 56,375
+============================== */
+
+function parseNumber(value) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+    return 0;
+  }
+
+  const cleaned =
+    String(value)
+      .replace(/,/g, "")
+      .replace(/\s/g, "")
+      .trim();
+
+  const number =
+    Number(cleaned);
+
+  return Number.isFinite(number)
+    ? number
+    : 0;
+}
+
+
+/* FORMAT */
 
 function numberFormat(value) {
 
@@ -1116,12 +1045,7 @@ function numberFormat(value) {
 }
 
 
-/* =====================================================
-   COST PER BAHT
-
-   ต้นทุน ÷ น้ำหนัก × 15.2
-   ปัดขึ้น
-===================================================== */
+/* COST PER BAHT */
 
 function calculateCostPerBaht(
   productCost,
@@ -1129,31 +1053,25 @@ function calculateCostPerBaht(
 ) {
 
   const c =
-    Number(productCost);
+    parseNumber(productCost);
 
   const w =
-    Number(productWeight);
+    parseNumber(productWeight);
 
   if (
-    !c ||
-    !w ||
+    c <= 0 ||
     w <= 0
   ) {
-
     return 0;
-
   }
 
   return Math.ceil(
     c / w * 15.2
   );
-
 }
 
 
-/* =====================================================
-   LIVE PREVIEW
-===================================================== */
+/* LIVE PREVIEW */
 
 function updateCostPreview() {
 
@@ -1180,9 +1098,7 @@ weight.addEventListener(
 );
 
 
-/* =====================================================
-   IMAGE
-===================================================== */
+/* IMAGE */
 
 imageInput.addEventListener(
   "change",
@@ -1194,11 +1110,6 @@ imageInput.addEventListener(
     if (!file) {
       return;
     }
-
-    /*
-      จำกัด 2 MB
-      เพราะรูปจะถูกเก็บใน LocalStorage
-    */
 
     if (
       file.size >
@@ -1212,13 +1123,11 @@ imageInput.addEventListener(
       imageInput.value = "";
 
       return;
-
     }
 
 
     const reader =
       new FileReader();
-
 
     reader.onload =
       event => {
@@ -1231,21 +1140,16 @@ imageInput.addEventListener(
 
         imagePreview.style.display =
           "block";
-
       };
-
 
     reader.readAsDataURL(
       file
     );
-
   }
 );
 
 
-/* =====================================================
-   SAVE
-===================================================== */
+/* SAVE */
 
 saveButton.addEventListener(
   "click",
@@ -1262,33 +1166,58 @@ function saveProduct() {
     productType.value;
 
   const percent =
-    Number(
+    parseNumber(
       goldPercent.value
     );
 
   const productWeight =
-    Number(
+    parseNumber(
       weight.value
     );
 
   const productCost =
-    Number(
+    parseNumber(
       cost.value
     );
 
 
+  if (!code) {
+
+    alert(
+      "กรุณากรอกรหัสสินค้า"
+    );
+
+    productCode.focus();
+
+    return;
+  }
+
+
   if (
-    !code ||
-    !productWeight ||
-    !productCost
+    productWeight <= 0
   ) {
 
     alert(
-      "กรุณากรอกรหัสสินค้า น้ำหนัก และต้นทุน"
+      "กรุณากรอกน้ำหนัก เช่น 15.08"
     );
 
-    return;
+    weight.focus();
 
+    return;
+  }
+
+
+  if (
+    productCost <= 0
+  ) {
+
+    alert(
+      "กรุณากรอกต้นทุนซื้อ เช่น 56,375"
+    );
+
+    cost.focus();
+
+    return;
   }
 
 
@@ -1328,7 +1257,6 @@ function saveProduct() {
 
         image:
           selectedImage
-
       };
 
     }
@@ -1343,9 +1271,7 @@ function saveProduct() {
         crypto.randomUUID(),
 
       code,
-
       type,
-
       percent,
 
       weight:
@@ -1362,29 +1288,22 @@ function saveProduct() {
       createdAt:
         new Date()
           .toISOString()
-
     });
 
   }
 
 
   saveData();
-
   resetForm();
-
   renderAll();
-
 }
 
 
-/* =====================================================
-   RESET FORM
-===================================================== */
+/* RESET */
 
 function resetForm() {
 
   editingId = null;
-
   selectedImage = "";
 
   productCode.value = "";
@@ -1417,13 +1336,10 @@ function resetForm() {
 
   cancelEditButton.style.display =
     "none";
-
 }
 
 
-/* =====================================================
-   EDIT
-===================================================== */
+/* EDIT */
 
 function editProduct(id) {
 
@@ -1454,7 +1370,9 @@ function editProduct(id) {
     product.weight;
 
   cost.value =
-    product.cost;
+    numberFormat(
+      product.cost
+    );
 
   selectedImage =
     product.image || "";
@@ -1474,12 +1392,10 @@ function editProduct(id) {
 
     imagePreview.style.display =
       "none";
-
   }
 
 
   updateCostPreview();
-
 
   formTitle.textContent =
     "✏️ แก้ไขรายการ";
@@ -1495,7 +1411,6 @@ function editProduct(id) {
     top: 0,
     behavior: "smooth"
   });
-
 }
 
 
@@ -1505,9 +1420,7 @@ cancelEditButton.addEventListener(
 );
 
 
-/* =====================================================
-   DELETE
-===================================================== */
+/* DELETE */
 
 function deleteProduct(id) {
 
@@ -1516,7 +1429,6 @@ function deleteProduct(id) {
       item =>
         item.id === id
     );
-
 
   if (!product) {
     return;
@@ -1542,15 +1454,11 @@ function deleteProduct(id) {
 
 
   saveData();
-
   renderAll();
-
 }
 
 
-/* =====================================================
-   LOCAL STORAGE
-===================================================== */
+/* STORAGE */
 
 function saveData() {
 
@@ -1568,11 +1476,9 @@ function saveData() {
     console.error(error);
 
     alert(
-      "พื้นที่จัดเก็บในเบราว์เซอร์เต็ม อาจเกิดจากรูปภาพมีขนาดใหญ่เกินไป"
+      "พื้นที่จัดเก็บเต็ม อาจเกิดจากรูปภาพมีขนาดใหญ่เกินไป"
     );
-
   }
-
 }
 
 
@@ -1585,30 +1491,21 @@ function loadData() {
         STORAGE_KEY
       );
 
-
     products =
       saved
-      ?
-      JSON.parse(saved)
-      :
-      [];
+        ? JSON.parse(saved)
+        : [];
 
   }
 
   catch (error) {
 
-    console.error(error);
-
     products = [];
-
   }
-
 }
 
 
-/* =====================================================
-   GOLD PRICE
-===================================================== */
+/* GOLD PRICE */
 
 goldPrice.addEventListener(
   "input",
@@ -1618,7 +1515,6 @@ goldPrice.addEventListener(
       GOLD_PRICE_KEY,
       goldPrice.value
     );
-
   }
 );
 
@@ -1630,20 +1526,14 @@ function loadGoldPrice() {
       GOLD_PRICE_KEY
     );
 
-
   if (saved) {
-
     goldPrice.value =
       saved;
-
   }
-
 }
 
 
-/* =====================================================
-   FILTER
-===================================================== */
+/* FILTER */
 
 function getFilteredProducts() {
 
@@ -1651,7 +1541,6 @@ function getFilteredProducts() {
     searchInput.value
       .trim()
       .toLowerCase();
-
 
   const type =
     typeFilter.value;
@@ -1664,21 +1553,16 @@ function getFilteredProducts() {
         const matchCode =
           item.code
             .toLowerCase()
-            .includes(
-              search
-            );
-
+            .includes(search);
 
         const matchType =
           !type ||
           item.type === type;
 
-
         return (
           matchCode &&
           matchType
         );
-
       }
     );
 
@@ -1727,12 +1611,10 @@ function getFilteredProducts() {
           new Date(b.createdAt) -
           new Date(a.createdAt)
       );
-
   }
 
 
   return result;
-
 }
 
 
@@ -1752,26 +1634,20 @@ sortSelect.addEventListener(
 );
 
 
-/* =====================================================
-   TABLE
-===================================================== */
+/* TABLE */
 
 function renderTable() {
 
   const list =
     getFilteredProducts();
 
-
   tableBody.innerHTML =
     "";
 
-
   emptyState.style.display =
     list.length
-    ?
-    "none"
-    :
-    "block";
+      ? "none"
+      : "block";
 
 
   list.forEach(
@@ -1787,41 +1663,40 @@ function renderTable() {
         new Date(
           product.createdAt
         )
-        .toLocaleDateString(
-          "th-TH"
-        );
+          .toLocaleDateString(
+            "th-TH"
+          );
 
 
       const imageHTML =
         product.image
-        ?
-        `
+          ?
+          `
           <img
             class="product-image"
             src="${product.image}"
           >
-        `
-        :
-        `
+          `
+          :
+          `
           <div class="no-image">
             🏆
           </div>
-        `;
+          `;
 
 
       const typeClass =
         product.type ===
         "ซื้อหน้าร้าน"
-        ?
-        "badge-shop"
-        :
-        "badge-pawn";
+          ?
+          "badge-shop"
+          :
+          "badge-pawn";
 
 
       tr.innerHTML = `
 
         <td>
-
           <div class="product-cell">
 
             ${imageHTML}
@@ -1831,18 +1706,13 @@ function renderTable() {
             </div>
 
           </div>
-
         </td>
 
 
         <td>
-
-          <span
-            class="badge ${typeClass}"
-          >
+          <span class="badge ${typeClass}">
             ${product.type}
           </span>
-
         </td>
 
 
@@ -1861,9 +1731,7 @@ function renderTable() {
         </td>
 
 
-        <td
-          class="cost-baht"
-        >
+        <td class="cost-baht">
           ${numberFormat(product.costPerBaht)}
         </td>
 
@@ -1884,7 +1752,6 @@ function renderTable() {
               ✏️
             </button>
 
-
             <button
               class="action-btn delete-btn"
               onclick="deleteProduct('${product.id}')"
@@ -1895,23 +1762,18 @@ function renderTable() {
           </div>
 
         </td>
-
       `;
 
 
       tableBody.appendChild(
         tr
       );
-
     }
   );
-
 }
 
 
-/* =====================================================
-   KPI
-===================================================== */
+/* KPI */
 
 function renderKPI() {
 
@@ -1937,43 +1799,33 @@ function renderKPI() {
     );
 
 
-  /*
-    ต้นทุนรวม / น้ำหนักรวม × 15.2
-  */
-
   const avg =
     sumWeight > 0
-    ?
-    Math.ceil(
-      sumCost /
-      sumWeight *
-      15.2
-    )
-    :
-    0;
+      ?
+      Math.ceil(
+        sumCost /
+        sumWeight *
+        15.2
+      )
+      :
+      0;
 
 
   totalItems.textContent =
     numberFormat(count);
 
-
   totalCost.textContent =
     numberFormat(sumCost);
-
 
   totalWeight.textContent =
     numberFormat(sumWeight);
 
-
   averageCost.textContent =
     numberFormat(avg);
-
 }
 
 
-/* =====================================================
-   CHART
-===================================================== */
+/* CHART */
 
 function drawChart() {
 
@@ -1982,36 +1834,28 @@ function drawChart() {
       "2d"
     );
 
-
   const rect =
     chart.getBoundingClientRect();
-
 
   const dpr =
     window.devicePixelRatio || 1;
 
-
   chart.width =
     rect.width * dpr;
 
-
   chart.height =
     250 * dpr;
-
 
   ctx.scale(
     dpr,
     dpr
   );
 
-
   const width =
     rect.width;
 
-
   const height =
     250;
-
 
   ctx.clearRect(
     0,
@@ -2023,10 +1867,7 @@ function drawChart() {
 
   const list =
     getFilteredProducts()
-      .slice(
-        0,
-        20
-      )
+      .slice(0,20)
       .reverse();
 
 
@@ -2050,15 +1891,14 @@ function drawChart() {
     );
 
     return;
-
   }
 
 
   const padding = {
-    left: 55,
-    right: 25,
-    top: 20,
-    bottom: 45
+    left:55,
+    right:25,
+    top:20,
+    bottom:45
   };
 
 
@@ -2072,7 +1912,6 @@ function drawChart() {
   let minValue =
     Math.min(...values);
 
-
   let maxValue =
     Math.max(...values);
 
@@ -2084,7 +1923,6 @@ function drawChart() {
 
     minValue -= 1000;
     maxValue += 1000;
-
   }
 
 
@@ -2092,10 +1930,8 @@ function drawChart() {
     maxValue -
     minValue;
 
-
   minValue -=
     range * .15;
-
 
   maxValue +=
     range * .15;
@@ -2106,14 +1942,11 @@ function drawChart() {
     padding.left -
     padding.right;
 
-
   const chartHeight =
     height -
     padding.top -
     padding.bottom;
 
-
-  /* grid */
 
   ctx.strokeStyle =
     "#eae7df";
@@ -2132,7 +1965,6 @@ function drawChart() {
       padding.top +
       chartHeight / 4 * i;
 
-
     ctx.beginPath();
 
     ctx.moveTo(
@@ -2147,35 +1979,6 @@ function drawChart() {
     );
 
     ctx.stroke();
-
-
-    const value =
-      maxValue -
-      (
-        maxValue -
-        minValue
-      ) / 4 * i;
-
-
-    ctx.fillStyle =
-      "#888";
-
-
-    ctx.font =
-      "10px Arial";
-
-
-    ctx.textAlign =
-      "right";
-
-
-    ctx.fillText(
-      Math.round(value)
-        .toLocaleString(),
-      padding.left - 8,
-      y + 3
-    );
-
   }
 
 
@@ -2190,9 +1993,7 @@ function drawChart() {
           padding.left +
           chartWidth / 2
         );
-
       }
-
 
       return (
         padding.left +
@@ -2205,7 +2006,6 @@ function drawChart() {
         ) *
         index
       );
-
     };
 
 
@@ -2224,11 +2024,8 @@ function drawChart() {
         ) *
         chartHeight
       );
-
     };
 
-
-  /* line */
 
   ctx.beginPath();
 
@@ -2254,31 +2051,18 @@ function drawChart() {
       if (
         index === 0
       ) {
-
-        ctx.moveTo(
-          x,
-          y
-        );
-
+        ctx.moveTo(x,y);
       }
 
       else {
-
-        ctx.lineTo(
-          x,
-          y
-        );
-
+        ctx.lineTo(x,y);
       }
-
     }
   );
 
 
   ctx.stroke();
 
-
-  /* points */
 
   list.forEach(
     (item,index) => {
@@ -2302,12 +2086,10 @@ function drawChart() {
         Math.PI * 2
       );
 
-
       ctx.fillStyle =
         "#c49a3a";
 
       ctx.fill();
-
 
       ctx.strokeStyle =
         "#ffffff";
@@ -2327,22 +2109,17 @@ function drawChart() {
       ctx.textAlign =
         "center";
 
-
       ctx.fillText(
         item.code,
         x,
         height - 20
       );
-
     }
   );
-
 }
 
 
-/* =====================================================
-   CSV EXPORT
-===================================================== */
+/* CSV */
 
 exportButton.addEventListener(
   "click",
@@ -2361,51 +2138,37 @@ function exportCSV() {
     );
 
     return;
-
   }
 
 
-  const rows = [
-
-    [
-      "รหัสสินค้า",
-      "ประเภท",
-      "เปอร์เซ็นต์ทอง",
-      "น้ำหนักกรัม",
-      "ต้นทุน",
-      "ต้นทุนต่อบาท",
-      "วันที่"
-    ]
-
-  ];
+  const rows = [[
+    "รหัสสินค้า",
+    "ประเภท",
+    "เปอร์เซ็นต์ทอง",
+    "น้ำหนักกรัม",
+    "ต้นทุน",
+    "ต้นทุนต่อบาท",
+    "วันที่"
+  ]];
 
 
   products.forEach(
     product => {
 
       rows.push([
-
         product.code,
-
         product.type,
-
         product.percent,
-
         product.weight,
-
         product.cost,
-
         product.costPerBaht,
-
         new Date(
           product.createdAt
         )
-        .toLocaleDateString(
-          "th-TH"
-        )
-
+          .toLocaleDateString(
+            "th-TH"
+          )
       ]);
-
     }
   );
 
@@ -2422,9 +2185,9 @@ function exportCSV() {
                 '""'
               )}"`
         )
-        .join(",")
+          .join(",")
     )
-    .join("\n");
+      .join("\n");
 
 
   const blob =
@@ -2448,81 +2211,49 @@ function exportCSV() {
       "a"
     );
 
-
   link.href =
     url;
-
 
   link.download =
     `gold-data-${new Date()
       .toISOString()
       .slice(0,10)}.csv`;
 
-
   link.click();
-
 
   URL.revokeObjectURL(
     url
   );
-
 }
 
 
-/* =====================================================
-   SAFE HTML
-===================================================== */
+/* SAFE HTML */
 
 function escapeHTML(text) {
 
   return String(text)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
 
-/* =====================================================
-   RENDER ALL
-===================================================== */
+/* RENDER ALL */
 
 function renderAll() {
 
   renderKPI();
-
   renderTable();
-
   drawChart();
-
 }
 
 
-/* =====================================================
-   START
-===================================================== */
+/* START */
 
 loadData();
-
 loadGoldPrice();
-
 renderAll();
 
 
@@ -2530,11 +2261,6 @@ window.addEventListener(
   "resize",
   drawChart
 );
-
-
-/*
-  ให้ onclick ใน table เรียกได้
-*/
 
 window.editProduct =
   editProduct;
