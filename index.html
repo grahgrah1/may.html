@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>3D Eyeball</title>
 
   <style>
@@ -14,11 +15,7 @@
 
     body {
       overflow: hidden;
-      background: radial-gradient(
-        circle at center,
-        #1a1a1a 0%,
-        #050505 70%
-      );
+      background: #050505;
       font-family: Arial, sans-serif;
     }
 
@@ -34,7 +31,6 @@
       color: white;
       font-size: 24px;
       font-weight: bold;
-      letter-spacing: 1px;
       z-index: 10;
       pointer-events: none;
     }
@@ -44,7 +40,7 @@
       bottom: 18px;
       left: 50%;
       transform: translateX(-50%);
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255,255,255,0.65);
       font-size: 13px;
       z-index: 10;
       pointer-events: none;
@@ -63,8 +59,9 @@
 <body>
 
   <div class="title">👁️ 3D EYEBALL</div>
+
   <div class="hint">
-    ขยับเมาส์ แล้วลูกตาจะมองตาม
+    มองตามเมาส์ • ตาดำหดขยาย • กระพริบอัตโนมัติ
   </div>
 
   <script type="module">
@@ -72,9 +69,9 @@
     import * as THREE from "three";
 
 
-    // =====================================
+    // =====================================================
     // SCENE
-    // =====================================
+    // =====================================================
 
     const scene = new THREE.Scene();
 
@@ -82,15 +79,14 @@
       new THREE.Color(0x050505);
 
 
-    // =====================================
+    // =====================================================
     // CAMERA
-    // =====================================
+    // =====================================================
 
     const camera =
       new THREE.PerspectiveCamera(
         45,
-        window.innerWidth /
-        window.innerHeight,
+        window.innerWidth / window.innerHeight,
         0.1,
         100
       );
@@ -102,9 +98,9 @@
     );
 
 
-    // =====================================
+    // =====================================================
     // RENDERER
-    // =====================================
+    // =====================================================
 
     const renderer =
       new THREE.WebGLRenderer({
@@ -131,9 +127,9 @@
     );
 
 
-    // =====================================
+    // =====================================================
     // LIGHT
-    // =====================================
+    // =====================================================
 
     const ambientLight =
       new THREE.AmbientLight(
@@ -180,39 +176,29 @@
     );
 
 
-    const rimLight =
-      new THREE.PointLight(
-        0xffffff,
-        12,
-        25
-      );
+    // =====================================================
+    // MAIN EYE GROUP
+    // =====================================================
 
-    rimLight.position.set(
-      0,
-      0,
-      8
-    );
+    const eyeContainer =
+      new THREE.Group();
 
     scene.add(
-      rimLight
+      eyeContainer
     );
 
-
-    // =====================================
-    // EYE GROUP
-    // =====================================
 
     const eyeGroup =
       new THREE.Group();
 
-    scene.add(
+    eyeContainer.add(
       eyeGroup
     );
 
 
-    // =====================================
+    // =====================================================
     // EYEBALL
-    // =====================================
+    // =====================================================
 
     const eyeballGeometry =
       new THREE.SphereGeometry(
@@ -254,9 +240,9 @@
     );
 
 
-    // =====================================
+    // =====================================================
     // IRIS GROUP
-    // =====================================
+    // =====================================================
 
     const irisGroup =
       new THREE.Group();
@@ -266,63 +252,61 @@
     );
 
 
-    // =====================================
-    // IRIS OUTER
-    // =====================================
+    // =====================================================
+    // IRIS
+    // =====================================================
 
-    const irisOuterGeometry =
+    const irisGeometry =
       new THREE.CircleGeometry(
         0.58,
         128
       );
 
 
-    const irisOuterMaterial =
+    const irisMaterial =
       new THREE.MeshPhysicalMaterial({
 
-        color: 0x1f8fff,
+        color: 0x168cff,
 
-        roughness: 0.35,
+        roughness: 0.3,
 
-        metalness: 0.05,
-
-        clearcoat: 0.8
+        clearcoat: 0.9
 
       });
 
 
-    const irisOuter =
+    const iris =
       new THREE.Mesh(
-        irisOuterGeometry,
-        irisOuterMaterial
+        irisGeometry,
+        irisMaterial
       );
 
 
-    irisOuter.position.z =
+    iris.position.z =
       1.57;
 
 
     irisGroup.add(
-      irisOuter
+      iris
     );
 
 
-    // =====================================
+    // =====================================================
     // IRIS RING
-    // =====================================
+    // =====================================================
 
-    const irisRingGeometry =
+    const ringGeometry =
       new THREE.RingGeometry(
-        0.26,
+        0.27,
         0.53,
         128
       );
 
 
-    const irisRingMaterial =
+    const ringMaterial =
       new THREE.MeshBasicMaterial({
 
-        color: 0x63c0ff,
+        color: 0x61c3ff,
 
         transparent: true,
 
@@ -333,62 +317,41 @@
       });
 
 
-    const irisRing =
+    const ring =
       new THREE.Mesh(
-        irisRingGeometry,
-        irisRingMaterial
+        ringGeometry,
+        ringMaterial
       );
 
 
-    irisRing.position.z =
+    ring.position.z =
       1.575;
 
 
     irisGroup.add(
-      irisRing
+      ring
     );
 
 
-    // =====================================
-    // INNER IRIS
-    // =====================================
+    // =====================================================
+    // PUPIL GROUP
+    // =====================================================
 
-    const irisInnerGeometry =
-      new THREE.CircleGeometry(
-        0.32,
-        128
-      );
-
-
-    const irisInnerMaterial =
-      new THREE.MeshBasicMaterial({
-        color: 0x0f5ca8
-      });
-
-
-    const irisInner =
-      new THREE.Mesh(
-        irisInnerGeometry,
-        irisInnerMaterial
-      );
-
-
-    irisInner.position.z =
-      1.58;
-
+    const pupilGroup =
+      new THREE.Group();
 
     irisGroup.add(
-      irisInner
+      pupilGroup
     );
 
 
-    // =====================================
+    // =====================================================
     // PUPIL
-    // =====================================
+    // =====================================================
 
     const pupilGeometry =
       new THREE.CircleGeometry(
-        0.22,
+        0.24,
         128
       );
 
@@ -410,51 +373,18 @@
       1.59;
 
 
-    irisGroup.add(
+    pupilGroup.add(
       pupil
     );
 
 
-    // =====================================
-    // PUPIL CORE
-    // =====================================
-
-    const pupilCoreGeometry =
-      new THREE.CircleGeometry(
-        0.12,
-        64
-      );
-
-
-    const pupilCoreMaterial =
-      new THREE.MeshBasicMaterial({
-        color: 0x000000
-      });
-
-
-    const pupilCore =
-      new THREE.Mesh(
-        pupilCoreGeometry,
-        pupilCoreMaterial
-      );
-
-
-    pupilCore.position.z =
-      1.595;
-
-
-    irisGroup.add(
-      pupilCore
-    );
-
-
-    // =====================================
-    // LIGHT REFLECTION 1
-    // =====================================
+    // =====================================================
+    // REFLECTION 1
+    // =====================================================
 
     const reflection1Geometry =
       new THREE.CircleGeometry(
-        0.11,
+        0.10,
         32
       );
 
@@ -490,9 +420,9 @@
     );
 
 
-    // =====================================
-    // LIGHT REFLECTION 2
-    // =====================================
+    // =====================================================
+    // REFLECTION 2
+    // =====================================================
 
     const reflection2Geometry =
       new THREE.CircleGeometry(
@@ -508,7 +438,7 @@
 
         transparent: true,
 
-        opacity: 0.75
+        opacity: 0.7
 
       });
 
@@ -532,82 +462,91 @@
     );
 
 
-    // =====================================
-    // STARS
-    // =====================================
+    // =====================================================
+    // BLINK MASK GROUP
+    // =====================================================
 
-    const starsGeometry =
-      new THREE.BufferGeometry();
+    const blinkGroup =
+      new THREE.Group();
 
-
-    const starCount =
-      500;
-
-
-    const starPositions =
-      [];
-
-
-    for (
-      let i = 0;
-      i < starCount;
-      i++
-    ) {
-
-      starPositions.push(
-
-        (Math.random() - 0.5) * 30,
-
-        (Math.random() - 0.5) * 20,
-
-        (Math.random() - 0.5) * 30
-
-      );
-
-    }
-
-
-    starsGeometry.setAttribute(
-
-      "position",
-
-      new THREE.Float32BufferAttribute(
-        starPositions,
-        3
-      )
-
+    scene.add(
+      blinkGroup
     );
 
 
-    const starsMaterial =
-      new THREE.PointsMaterial({
+    const blinkMaterial =
+      new THREE.MeshBasicMaterial({
 
-        color: 0xffffff,
+        color: 0x050505,
 
-        size: 0.03,
-
-        transparent: true,
-
-        opacity: 0.6
+        side: THREE.DoubleSide
 
       });
 
 
-    const stars =
-      new THREE.Points(
-        starsGeometry,
-        starsMaterial
+    // =====================================================
+    // TOP BLINK MASK
+    // =====================================================
+
+    const topMaskGeometry =
+      new THREE.PlaneGeometry(
+        5,
+        2.2
       );
 
 
-    scene.add(
-      stars
+    const topMask =
+      new THREE.Mesh(
+        topMaskGeometry,
+        blinkMaterial
+      );
+
+
+    topMask.position.set(
+      0,
+      2.5,
+      2
     );
 
 
-    // =====================================
+    blinkGroup.add(
+      topMask
+    );
+
+
+    // =====================================================
+    // BOTTOM BLINK MASK
+    // =====================================================
+
+    const bottomMaskGeometry =
+      new THREE.PlaneGeometry(
+        5,
+        2.2
+      );
+
+
+    const bottomMask =
+      new THREE.Mesh(
+        bottomMaskGeometry,
+        blinkMaterial
+      );
+
+
+    bottomMask.position.set(
+      0,
+      -2.5,
+      2
+    );
+
+
+    blinkGroup.add(
+      bottomMask
+    );
+
+
+    // =====================================================
     // MOUSE
-    // =====================================
+    // =====================================================
 
     let mouseX = 0;
 
@@ -639,9 +578,9 @@
     );
 
 
-    // =====================================
+    // =====================================================
     // TOUCH
-    // =====================================
+    // =====================================================
 
     window.addEventListener(
       "touchmove",
@@ -676,9 +615,156 @@
     );
 
 
-    // =====================================
+    // =====================================================
+    // PUPIL DILATION SETTINGS
+    // =====================================================
+
+    const pupilMinimumSize =
+      0.55;
+
+
+    const pupilMaximumSize =
+      1.35;
+
+
+    const pupilSpeed =
+      1.2;
+
+
+    // =====================================================
+    // BLINK SETTINGS
+    // =====================================================
+
+    let blinkStart =
+      performance.now();
+
+
+    let nextBlink =
+      2500;
+
+
+    const blinkDuration =
+      230;
+
+
+    // =====================================================
+    // BLINK FUNCTION
+    // =====================================================
+
+    function updateBlink(now) {
+
+      const elapsed =
+        now - blinkStart;
+
+
+      if (elapsed > nextBlink) {
+
+        blinkStart =
+          now;
+
+
+        nextBlink =
+          2500 +
+          Math.random() * 3500;
+
+      }
+
+
+      const blinkTime =
+        now - blinkStart;
+
+
+      let blinkAmount =
+        0;
+
+
+      if (
+        blinkTime <
+        blinkDuration
+      ) {
+
+        const progress =
+          blinkTime /
+          blinkDuration;
+
+
+        // ปิดช่วงครึ่งแรก
+        // เปิดช่วงครึ่งหลัง
+
+        blinkAmount =
+          Math.sin(
+            progress *
+            Math.PI
+          );
+
+      }
+
+
+      // 0 = เปิดเต็ม
+      // 1 = ปิดเต็ม
+
+      const closeDistance =
+        1.47;
+
+
+      topMask.position.y =
+        2.5 -
+        (
+          blinkAmount *
+          closeDistance
+        );
+
+
+      bottomMask.position.y =
+        -2.5 +
+        (
+          blinkAmount *
+          closeDistance
+        );
+
+    }
+
+
+    // =====================================================
+    // DOUBLE BLINK RANDOM
+    // =====================================================
+
+    let lastDoubleBlink =
+      0;
+
+
+    function randomDoubleBlink(now) {
+
+      if (
+        now -
+        lastDoubleBlink >
+        10000
+      ) {
+
+        if (
+          Math.random() <
+          0.003
+        ) {
+
+          blinkStart =
+            now;
+
+          nextBlink =
+            450;
+
+          lastDoubleBlink =
+            now;
+
+        }
+
+      }
+
+    }
+
+
+    // =====================================================
     // ANIMATION
-    // =====================================
+    // =====================================================
 
     function animate() {
 
@@ -687,14 +773,17 @@
       );
 
 
+      const now =
+        performance.now();
+
+
       const time =
-        performance.now() *
-        0.001;
+        now * 0.001;
 
 
-      // =================================
+      // =================================================
       // LEFT / RIGHT
-      // =================================
+      // =================================================
 
       eyeGroup.rotation.y +=
 
@@ -707,14 +796,9 @@
         * 0.06;
 
 
-      // =================================
+      // =================================================
       // UP / DOWN
-      //
-      // ตรงนี้แก้แล้ว
-      // ต้องใช้ -mouseY
-      // เพราะแกน X ของ Three.js
-      // หมุนตรงข้ามกับหน้าจอ
-      // =================================
+      // =================================================
 
       eyeGroup.rotation.x +=
 
@@ -727,9 +811,9 @@
         * 0.06;
 
 
-      // =================================
-      // IRIS FOLLOW MOUSE
-      // =================================
+      // =================================================
+      // IRIS FOLLOW
+      // =================================================
 
       irisGroup.position.x +=
 
@@ -753,23 +837,78 @@
         * 0.08;
 
 
-      // =================================
+      // =================================================
+      // PUPIL DILATION
+      // =================================================
+
+      const pupilWave =
+
+        (
+          Math.sin(
+            time *
+            pupilSpeed
+          )
+          +
+          1
+        )
+
+        / 2;
+
+
+      const pupilSize =
+
+        THREE.MathUtils.lerp(
+
+          pupilMinimumSize,
+
+          pupilMaximumSize,
+
+          pupilWave
+
+        );
+
+
+      pupilGroup.scale.set(
+
+        pupilSize,
+
+        pupilSize,
+
+        1
+
+      );
+
+
+      // =================================================
       // FLOATING
-      // =================================
+      // =================================================
 
-      eyeGroup.position.y =
+      eyeContainer.position.y =
+
         Math.sin(
-          time * 1.2
-        ) * 0.04;
+          time * 1.1
+        )
+
+        * 0.04;
 
 
-      // =================================
-      // STAR MOVEMENT
-      // =================================
+      // =================================================
+      // BLINK
+      // =================================================
 
-      stars.rotation.y +=
-        0.0008;
+      updateBlink(
+        now
+      );
 
+
+      randomDoubleBlink(
+        now
+      );
+
+
+      // =================================================
+      // RENDER
+      // =================================================
 
       renderer.render(
         scene,
@@ -782,9 +921,9 @@
     animate();
 
 
-    // =====================================
+    // =====================================================
     // RESIZE
-    // =====================================
+    // =====================================================
 
     window.addEventListener(
       "resize",
