@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Eye in a Jar Experiment</title>
 
   <style>
@@ -14,7 +15,12 @@
 
     body {
       overflow: hidden;
-      background: radial-gradient(circle at center, #0d1118 0%, #05070b 60%, #020304 100%);
+      background: radial-gradient(
+        circle at center,
+        #0d1118 0%,
+        #05070b 60%,
+        #020304 100%
+      );
       font-family: Arial, sans-serif;
     }
 
@@ -33,7 +39,6 @@
       letter-spacing: 1px;
       pointer-events: none;
       z-index: 10;
-      text-shadow: 0 0 10px rgba(255,255,255,0.15);
     }
 
     .hint {
@@ -46,7 +51,6 @@
       white-space: nowrap;
       pointer-events: none;
       z-index: 10;
-      text-shadow: 0 0 8px rgba(255,255,255,0.1);
     }
   </style>
 
@@ -61,677 +65,2327 @@
 
 <body>
 
-  <div class="title">👁️ EYE IN A JAR</div>
-  <div class="hint">ลูกตาในโหลทดลอง • มองตามเมาส์ • รูม่านตาตอบสนอง</div>
+<div class="title">
+  👁️ EYE EXPERIMENT
+</div>
 
-  <script type="module">
-    import * as THREE from "three";
+<div class="hint">
+  ลูกตาในโหลทดลอง • หนูหยุดมองลูกตา • มองตามเมาส์
+</div>
 
-    // ======================================================
-    // SCENE
-    // ======================================================
+<script type="module">
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x05070b);
-    scene.fog = new THREE.Fog(0x05070b, 12, 24);
+import * as THREE from "three";
 
-    // ======================================================
-    // CAMERA
-    // ======================================================
 
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth / window.innerHeight,
-      0.1,
+// ======================================================
+// SCENE
+// ======================================================
+
+const scene = new THREE.Scene();
+
+scene.background =
+  new THREE.Color(0x05070b);
+
+scene.fog =
+  new THREE.Fog(
+    0x05070b,
+    12,
+    24
+  );
+
+
+// ======================================================
+// CAMERA
+// ======================================================
+
+const camera =
+  new THREE.PerspectiveCamera(
+    45,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    100
+  );
+
+camera.position.set(
+  0,
+  0.8,
+  10
+);
+
+
+// ======================================================
+// RENDERER
+// ======================================================
+
+const renderer =
+  new THREE.WebGLRenderer({
+    antialias: true
+  });
+
+renderer.setSize(
+  window.innerWidth,
+  window.innerHeight
+);
+
+renderer.setPixelRatio(
+  Math.min(
+    window.devicePixelRatio,
+    2
+  )
+);
+
+renderer.outputColorSpace =
+  THREE.SRGBColorSpace;
+
+document.body.appendChild(
+  renderer.domElement
+);
+
+
+// ======================================================
+// LIGHTS
+// ======================================================
+
+const ambientLight =
+  new THREE.AmbientLight(
+    0xffffff,
+    1.15
+  );
+
+scene.add(ambientLight);
+
+
+const topLight =
+  new THREE.DirectionalLight(
+    0xffffff,
+    2.8
+  );
+
+topLight.position.set(
+  3,
+  7,
+  5
+);
+
+scene.add(topLight);
+
+
+const blueLight =
+  new THREE.PointLight(
+    0x66b7ff,
+    16,
+    30
+  );
+
+blueLight.position.set(
+  -4,
+  3,
+  6
+);
+
+scene.add(blueLight);
+
+
+const rimLight =
+  new THREE.PointLight(
+    0x89d4ff,
+    10,
+    25
+  );
+
+rimLight.position.set(
+  4,
+  2,
+  -2
+);
+
+scene.add(rimLight);
+
+
+const warmFloorLight =
+  new THREE.PointLight(
+    0xffc98a,
+    2.5,
+    15
+  );
+
+warmFloorLight.position.set(
+  0,
+  -2,
+  4
+);
+
+scene.add(warmFloorLight);
+
+
+// ======================================================
+// BACK WALL
+// ======================================================
+
+const backWall =
+  new THREE.Mesh(
+
+    new THREE.PlaneGeometry(
+      30,
+      18
+    ),
+
+    new THREE.MeshStandardMaterial({
+      color: 0x0b1017,
+      roughness: 0.95,
+      metalness: 0.05
+    })
+
+  );
+
+backWall.position.set(
+  0,
+  1.5,
+  -8
+);
+
+scene.add(backWall);
+
+
+// ======================================================
+// TABLE
+// ======================================================
+
+const table =
+  new THREE.Mesh(
+
+    new THREE.BoxGeometry(
+      16,
+      1.2,
+      6
+    ),
+
+    new THREE.MeshStandardMaterial({
+      color: 0x1a2029,
+      roughness: 0.85,
+      metalness: 0.10
+    })
+
+  );
+
+table.position.set(
+  0,
+  -4.2,
+  0
+);
+
+scene.add(table);
+
+
+// ======================================================
+// METAL BASE
+// ======================================================
+
+const stand =
+  new THREE.Mesh(
+
+    new THREE.CylinderGeometry(
+      2.4,
+      2.8,
+      0.65,
+      64
+    ),
+
+    new THREE.MeshStandardMaterial({
+      color: 0x2b3440,
+      roughness: 0.55,
+      metalness: 0.45
+    })
+
+  );
+
+stand.position.set(
+  0,
+  -2.55,
+  0
+);
+
+scene.add(stand);
+
+
+// ======================================================
+// JAR GROUP
+// ======================================================
+
+const jarGroup =
+  new THREE.Group();
+
+scene.add(
+  jarGroup
+);
+
+
+// ======================================================
+// JAR LID
+// ======================================================
+
+const lid =
+  new THREE.Mesh(
+
+    new THREE.CylinderGeometry(
+      2.18,
+      2.22,
+      0.42,
+      64
+    ),
+
+    new THREE.MeshStandardMaterial({
+      color: 0x7f8792,
+      roughness: 0.35,
+      metalness: 0.75
+    })
+
+  );
+
+lid.position.set(
+  0,
+  2.62,
+  0
+);
+
+jarGroup.add(
+  lid
+);
+
+
+const lidRim =
+  new THREE.Mesh(
+
+    new THREE.TorusGeometry(
+      2.02,
+      0.07,
+      24,
       100
-    );
+    ),
 
-    camera.position.set(0, 0.8, 10);
+    new THREE.MeshStandardMaterial({
+      color: 0xb1b8c2,
+      roughness: 0.30,
+      metalness: 0.85
+    })
 
-    // ======================================================
-    // RENDERER
-    // ======================================================
+  );
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true
-    });
+lidRim.rotation.x =
+  Math.PI / 2;
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    document.body.appendChild(renderer.domElement);
+lidRim.position.set(
+  0,
+  2.39,
+  0
+);
 
-    // ======================================================
-    // LIGHTING
-    // ======================================================
+jarGroup.add(
+  lidRim
+);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
-    scene.add(ambientLight);
 
-    const topLight = new THREE.DirectionalLight(0xffffff, 2.8);
-    topLight.position.set(3, 7, 5);
-    scene.add(topLight);
+// ======================================================
+// GLASS
+// ======================================================
 
-    const blueLight = new THREE.PointLight(0x66b7ff, 16, 30);
-    blueLight.position.set(-4, 3, 6);
-    scene.add(blueLight);
+const glassMaterial =
+  new THREE.MeshPhysicalMaterial({
+    color: 0xdff8ff,
+    roughness: 0.02,
+    metalness: 0,
+    transparent: true,
+    opacity: 0.16,
+    transmission: 1,
+    ior: 1.45,
+    thickness: 0.45,
+    clearcoat: 1,
+    clearcoatRoughness: 0
+  });
 
-    const rimLight = new THREE.PointLight(0x89d4ff, 10, 25);
-    rimLight.position.set(4, 2, -2);
-    scene.add(rimLight);
 
-    const jarGlow = new THREE.PointLight(0x48bfff, 4, 10);
-    jarGlow.position.set(0, 0, 3);
-    scene.add(jarGlow);
+const jarBody =
+  new THREE.Mesh(
 
-    // ======================================================
-    // LAB BACKGROUND
-    // ======================================================
+    new THREE.CylinderGeometry(
+      2.05,
+      2.18,
+      5.1,
+      96,
+      1,
+      true
+    ),
 
-    const backWall = new THREE.Mesh(
-      new THREE.PlaneGeometry(30, 18),
-      new THREE.MeshStandardMaterial({
-        color: 0x0b1017,
-        roughness: 0.95,
-        metalness: 0.05
-      })
-    );
+    glassMaterial
 
-    backWall.position.set(0, 1.5, -8);
-    scene.add(backWall);
+  );
 
-    const table = new THREE.Mesh(
-      new THREE.BoxGeometry(16, 1.2, 6),
-      new THREE.MeshStandardMaterial({
-        color: 0x1a2029,
-        roughness: 0.85,
-        metalness: 0.1
-      })
-    );
+jarBody.renderOrder =
+  10;
 
-    table.position.set(0, -4.2, 0);
-    scene.add(table);
+jarGroup.add(
+  jarBody
+);
 
-    const stand = new THREE.Mesh(
-      new THREE.CylinderGeometry(2.4, 2.8, 0.65, 64),
-      new THREE.MeshStandardMaterial({
-        color: 0x2b3440,
-        roughness: 0.55,
-        metalness: 0.45
-      })
-    );
 
-    stand.position.set(0, -2.55, 0);
-    scene.add(stand);
+const jarBottom =
+  new THREE.Mesh(
 
-    // ======================================================
-    // JAR GROUP
-    // ======================================================
+    new THREE.CylinderGeometry(
+      2.05,
+      2.05,
+      0.18,
+      96
+    ),
 
-    const jarGroup = new THREE.Group();
-    scene.add(jarGroup);
+    glassMaterial
 
-    // ======================================================
-    // JAR LID
-    // ======================================================
+  );
 
-    const lid = new THREE.Mesh(
-      new THREE.CylinderGeometry(2.18, 2.22, 0.42, 64),
-      new THREE.MeshStandardMaterial({
-        color: 0x7f8792,
-        roughness: 0.35,
-        metalness: 0.75
-      })
-    );
+jarBottom.position.set(
+  0,
+  -2.47,
+  0
+);
 
-    lid.position.set(0, 2.62, 0);
-    jarGroup.add(lid);
+jarGroup.add(
+  jarBottom
+);
 
-    const lidRim = new THREE.Mesh(
-      new THREE.TorusGeometry(2.02, 0.07, 24, 100),
-      new THREE.MeshStandardMaterial({
-        color: 0xb1b8c2,
-        roughness: 0.3,
-        metalness: 0.85
-      })
-    );
 
-    lidRim.rotation.x = Math.PI / 2;
-    lidRim.position.set(0, 2.39, 0);
-    jarGroup.add(lidRim);
+// ======================================================
+// LIQUID
+// ======================================================
 
-    // ======================================================
-    // JAR GLASS
-    // ======================================================
+const liquid =
+  new THREE.Mesh(
 
-    const glassMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xdff8ff,
-      roughness: 0.02,
-      metalness: 0,
+    new THREE.CylinderGeometry(
+      1.9,
+      2.0,
+      3.55,
+      96
+    ),
+
+    new THREE.MeshPhysicalMaterial({
+      color: 0x47b8e8,
+      roughness: 0.08,
       transparent: true,
-      opacity: 0.18,
-      transmission: 1,
-      ior: 1.45,
-      thickness: 0.5,
+      opacity: 0.28,
+      transmission: 0.4,
       clearcoat: 1,
-      clearcoatRoughness: 0
-    });
+      clearcoatRoughness: 0.02
+    })
 
-    const jarBody = new THREE.Mesh(
-      new THREE.CylinderGeometry(2.05, 2.18, 5.1, 96, 1, true),
-      glassMaterial
-    );
+  );
 
-    jarBody.position.set(0, 0, 0);
-    jarBody.renderOrder = 10;
-    jarGroup.add(jarBody);
+liquid.position.set(
+  0,
+  -0.55,
+  0
+);
 
-    const jarBottom = new THREE.Mesh(
-      new THREE.CylinderGeometry(2.05, 2.05, 0.18, 96),
+jarGroup.add(
+  liquid
+);
+
+
+const liquidSurface =
+  new THREE.Mesh(
+
+    new THREE.CircleGeometry(
+      1.92,
+      96
+    ),
+
+    new THREE.MeshPhysicalMaterial({
+      color: 0x89ecff,
+      transparent: true,
+      opacity: 0.26,
+      side: THREE.DoubleSide
+    })
+
+  );
+
+liquidSurface.rotation.x =
+  -Math.PI / 2;
+
+liquidSurface.position.set(
+  0,
+  1.215,
+  0
+);
+
+jarGroup.add(
+  liquidSurface
+);
+
+
+// ======================================================
+// BUBBLES
+// ======================================================
+
+const bubbles =
+  [];
+
+const bubbleGroup =
+  new THREE.Group();
+
+jarGroup.add(
+  bubbleGroup
+);
+
+
+for (
+  let i = 0;
+  i < 24;
+  i++
+) {
+
+  const bubble =
+    new THREE.Mesh(
+
+      new THREE.SphereGeometry(
+        0.03 +
+        Math.random() *
+        0.06,
+        18,
+        18
+      ),
+
       new THREE.MeshPhysicalMaterial({
-        color: 0xdff8ff,
-        roughness: 0.03,
+        color: 0xdffcff,
         transparent: true,
-        opacity: 0.28,
+        opacity:
+          0.35 +
+          Math.random() *
+          0.25,
+        roughness: 0.05,
         transmission: 1,
-        thickness: 0.4,
-        ior: 1.45
+        thickness: 0.2
       })
+
     );
 
-    jarBottom.position.set(0, -2.47, 0);
-    jarBottom.renderOrder = 9;
-    jarGroup.add(jarBottom);
 
-    const jarTopRing = new THREE.Mesh(
-      new THREE.TorusGeometry(2.07, 0.07, 24, 100),
-      new THREE.MeshPhysicalMaterial({
-        color: 0xe8fbff,
-        roughness: 0.03,
-        transparent: true,
-        opacity: 0.32,
-        transmission: 1,
-        thickness: 0.3
-      })
-    );
+  bubble.position.set(
+    (Math.random() - 0.5) * 2.5,
+    -1.9 +
+    Math.random() *
+    3,
+    (Math.random() - 0.5) * 1.7
+  );
 
-    jarTopRing.rotation.x = Math.PI / 2;
-    jarTopRing.position.set(0, 2.28, 0);
-    jarTopRing.renderOrder = 11;
-    jarGroup.add(jarTopRing);
 
-    const jarBottomRing = new THREE.Mesh(
-      new THREE.TorusGeometry(2.07, 0.08, 24, 100),
-      new THREE.MeshPhysicalMaterial({
-        color: 0xe8fbff,
-        roughness: 0.03,
-        transparent: true,
-        opacity: 0.35,
-        transmission: 1,
-        thickness: 0.3
-      })
-    );
+  bubble.userData = {
+    speed:
+      0.005 +
+      Math.random() *
+      0.012,
 
-    jarBottomRing.rotation.x = Math.PI / 2;
-    jarBottomRing.position.set(0, -2.38, 0);
-    jarBottomRing.renderOrder = 11;
-    jarGroup.add(jarBottomRing);
+    baseX:
+      bubble.position.x,
 
-    // ======================================================
-    // LIQUID
-    // ======================================================
+    phase:
+      Math.random() *
+      Math.PI *
+      2
+  };
 
-    const liquidGroup = new THREE.Group();
-    jarGroup.add(liquidGroup);
 
-    const liquid = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.9, 2.0, 3.55, 96),
-      new THREE.MeshPhysicalMaterial({
-        color: 0x47b8e8,
-        roughness: 0.08,
-        metalness: 0,
-        transparent: true,
-        opacity: 0.30,
-        transmission: 0.4,
-        clearcoat: 1,
-        clearcoatRoughness: 0.02
-      })
-    );
+  bubbleGroup.add(
+    bubble
+  );
 
-    liquid.position.set(0, -0.55, 0);
-    liquid.renderOrder = 5;
-    liquidGroup.add(liquid);
+  bubbles.push(
+    bubble
+  );
 
-    const liquidSurface = new THREE.Mesh(
-      new THREE.CircleGeometry(1.92, 96),
-      new THREE.MeshPhysicalMaterial({
-        color: 0x89ecff,
-        transparent: true,
-        opacity: 0.26,
-        side: THREE.DoubleSide
-      })
-    );
+}
 
-    liquidSurface.rotation.x = -Math.PI / 2;
-    liquidSurface.position.set(0, 1.215, 0);
-    liquidSurface.renderOrder = 6;
-    liquidGroup.add(liquidSurface);
 
-    // ======================================================
-    // BUBBLES
-    // ======================================================
+// ======================================================
+// EYE
+// ======================================================
 
-    const bubbles = [];
-    const bubbleGroup = new THREE.Group();
-    jarGroup.add(bubbleGroup);
+const eyeContainer =
+  new THREE.Group();
 
-    for (let i = 0; i < 24; i++) {
-      const bubble = new THREE.Mesh(
-        new THREE.SphereGeometry(0.03 + Math.random() * 0.06, 18, 18),
-        new THREE.MeshPhysicalMaterial({
-          color: 0xdffcff,
-          transparent: true,
-          opacity: 0.35 + Math.random() * 0.25,
-          roughness: 0.05,
-          transmission: 1,
-          thickness: 0.2
-        })
-      );
+eyeContainer.position.set(
+  0,
+  0.05,
+  0.08
+);
 
-      bubble.position.set(
-        (Math.random() - 0.5) * 2.5,
-        -1.9 + Math.random() * 3.0,
-        (Math.random() - 0.5) * 1.7
-      );
+jarGroup.add(
+  eyeContainer
+);
 
-      bubble.userData = {
-        speed: 0.005 + Math.random() * 0.012,
-        drift: 0.002 + Math.random() * 0.005,
-        baseX: bubble.position.x,
-        phase: Math.random() * Math.PI * 2
-      };
 
-      bubble.renderOrder = 7;
-      bubbleGroup.add(bubble);
-      bubbles.push(bubble);
-    }
+const eyeGroup =
+  new THREE.Group();
 
-    // ======================================================
-    // EYE CONTAINER
-    // ======================================================
+eyeContainer.add(
+  eyeGroup
+);
 
-    const eyeContainer = new THREE.Group();
-    eyeContainer.position.set(0, 0.05, 0.08);
-    jarGroup.add(eyeContainer);
 
-    const eyeGroup = new THREE.Group();
-    eyeContainer.add(eyeGroup);
+// ======================================================
+// EYEBALL
+// ======================================================
 
-    // ======================================================
-    // EYEBALL
-    // ======================================================
+const eyeball =
+  new THREE.Mesh(
 
-    const eyeballGeometry = new THREE.SphereGeometry(1.12, 128, 128);
+    new THREE.SphereGeometry(
+      1.12,
+      128,
+      128
+    ),
 
-    const eyeballMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xf9f9f7,
-      roughness: 0.14,
+    new THREE.MeshPhysicalMaterial({
+      color: 0xf8f8f5,
+      roughness: 0.18,
       metalness: 0,
       clearcoat: 1,
       clearcoatRoughness: 0.025
-    });
+    })
 
-    const eyeball = new THREE.Mesh(eyeballGeometry, eyeballMaterial);
-    eyeball.scale.y = 0.92;
-    eyeGroup.add(eyeball);
+  );
 
-    // ======================================================
-    // IRIS GROUP
-    // ======================================================
+eyeball.scale.y =
+  0.92;
 
-    const irisGroup = new THREE.Group();
-    eyeGroup.add(irisGroup);
+eyeGroup.add(
+  eyeball
+);
 
-    // ======================================================
-    // IRIS
-    // ======================================================
 
-    const irisGeometry = new THREE.CircleGeometry(0.43, 128);
+// ======================================================
+// IRIS GROUP
+// ======================================================
 
-    const irisMaterial = new THREE.MeshPhysicalMaterial({
+const irisGroup =
+  new THREE.Group();
+
+eyeGroup.add(
+  irisGroup
+);
+
+
+// ======================================================
+// IRIS
+// ======================================================
+
+const iris =
+  new THREE.Mesh(
+
+    new THREE.CircleGeometry(
+      0.43,
+      128
+    ),
+
+    new THREE.MeshPhysicalMaterial({
       color: 0x168cff,
       roughness: 0.30,
       clearcoat: 0.8,
-      clearcoatRoughness: 0.06
-    });
+      clearcoatRoughness: 0.05
+    })
 
-    const iris = new THREE.Mesh(irisGeometry, irisMaterial);
-    iris.position.z = 1.13;
-    irisGroup.add(iris);
+  );
 
-    const darkRingGeometry = new THREE.RingGeometry(0.39, 0.43, 128);
+iris.position.z =
+  1.13;
 
-    const darkRingMaterial = new THREE.MeshBasicMaterial({
+irisGroup.add(
+  iris
+);
+
+
+// ======================================================
+// DARK IRIS RING
+// ======================================================
+
+const darkRing =
+  new THREE.Mesh(
+
+    new THREE.RingGeometry(
+      0.39,
+      0.43,
+      128
+    ),
+
+    new THREE.MeshBasicMaterial({
       color: 0x052d4d,
       side: THREE.DoubleSide
-    });
+    })
 
-    const darkRing = new THREE.Mesh(darkRingGeometry, darkRingMaterial);
-    darkRing.position.z = 1.135;
-    irisGroup.add(darkRing);
+  );
 
-    const irisLightGeometry = new THREE.RingGeometry(0.20, 0.36, 128);
+darkRing.position.z =
+  1.135;
 
-    const irisLightMaterial = new THREE.MeshBasicMaterial({
+irisGroup.add(
+  darkRing
+);
+
+
+// ======================================================
+// IRIS LIGHT
+// ======================================================
+
+const irisLight =
+  new THREE.Mesh(
+
+    new THREE.RingGeometry(
+      0.20,
+      0.36,
+      128
+    ),
+
+    new THREE.MeshBasicMaterial({
       color: 0x67c8ff,
       transparent: true,
       opacity: 0.35,
       side: THREE.DoubleSide
-    });
+    })
 
-    const irisLight = new THREE.Mesh(irisLightGeometry, irisLightMaterial);
-    irisLight.position.z = 1.138;
-    irisGroup.add(irisLight);
+  );
 
-    // ======================================================
-    // IRIS FIBERS
-    // ======================================================
+irisLight.position.z =
+  1.138;
 
-    const irisLinesGroup = new THREE.Group();
-    irisLinesGroup.position.z = 1.142;
-    irisGroup.add(irisLinesGroup);
+irisGroup.add(
+  irisLight
+);
 
-    const irisLineCount = 80;
 
-    for (let i = 0; i < irisLineCount; i++) {
-      const angle = (i / irisLineCount) * Math.PI * 2;
-      const innerRadius = 0.18;
-      const outerRadius = 0.29 + Math.random() * 0.08;
+// ======================================================
+// IRIS FIBERS
+// ======================================================
 
-      const points = [
+const irisLinesGroup =
+  new THREE.Group();
+
+irisLinesGroup.position.z =
+  1.142;
+
+irisGroup.add(
+  irisLinesGroup
+);
+
+
+for (
+  let i = 0;
+  i < 80;
+  i++
+) {
+
+  const angle =
+    (i / 80) *
+    Math.PI *
+    2;
+
+  const innerRadius =
+    0.18;
+
+  const outerRadius =
+    0.29 +
+    Math.random() *
+    0.08;
+
+
+  const geometry =
+    new THREE.BufferGeometry()
+      .setFromPoints([
+
         new THREE.Vector3(
-          Math.cos(angle) * innerRadius,
-          Math.sin(angle) * innerRadius,
+          Math.cos(angle) *
+          innerRadius,
+          Math.sin(angle) *
+          innerRadius,
           0
         ),
+
         new THREE.Vector3(
-          Math.cos(angle) * outerRadius,
-          Math.sin(angle) * outerRadius,
+          Math.cos(angle) *
+          outerRadius,
+          Math.sin(angle) *
+          outerRadius,
           0
         )
-      ];
 
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      ]);
 
-      const material = new THREE.LineBasicMaterial({
-        color: Math.random() > 0.55 ? 0x8bdcff : 0x075182,
+
+  const line =
+    new THREE.Line(
+
+      geometry,
+
+      new THREE.LineBasicMaterial({
+        color:
+          Math.random() > 0.55
+          ? 0x8bdcff
+          : 0x075182,
+
         transparent: true,
-        opacity: 0.45 + Math.random() * 0.3
-      });
 
-      const line = new THREE.Line(geometry, material);
-      irisLinesGroup.add(line);
-    }
+        opacity:
+          0.45 +
+          Math.random() *
+          0.30
+      })
 
-    // ======================================================
-    // PUPIL GROUP
-    // ======================================================
+    );
 
-    const pupilGroup = new THREE.Group();
-    irisGroup.add(pupilGroup);
 
-    const pupilGeometry = new THREE.CircleGeometry(0.175, 128);
+  irisLinesGroup.add(
+    line
+  );
 
-    const pupilMaterial = new THREE.MeshBasicMaterial({
+}
+
+
+// ======================================================
+// PUPIL
+// ======================================================
+
+const pupilGroup =
+  new THREE.Group();
+
+irisGroup.add(
+  pupilGroup
+);
+
+
+const pupil =
+  new THREE.Mesh(
+
+    new THREE.CircleGeometry(
+      0.175,
+      128
+    ),
+
+    new THREE.MeshBasicMaterial({
       color: 0x000000
-    });
+    })
 
-    const pupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
-    pupil.position.z = 1.15;
-    pupilGroup.add(pupil);
+  );
 
-    // ======================================================
-    // REFLECTIONS
-    // ======================================================
+pupil.position.z =
+  1.15;
 
-    const reflection1 = new THREE.Mesh(
-      new THREE.CircleGeometry(0.08, 32),
-      new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.95
-      })
+pupilGroup.add(
+  pupil
+);
+
+
+// ======================================================
+// REFLECTIONS
+// ======================================================
+
+const reflection1 =
+  new THREE.Mesh(
+
+    new THREE.CircleGeometry(
+      0.08,
+      32
+    ),
+
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.95
+    })
+
+  );
+
+reflection1.position.set(
+  0.12,
+  0.13,
+  1.16
+);
+
+irisGroup.add(
+  reflection1
+);
+
+
+const reflection2 =
+  new THREE.Mesh(
+
+    new THREE.CircleGeometry(
+      0.03,
+      32
+    ),
+
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.68
+    })
+
+  );
+
+reflection2.position.set(
+  -0.08,
+  -0.05,
+  1.161
+);
+
+irisGroup.add(
+  reflection2
+);
+
+
+// ======================================================
+// RAT
+// ======================================================
+
+const ratGroup =
+  new THREE.Group();
+
+scene.add(
+  ratGroup
+);
+
+ratGroup.position.set(
+  -8,
+  -3.33,
+  1.25
+);
+
+ratGroup.scale.set(
+  0.72,
+  0.72,
+  0.72
+);
+
+
+// ======================================================
+// RAT MATERIALS
+// ======================================================
+
+const ratFurMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0x7a7c80,
+    roughness: 0.85
+  });
+
+
+const ratEarMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0xd6a2a8,
+    roughness: 0.8
+  });
+
+
+const ratTailMaterial =
+  new THREE.MeshStandardMaterial({
+    color: 0xc69495,
+    roughness: 0.85
+  });
+
+
+const ratEyeMaterial =
+  new THREE.MeshBasicMaterial({
+    color: 0x050505
+  });
+
+
+// ======================================================
+// RAT BODY
+// ======================================================
+
+const ratBody =
+  new THREE.Mesh(
+
+    new THREE.SphereGeometry(
+      0.38,
+      32,
+      32
+    ),
+
+    ratFurMaterial
+
+  );
+
+ratBody.scale.set(
+  1.4,
+  0.9,
+  0.9
+);
+
+ratGroup.add(
+  ratBody
+);
+
+
+// ======================================================
+// HEAD PIVOT
+//
+// หัวทั้งหมดจะหมุนผ่าน group นี้
+// ======================================================
+
+const ratHeadPivot =
+  new THREE.Group();
+
+ratHeadPivot.position.set(
+  0.42,
+  0.03,
+  0
+);
+
+ratGroup.add(
+  ratHeadPivot
+);
+
+
+// ======================================================
+// RAT HEAD
+// ======================================================
+
+const ratHead =
+  new THREE.Mesh(
+
+    new THREE.SphereGeometry(
+      0.23,
+      28,
+      28
+    ),
+
+    ratFurMaterial
+
+  );
+
+ratHead.position.set(
+  0.10,
+  0.01,
+  0
+);
+
+ratHead.scale.set(
+  1.05,
+  0.95,
+  0.9
+);
+
+ratHeadPivot.add(
+  ratHead
+);
+
+
+// ======================================================
+// NOSE
+// ======================================================
+
+const ratNose =
+  new THREE.Mesh(
+
+    new THREE.SphereGeometry(
+      0.045,
+      20,
+      20
+    ),
+
+    new THREE.MeshStandardMaterial({
+      color: 0xe39aa5,
+      roughness: 0.6
+    })
+
+  );
+
+ratNose.position.set(
+  0.34,
+  -0.005,
+  0
+);
+
+ratHeadPivot.add(
+  ratNose
+);
+
+
+// ======================================================
+// EARS
+// ======================================================
+
+const ratEarLeft =
+  new THREE.Mesh(
+
+    new THREE.SphereGeometry(
+      0.09,
+      20,
+      20
+    ),
+
+    ratEarMaterial
+
+  );
+
+ratEarLeft.position.set(
+  0.03,
+  0.17,
+  0.11
+);
+
+ratEarLeft.scale.set(
+  0.75,
+  1,
+  0.25
+);
+
+ratHeadPivot.add(
+  ratEarLeft
+);
+
+
+const ratEarRight =
+  ratEarLeft.clone();
+
+ratEarRight.position.z =
+  -0.11;
+
+ratHeadPivot.add(
+  ratEarRight
+);
+
+
+// ======================================================
+// RAT EYES
+// ======================================================
+
+const ratEyeLeft =
+  new THREE.Mesh(
+
+    new THREE.SphereGeometry(
+      0.027,
+      12,
+      12
+    ),
+
+    ratEyeMaterial
+
+  );
+
+ratEyeLeft.position.set(
+  0.20,
+  0.035,
+  0.085
+);
+
+ratHeadPivot.add(
+  ratEyeLeft
+);
+
+
+const ratEyeRight =
+  ratEyeLeft.clone();
+
+ratEyeRight.position.z =
+  -0.085;
+
+ratHeadPivot.add(
+  ratEyeRight
+);
+
+
+// ======================================================
+// WHISKERS
+// ======================================================
+
+const whiskerMaterial =
+  new THREE.LineBasicMaterial({
+    color: 0xd8d8d8,
+    transparent: true,
+    opacity: 0.7
+  });
+
+
+function createWhisker(
+  y,
+  z,
+  direction
+) {
+
+  const geometry =
+    new THREE.BufferGeometry()
+      .setFromPoints([
+
+        new THREE.Vector3(
+          0.30,
+          y,
+          z
+        ),
+
+        new THREE.Vector3(
+          0.58,
+          y + 0.02 * direction,
+          z + 0.10 * direction
+        )
+
+      ]);
+
+
+  return new THREE.Line(
+    geometry,
+    whiskerMaterial
+  );
+
+}
+
+
+ratHeadPivot.add(
+  createWhisker(
+    0.02,
+    0.05,
+    1
+  )
+);
+
+ratHeadPivot.add(
+  createWhisker(
+    -0.02,
+    0.05,
+    1
+  )
+);
+
+ratHeadPivot.add(
+  createWhisker(
+    0.02,
+    -0.05,
+    -1
+  )
+);
+
+ratHeadPivot.add(
+  createWhisker(
+    -0.02,
+    -0.05,
+    -1
+  )
+);
+
+
+// ======================================================
+// LEGS
+// ======================================================
+
+function createRatLeg(
+  x,
+  z
+) {
+
+  const leg =
+    new THREE.Group();
+
+
+  const upper =
+    new THREE.Mesh(
+
+      new THREE.CapsuleGeometry(
+        0.03,
+        0.18,
+        4,
+        8
+      ),
+
+      ratFurMaterial
+
     );
 
-    reflection1.position.set(0.12, 0.13, 1.16);
-    irisGroup.add(reflection1);
 
-    const reflection2 = new THREE.Mesh(
-      new THREE.CircleGeometry(0.03, 32),
-      new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.68
-      })
+  upper.rotation.z =
+    Math.PI / 2;
+
+  upper.position.y =
+    -0.10;
+
+
+  const foot =
+    new THREE.Mesh(
+
+      new THREE.SphereGeometry(
+        0.035,
+        12,
+        12
+      ),
+
+      ratTailMaterial
+
     );
 
-    reflection2.position.set(-0.08, -0.05, 1.161);
-    irisGroup.add(reflection2);
 
-    // ======================================================
-    // POINTER
-    // ======================================================
+  foot.position.set(
+    0.10,
+    -0.16,
+    0
+  );
 
-    let mouseX = 0;
-    let mouseY = 0;
 
-    let pointerX = window.innerWidth / 2;
-    let pointerY = window.innerHeight / 2;
+  leg.add(
+    upper
+  );
 
-    function updatePointer(x, y) {
-      pointerX = x;
-      pointerY = y;
+  leg.add(
+    foot
+  );
 
-      mouseX = ((x / window.innerWidth) - 0.5) * 2;
-      mouseY = -(((y / window.innerHeight) - 0.5) * 2);
+
+  leg.position.set(
+    x,
+    -0.18,
+    z
+  );
+
+
+  return leg;
+
+}
+
+
+const frontLeftLeg =
+  createRatLeg(
+    0.28,
+    0.15
+  );
+
+const frontRightLeg =
+  createRatLeg(
+    0.28,
+    -0.15
+  );
+
+const backLeftLeg =
+  createRatLeg(
+    -0.24,
+    0.15
+  );
+
+const backRightLeg =
+  createRatLeg(
+    -0.24,
+    -0.15
+  );
+
+
+ratGroup.add(
+  frontLeftLeg
+);
+
+ratGroup.add(
+  frontRightLeg
+);
+
+ratGroup.add(
+  backLeftLeg
+);
+
+ratGroup.add(
+  backRightLeg
+);
+
+
+// ======================================================
+// TAIL
+// ======================================================
+
+const tailGroup =
+  new THREE.Group();
+
+tailGroup.position.set(
+  -0.60,
+  -0.04,
+  0
+);
+
+ratGroup.add(
+  tailGroup
+);
+
+
+const tailSegments =
+  [];
+
+
+for (
+  let i = 0;
+  i < 7;
+  i++
+) {
+
+  const segment =
+    new THREE.Mesh(
+
+      new THREE.CapsuleGeometry(
+        0.025 -
+        i * 0.002,
+        0.14,
+        4,
+        8
+      ),
+
+      ratTailMaterial
+
+    );
+
+
+  segment.rotation.z =
+    Math.PI / 2;
+
+
+  segment.position.x =
+    -i * 0.12;
+
+
+  tailGroup.add(
+    segment
+  );
+
+
+  tailSegments.push(
+    segment
+  );
+
+}
+
+
+// ======================================================
+// POINTER
+// ======================================================
+
+let mouseX = 0;
+let mouseY = 0;
+
+let pointerX =
+  window.innerWidth / 2;
+
+let pointerY =
+  window.innerHeight / 2;
+
+
+function updatePointer(
+  x,
+  y
+) {
+
+  pointerX = x;
+  pointerY = y;
+
+
+  mouseX =
+    (
+      x /
+      window.innerWidth -
+      0.5
+    ) * 2;
+
+
+  mouseY =
+    -(
+      y /
+      window.innerHeight -
+      0.5
+    ) * 2;
+
+}
+
+
+window.addEventListener(
+  "mousemove",
+  event => {
+
+    updatePointer(
+      event.clientX,
+      event.clientY
+    );
+
+  }
+);
+
+
+// ======================================================
+// TOUCH
+// ======================================================
+
+window.addEventListener(
+  "touchmove",
+  event => {
+
+    if (
+      event.touches.length === 0
+    ) {
+      return;
     }
 
-    window.addEventListener("mousemove", (event) => {
-      updatePointer(event.clientX, event.clientY);
-    });
 
-    window.addEventListener("touchmove", (event) => {
-      if (event.touches.length === 0) return;
-      updatePointer(event.touches[0].clientX, event.touches[0].clientY);
-    }, { passive: true });
+    updatePointer(
+      event.touches[0].clientX,
+      event.touches[0].clientY
+    );
 
-    // ======================================================
-    // RANDOM FUNCTION
-    // ======================================================
+  },
+  {
+    passive: true
+  }
+);
 
-    function randomRange(min, max) {
-      return min + Math.random() * (max - min);
+
+// ======================================================
+// RANDOM
+// ======================================================
+
+function randomRange(
+  min,
+  max
+) {
+
+  return (
+    min +
+    Math.random() *
+    (max - min)
+  );
+
+}
+
+
+// ======================================================
+// SACCADE
+// ======================================================
+
+let saccadeX = 0;
+let saccadeY = 0;
+
+let targetSaccadeX = 0;
+let targetSaccadeY = 0;
+
+let nextSaccadeTime =
+  performance.now() +
+  randomRange(
+    700,
+    2100
+  );
+
+let saccadeReturnTime =
+  0;
+
+
+function triggerSaccade(
+  now
+) {
+
+  targetSaccadeX =
+    randomRange(
+      -0.10,
+      0.10
+    );
+
+
+  targetSaccadeY =
+    randomRange(
+      -0.06,
+      0.06
+    );
+
+
+  saccadeReturnTime =
+    now +
+    randomRange(
+      90,
+      190
+    );
+
+
+  nextSaccadeTime =
+    now +
+    randomRange(
+      900,
+      2900
+    );
+
+}
+
+
+// ======================================================
+// PUPIL
+// ======================================================
+
+const pupilMinimumSize =
+  0.65;
+
+const pupilMaximumSize =
+  1.45;
+
+let pupilCurrentSize =
+  1;
+
+
+function updatePupil() {
+
+  const centerX =
+    window.innerWidth / 2;
+
+  const centerY =
+    window.innerHeight / 2;
+
+
+  const dx =
+    pointerX -
+    centerX;
+
+  const dy =
+    pointerY -
+    centerY;
+
+
+  const distance =
+    Math.sqrt(
+      dx * dx +
+      dy * dy
+    );
+
+
+  const maxDistance =
+    Math.min(
+      window.innerWidth,
+      window.innerHeight
+    ) * 0.52;
+
+
+  const normalized =
+    THREE.MathUtils.clamp(
+      distance /
+      maxDistance,
+      0,
+      1
+    );
+
+
+  const proximity =
+    1 -
+    normalized;
+
+
+  const targetSize =
+    THREE.MathUtils.lerp(
+      pupilMinimumSize,
+      pupilMaximumSize,
+      proximity *
+      proximity
+    );
+
+
+  pupilCurrentSize +=
+    (
+      targetSize -
+      pupilCurrentSize
+    ) * 0.05;
+
+
+  pupilGroup.scale.set(
+    pupilCurrentSize,
+    pupilCurrentSize,
+    1
+  );
+
+}
+
+
+// ======================================================
+// RAT BEHAVIOR
+//
+// 0-5 sec  : วิ่ง
+// 5-6 sec  : ชะลอ
+// 6-8.5 sec: หยุดมองลูกตา
+// 8.5-9.2 : หันกลับ
+// 9.2+    : วิ่งต่อ
+// ======================================================
+
+const RAT_CYCLE =
+  13.5;
+
+
+const RAT_START_X =
+  -8;
+
+
+const RAT_STOP_X =
+  -2.8;
+
+
+const RAT_END_X =
+  8;
+
+
+function smoothStep(
+  t
+) {
+
+  t =
+    THREE.MathUtils.clamp(
+      t,
+      0,
+      1
+    );
+
+
+  return (
+    t *
+    t *
+    (
+      3 -
+      2 * t
+    )
+  );
+
+}
+
+
+// ======================================================
+// ANIMATION
+// ======================================================
+
+function animate() {
+
+  requestAnimationFrame(
+    animate
+  );
+
+
+  const now =
+    performance.now();
+
+
+  const time =
+    now * 0.001;
+
+
+// ======================================================
+// SACCADE
+// ======================================================
+
+  if (
+    now >=
+    nextSaccadeTime
+  ) {
+
+    triggerSaccade(
+      now
+    );
+
+  }
+
+
+  if (
+    saccadeReturnTime !== 0 &&
+    now >= saccadeReturnTime
+  ) {
+
+    targetSaccadeX =
+      0;
+
+    targetSaccadeY =
+      0;
+
+    saccadeReturnTime =
+      0;
+
+  }
+
+
+  saccadeX +=
+    (
+      targetSaccadeX -
+      saccadeX
+    ) * 0.38;
+
+
+  saccadeY +=
+    (
+      targetSaccadeY -
+      saccadeY
+    ) * 0.38;
+
+
+// ======================================================
+// EYE FOLLOW
+// ======================================================
+
+  const targetRotationY =
+    mouseX * 0.32 +
+    saccadeX;
+
+
+  const targetRotationX =
+    -mouseY * 0.20 +
+    saccadeY;
+
+
+  eyeGroup.rotation.y +=
+    (
+      targetRotationY -
+      eyeGroup.rotation.y
+    ) * 0.065;
+
+
+  eyeGroup.rotation.x +=
+    (
+      targetRotationX -
+      eyeGroup.rotation.x
+    ) * 0.065;
+
+
+// ======================================================
+// IRIS FOLLOW
+// ======================================================
+
+  irisGroup.position.x +=
+    (
+      mouseX * 0.06 +
+      saccadeX * 0.14 -
+      irisGroup.position.x
+    ) * 0.09;
+
+
+  irisGroup.position.y +=
+    (
+      mouseY * 0.045 -
+      saccadeY * 0.11 -
+      irisGroup.position.y
+    ) * 0.09;
+
+
+// ======================================================
+// PUPIL
+// ======================================================
+
+  updatePupil();
+
+
+// ======================================================
+// FLOATING EYE
+// ======================================================
+
+  eyeContainer.position.y =
+    0.06 +
+    Math.sin(
+      time * 1.3
+    ) * 0.12;
+
+
+  eyeContainer.position.x =
+    Math.sin(
+      time * 0.7
+    ) * 0.04;
+
+
+  eyeContainer.rotation.z =
+    Math.sin(
+      time * 1.1
+    ) * 0.04;
+
+
+// ======================================================
+// BUBBLES
+// ======================================================
+
+  for (
+    const bubble
+    of bubbles
+  ) {
+
+    bubble.position.y +=
+      bubble.userData.speed;
+
+
+    bubble.position.x =
+      bubble.userData.baseX +
+      Math.sin(
+        time * 2 +
+        bubble.userData.phase
+      ) * 0.05;
+
+
+    if (
+      bubble.position.y >
+      1.15
+    ) {
+
+      bubble.position.y =
+        -2 +
+        Math.random() *
+        0.3;
+
+
+      bubble.position.x =
+        (
+          Math.random() -
+          0.5
+        ) * 2.5;
+
+
+      bubble.userData.baseX =
+        bubble.position.x;
+
     }
 
-    // ======================================================
-    // SACCADE
-    // ======================================================
+  }
 
-    let saccadeX = 0;
-    let saccadeY = 0;
 
-    let targetSaccadeX = 0;
-    let targetSaccadeY = 0;
+// ======================================================
+// LIQUID
+// ======================================================
 
-    let nextSaccadeTime = performance.now() + randomRange(700, 2100);
-    let saccadeReturnTime = 0;
+  liquidSurface.position.y =
+    1.215 +
+    Math.sin(
+      time * 1.3
+    ) * 0.02;
 
-    function triggerSaccade(now) {
-      targetSaccadeX = randomRange(-0.10, 0.10);
-      targetSaccadeY = randomRange(-0.06, 0.06);
 
-      saccadeReturnTime = now + randomRange(90, 190);
+// ======================================================
+// IRIS MICRO
+// ======================================================
 
-      nextSaccadeTime = now + randomRange(900, 2900);
-    }
+  irisLinesGroup.rotation.z =
+    Math.sin(
+      time * 0.28
+    ) * 0.012;
 
-    // ======================================================
-    // PUPIL SETTINGS
-    // ======================================================
 
-    const pupilMinimumSize = 0.65;
-    const pupilMaximumSize = 1.45;
-    let pupilCurrentSize = 1;
+// ======================================================
+// RAT BEHAVIOR
+// ======================================================
 
-    function updatePupil() {
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
+  const cycleTime =
+    time %
+    RAT_CYCLE;
 
-      const dx = pointerX - centerX;
-      const dy = pointerY - centerY;
 
-      const distance = Math.sqrt(dx * dx + dy * dy);
+  let ratX =
+    RAT_START_X;
 
-      const maxDistance = Math.min(window.innerWidth, window.innerHeight) * 0.52;
 
-      const normalized = THREE.MathUtils.clamp(distance / maxDistance, 0, 1);
-      const proximity = 1 - normalized;
-      const response = proximity * proximity;
+  let runningAmount =
+    1;
 
-      const targetSize = THREE.MathUtils.lerp(
-        pupilMinimumSize,
-        pupilMaximumSize,
-        response
+
+  let headTurn =
+    0;
+
+
+// ======================================================
+// PHASE 1
+// วิ่งเข้าหาโหล
+// ======================================================
+
+  if (
+    cycleTime <
+    5
+  ) {
+
+    const p =
+      cycleTime /
+      5;
+
+
+    ratX =
+      THREE.MathUtils.lerp(
+        RAT_START_X,
+        RAT_STOP_X,
+        p
       );
 
-      pupilCurrentSize += (targetSize - pupilCurrentSize) * 0.05;
 
-      pupilGroup.scale.set(
-        pupilCurrentSize,
-        pupilCurrentSize,
-        1
+    runningAmount =
+      1;
+
+  }
+
+
+// ======================================================
+// PHASE 2
+// ชะลอและหยุด
+// ======================================================
+
+  else if (
+    cycleTime <
+    6
+  ) {
+
+    const p =
+      smoothStep(
+        cycleTime -
+        5
       );
-    }
 
-    // ======================================================
-    // ANIMATION
-    // ======================================================
 
-    function animate() {
-      requestAnimationFrame(animate);
-
-      const now = performance.now();
-      const time = now * 0.001;
-
-      // ====================================================
-      // SACCADE TIMER
-      // ====================================================
-
-      if (now >= nextSaccadeTime) {
-        triggerSaccade(now);
-      }
-
-      if (saccadeReturnTime !== 0 && now >= saccadeReturnTime) {
-        targetSaccadeX = 0;
-        targetSaccadeY = 0;
-        saccadeReturnTime = 0;
-      }
-
-      saccadeX += (targetSaccadeX - saccadeX) * 0.38;
-      saccadeY += (targetSaccadeY - saccadeY) * 0.38;
-
-      // ====================================================
-      // EYE FOLLOW
-      // ====================================================
-
-      const targetRotationY = mouseX * 0.32 + saccadeX;
-      const targetRotationX = -mouseY * 0.20 + saccadeY;
-
-      eyeGroup.rotation.y += (targetRotationY - eyeGroup.rotation.y) * 0.065;
-      eyeGroup.rotation.x += (targetRotationX - eyeGroup.rotation.x) * 0.065;
-
-      irisGroup.position.x += (
-        mouseX * 0.06 +
-        saccadeX * 0.14 -
-        irisGroup.position.x
-      ) * 0.09;
-
-      irisGroup.position.y += (
-        mouseY * 0.045 -
-        saccadeY * 0.11 -
-        irisGroup.position.y
-      ) * 0.09;
-
-      // ====================================================
-      // PUPIL
-      // ====================================================
-
-      updatePupil();
-
-      // ====================================================
-      // FLOATING EYE IN LIQUID
-      // ====================================================
-
-      eyeContainer.position.y = 0.06 + Math.sin(time * 1.3) * 0.12;
-      eyeContainer.position.x = Math.sin(time * 0.7) * 0.04;
-      eyeContainer.rotation.z = Math.sin(time * 1.1) * 0.04;
-      eyeContainer.rotation.y += (Math.sin(time * 0.9) * 0.06 - eyeContainer.rotation.y) * 0.03;
-
-      // ====================================================
-      // JAR / LIQUID SUBTLE MOTION
-      // ====================================================
-
-      liquidSurface.position.y = 1.215 + Math.sin(time * 1.3) * 0.02;
-      liquidSurface.rotation.z = Math.sin(time * 0.9) * 0.02;
-      liquid.scale.x = 1 + Math.sin(time * 1.1) * 0.005;
-      liquid.scale.z = 1 - Math.sin(time * 1.1) * 0.005;
-
-      // ====================================================
-      // BUBBLES
-      // ====================================================
-
-      for (const bubble of bubbles) {
-        bubble.position.y += bubble.userData.speed;
-        bubble.position.x = bubble.userData.baseX + Math.sin(time * 2 + bubble.userData.phase) * bubble.userData.drift * 20;
-
-        if (bubble.position.y > 1.15) {
-          bubble.position.y = -2.0 + Math.random() * 0.3;
-          bubble.position.x = (Math.random() - 0.5) * 2.5;
-          bubble.position.z = (Math.random() - 0.5) * 1.7;
-          bubble.userData.baseX = bubble.position.x;
-        }
-      }
-
-      // ====================================================
-      // MICRO MOTION
-      // ====================================================
-
-      irisLinesGroup.rotation.z = Math.sin(time * 0.28) * 0.012;
-      jarGroup.position.y = Math.sin(time * 0.55) * 0.015;
-
-      // ====================================================
-      // RENDER
-      // ====================================================
-
-      renderer.render(scene, camera);
-    }
-
-    animate();
-
-    // ======================================================
-    // RESIZE
-    // ======================================================
-
-    window.addEventListener("resize", () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-
-      renderer.setSize(
-        window.innerWidth,
-        window.innerHeight
+    ratX =
+      THREE.MathUtils.lerp(
+        RAT_STOP_X - 0.4,
+        RAT_STOP_X,
+        p
       );
-    });
-  </script>
+
+
+    runningAmount =
+      1 -
+      p;
+
+  }
+
+
+// ======================================================
+// PHASE 3
+// หันหัวไปมองลูกตา
+// ======================================================
+
+  else if (
+    cycleTime <
+    6.8
+  ) {
+
+    ratX =
+      RAT_STOP_X;
+
+
+    runningAmount =
+      0;
+
+
+    const p =
+      smoothStep(
+        (
+          cycleTime -
+          6
+        ) /
+        0.8
+      );
+
+
+    /*
+      หมุนหัวเข้าหาโหล
+    */
+
+    headTurn =
+      p *
+      -0.95;
+
+  }
+
+
+// ======================================================
+// PHASE 4
+// ยืนมองลูกตา
+// ======================================================
+
+  else if (
+    cycleTime <
+    8.5
+  ) {
+
+    ratX =
+      RAT_STOP_X;
+
+
+    runningAmount =
+      0;
+
+
+    headTurn =
+      -0.95;
+
+
+    /*
+      ขยับหัวเล็กน้อย
+      เหมือนกำลังสังเกต
+    */
+
+    ratHeadPivot.rotation.z =
+      Math.sin(
+        time * 2.8
+      ) * 0.06;
+
+  }
+
+
+// ======================================================
+// PHASE 5
+// หันหัวกลับ
+// ======================================================
+
+  else if (
+    cycleTime <
+    9.2
+  ) {
+
+    ratX =
+      RAT_STOP_X;
+
+
+    runningAmount =
+      0;
+
+
+    const p =
+      smoothStep(
+        (
+          cycleTime -
+          8.5
+        ) /
+        0.7
+      );
+
+
+    headTurn =
+      THREE.MathUtils.lerp(
+        -0.95,
+        0,
+        p
+      );
+
+  }
+
+
+// ======================================================
+// PHASE 6
+// วิ่งต่อไปทางขวา
+// ======================================================
+
+  else {
+
+    const p =
+      (
+        cycleTime -
+        9.2
+      )
+      /
+      (
+        RAT_CYCLE -
+        9.2
+      );
+
+
+    ratX =
+      THREE.MathUtils.lerp(
+        RAT_STOP_X,
+        RAT_END_X,
+        p
+      );
+
+
+    runningAmount =
+      smoothStep(
+        Math.min(
+          1,
+          p * 4
+        )
+      );
+
+  }
+
+
+// ======================================================
+// APPLY RAT POSITION
+// ======================================================
+
+  ratGroup.position.x =
+    ratX;
+
+
+  ratGroup.position.y =
+    -3.33 +
+    Math.abs(
+      Math.sin(
+        time * 11
+      )
+    ) *
+    0.035 *
+    runningAmount;
+
+
+// ======================================================
+// HEAD LOOK
+// ======================================================
+
+  ratHeadPivot.rotation.y +=
+    (
+      headTurn -
+      ratHeadPivot.rotation.y
+    ) * 0.14;
+
+
+// ======================================================
+// RESET HEAD Z WHEN NOT WATCHING
+// ======================================================
+
+  if (
+    cycleTime <
+    6.8 ||
+    cycleTime >=
+    8.5
+  ) {
+
+    ratHeadPivot.rotation.z +=
+      (
+        0 -
+        ratHeadPivot.rotation.z
+      ) * 0.12;
+
+  }
+
+
+// ======================================================
+// RUNNING LEGS
+// ======================================================
+
+  const runSwing =
+    Math.sin(
+      time * 14
+    ) *
+    runningAmount;
+
+
+  const runSwingOpp =
+    Math.sin(
+      time * 14 +
+      Math.PI
+    ) *
+    runningAmount;
+
+
+  frontLeftLeg.rotation.z =
+    runSwing * 0.75;
+
+
+  backRightLeg.rotation.z =
+    runSwing * 0.75;
+
+
+  frontRightLeg.rotation.z =
+    runSwingOpp * 0.75;
+
+
+  backLeftLeg.rotation.z =
+    runSwingOpp * 0.75;
+
+
+// ======================================================
+// RAT BODY MOVEMENT
+// ======================================================
+
+  ratBody.rotation.z =
+    Math.sin(
+      time * 14
+    ) *
+    0.025 *
+    runningAmount;
+
+
+// ======================================================
+// TAIL
+// ======================================================
+
+  for (
+    let i = 0;
+    i <
+    tailSegments.length;
+    i++
+  ) {
+
+    tailSegments[i].rotation.y =
+      Math.sin(
+        time * 7 -
+        i * 0.55
+      ) *
+      (
+        0.10 +
+        0.14 *
+        runningAmount
+      );
+
+
+    tailSegments[i].position.y =
+      Math.sin(
+        time * 7 -
+        i * 0.4
+      ) * 0.01;
+
+  }
+
+
+// ======================================================
+// RAT NOSE MOVEMENT WHEN WATCHING
+// ======================================================
+
+  if (
+    cycleTime >=
+    6.8 &&
+    cycleTime <
+    8.5
+  ) {
+
+    ratNose.scale.setScalar(
+      1 +
+      Math.sin(
+        time * 12
+      ) * 0.06
+    );
+
+  }
+
+  else {
+
+    ratNose.scale.setScalar(
+      1
+    );
+
+  }
+
+
+// ======================================================
+// RENDER
+// ======================================================
+
+  renderer.render(
+    scene,
+    camera
+  );
+
+}
+
+
+animate();
+
+
+// ======================================================
+// RESIZE
+// ======================================================
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    camera.aspect =
+      window.innerWidth /
+      window.innerHeight;
+
+
+    camera.updateProjectionMatrix();
+
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+  }
+);
+
+</script>
 
 </body>
 </html>
