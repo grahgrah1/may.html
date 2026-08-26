@@ -37,8 +37,6 @@ select {
   font: inherit;
 }
 
-/* HEADER */
-
 header {
   background: linear-gradient(
     135deg,
@@ -123,15 +121,11 @@ header {
   font-weight: bold;
 }
 
-/* MAIN */
-
 main {
   width: min(1450px, 94%);
   margin: auto;
   padding: 28px 0 80px;
 }
-
-/* KPI */
 
 .kpi-grid {
   display: grid;
@@ -182,8 +176,6 @@ main {
   font-size: 11px;
 }
 
-/* LAYOUT */
-
 .layout {
   display: grid;
   grid-template-columns: 390px 1fr;
@@ -197,8 +189,6 @@ main {
   border-radius: 20px;
   box-shadow: var(--shadow);
 }
-
-/* FORM */
 
 .form-card {
   position: sticky;
@@ -331,14 +321,10 @@ main {
   cursor: pointer;
 }
 
-/* RIGHT */
-
 .right-column {
   display: grid;
   gap: 20px;
 }
-
-/* CHART */
 
 .chart-card {
   padding: 22px;
@@ -364,8 +350,6 @@ canvas {
   height: 250px;
   border-radius: 14px;
 }
-
-/* TABLE */
 
 .table-card {
   overflow: hidden;
@@ -499,6 +483,26 @@ tbody tr:hover {
   color: #9a5816;
 }
 
+.karat-badge {
+  display: inline-block;
+
+  min-width: 45px;
+
+  padding: 6px 10px;
+
+  text-align: center;
+
+  border-radius: 30px;
+
+  background: #fff4cb;
+  color: #806015;
+
+  border: 1px solid #ecd58c;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .cost-baht {
   color: var(--red);
   font-weight: 800;
@@ -534,9 +538,8 @@ tbody tr:hover {
   color: var(--muted);
 }
 
-/* MOBILE */
-
 @media (max-width: 1050px) {
+
   .kpi-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -551,6 +554,7 @@ tbody tr:hover {
 }
 
 @media (max-width: 600px) {
+
   header {
     padding: 15px;
   }
@@ -598,66 +602,154 @@ tbody tr:hover {
 <body>
 
 <header>
-  <div class="header-inner">
 
-    <div class="brand">
-      <div class="logo">🏆</div>
+<div class="header-inner">
 
-      <div>
-        <h1>Gold & Pawn Manager</h1>
-        <p>ระบบจัดการต้นทุนทองคำและสินค้าหลุดจำนำ</p>
-      </div>
+  <div class="brand">
+
+    <div class="logo">
+      🏆
     </div>
 
-    <div class="gold-price">
-      <div>
-        <label>ราคาทองวันนี้</label>
+    <div>
+      <h1>
+        Gold & Pawn Manager
+      </h1>
 
-        <input
-          id="goldPrice"
-          type="text"
-          inputmode="numeric"
-          value="71900"
-        >
-      </div>
-
-      <strong>บาท</strong>
+      <p>
+        ระบบจัดการต้นทุนทองคำและสินค้าหลุดจำนำ
+      </p>
     </div>
 
   </div>
+
+
+  <div class="gold-price">
+
+    <div>
+
+      <label>
+        ราคาทองวันนี้
+      </label>
+
+      <input
+        id="goldPrice"
+        type="text"
+        inputmode="numeric"
+        value="71900"
+      >
+
+    </div>
+
+    <strong>
+      บาท
+    </strong>
+
+  </div>
+
+</div>
+
 </header>
 
 
 <main>
 
+
 <section class="kpi-grid">
 
   <div class="kpi">
-    <div class="kpi-icon">📦</div>
-    <div class="kpi-label">สินค้าทั้งหมด</div>
-    <div class="kpi-value" id="totalItems">0</div>
-    <div class="kpi-sub">รายการ</div>
+
+    <div class="kpi-icon">
+      📦
+    </div>
+
+    <div class="kpi-label">
+      สินค้าทั้งหมด
+    </div>
+
+    <div
+      class="kpi-value"
+      id="totalItems"
+    >
+      0
+    </div>
+
+    <div class="kpi-sub">
+      รายการ
+    </div>
+
   </div>
 
-  <div class="kpi">
-    <div class="kpi-icon">💰</div>
-    <div class="kpi-label">ต้นทุนรวม</div>
-    <div class="kpi-value" id="totalCost">0</div>
-    <div class="kpi-sub">บาท</div>
-  </div>
 
   <div class="kpi">
-    <div class="kpi-icon">⚖️</div>
-    <div class="kpi-label">น้ำหนักรวม</div>
-    <div class="kpi-value" id="totalWeight">0</div>
-    <div class="kpi-sub">กรัม</div>
+
+    <div class="kpi-icon">
+      💰
+    </div>
+
+    <div class="kpi-label">
+      ต้นทุนรวม
+    </div>
+
+    <div
+      class="kpi-value"
+      id="totalCost"
+    >
+      0
+    </div>
+
+    <div class="kpi-sub">
+      บาท
+    </div>
+
   </div>
 
+
   <div class="kpi">
-    <div class="kpi-icon">📊</div>
-    <div class="kpi-label">ต้นทุนเฉลี่ย / บาททอง</div>
-    <div class="kpi-value" id="averageCost">0</div>
-    <div class="kpi-sub">บาท</div>
+
+    <div class="kpi-icon">
+      ⚖️
+    </div>
+
+    <div class="kpi-label">
+      น้ำหนักรวม
+    </div>
+
+    <div
+      class="kpi-value"
+      id="totalWeight"
+    >
+      0
+    </div>
+
+    <div class="kpi-sub">
+      กรัม
+    </div>
+
+  </div>
+
+
+  <div class="kpi">
+
+    <div class="kpi-icon">
+      📊
+    </div>
+
+    <div class="kpi-label">
+      ต้นทุนเฉลี่ย / บาททอง
+    </div>
+
+    <div
+      class="kpi-value"
+      id="averageCost"
+    >
+      0
+    </div>
+
+    <div class="kpi-sub">
+      บาท
+    </div>
+
   </div>
 
 </section>
@@ -665,213 +757,299 @@ tbody tr:hover {
 
 <section class="layout">
 
+
 <aside class="card form-card">
 
-  <h2 id="formTitle">
-    ➕ เพิ่มรายการทอง
-  </h2>
+<h2 id="formTitle">
+  ➕ เพิ่มรายการทอง
+</h2>
 
-  <p>
-    กรอกข้อมูลสินค้า ระบบจะคำนวณต้นทุนต่อบาทให้อัตโนมัติ
-  </p>
-
-
-  <div class="form-group">
-    <label>รหัสสินค้า</label>
-
-    <input
-      id="productCode"
-      type="text"
-      placeholder="เช่น A001"
-    >
-  </div>
+<p>
+  กรอกข้อมูลสินค้า ระบบจะคำนวณต้นทุนต่อบาทให้อัตโนมัติ
+</p>
 
 
-  <div class="form-group">
-    <label>ประเภท</label>
+<div class="form-group">
 
-    <select id="productType">
-      <option value="ซื้อหน้าร้าน">
-        ซื้อหน้าร้าน
-      </option>
+  <label>
+    รหัสสินค้า
+  </label>
 
-      <option value="หลุดจำนำ">
-        หลุดจำนำ
-      </option>
-    </select>
-  </div>
-
-
-  <div class="two-column">
-
-    <div class="form-group">
-      <label>เปอร์เซ็นต์ทอง</label>
-
-      <select id="goldPercent">
-        <option value="96.5">96.5%</option>
-        <option value="99.99">99.99%</option>
-        <option value="90">90%</option>
-      </select>
-    </div>
-
-
-    <div class="form-group">
-      <label>น้ำหนัก (กรัม)</label>
-
-      <input
-        id="weight"
-        type="text"
-        inputmode="decimal"
-        autocomplete="off"
-        placeholder="เช่น 15.08"
-      >
-    </div>
-
-  </div>
-
-
-  <div class="form-group">
-    <label>ต้นทุนซื้อ (บาท)</label>
-
-    <input
-      id="cost"
-      type="text"
-      inputmode="decimal"
-      autocomplete="off"
-      placeholder="เช่น 56,375"
-    >
-  </div>
-
-
-  <div class="cost-preview">
-
-    <span>
-      ต้นทุนต่อ 1 บาททอง
-    </span>
-
-    <strong id="costPerBahtPreview">
-      0 บาท
-    </strong>
-
-  </div>
-
-
-  <div class="form-group">
-    <label>รูปสินค้า</label>
-
-    <input
-      id="imageInput"
-      type="file"
-      accept="image/*"
-    >
-
-    <img
-      id="imagePreview"
-      class="image-preview"
-      alt="Preview"
-    >
-  </div>
-
-
-  <button
-    class="primary-button"
-    id="saveButton"
-    type="button"
+  <input
+    id="productCode"
+    type="text"
+    placeholder="เช่น A001"
   >
-    บันทึกรายการ
-  </button>
+
+</div>
 
 
-  <button
-    class="secondary-button"
-    id="cancelEditButton"
-    type="button"
-    style="display:none"
-  >
-    ยกเลิกการแก้ไข
-  </button>
+<div class="form-group">
+
+  <label>
+    ประเภท
+  </label>
+
+  <select id="productType">
+
+    <option value="ซื้อหน้าร้าน">
+      ซื้อหน้าร้าน
+    </option>
+
+    <option value="หลุดจำนำ">
+      หลุดจำนำ
+    </option>
+
+  </select>
+
+</div>
+
+
+<div class="two-column">
+
+
+<div class="form-group">
+
+<label>
+  กะรัตทอง
+</label>
+
+<select id="goldKarat">
+
+  <option value="24K">
+    24K
+  </option>
+
+  <option value="23K">
+    23K
+  </option>
+
+  <option value="18K">
+    18K
+  </option>
+
+  <option value="14K">
+    14K
+  </option>
+
+  <option value="9K">
+    9K
+  </option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+  น้ำหนัก (กรัม)
+</label>
+
+<input
+  id="weight"
+  type="text"
+  inputmode="decimal"
+  autocomplete="off"
+  placeholder="เช่น 15.08"
+>
+
+</div>
+
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+  ต้นทุนซื้อ (บาท)
+</label>
+
+<input
+  id="cost"
+  type="text"
+  inputmode="decimal"
+  autocomplete="off"
+  placeholder="เช่น 56,375"
+>
+
+</div>
+
+
+<div class="cost-preview">
+
+<span>
+  ต้นทุนต่อ 1 บาททอง
+</span>
+
+<strong id="costPerBahtPreview">
+  0 บาท
+</strong>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+  รูปสินค้า
+</label>
+
+<input
+  id="imageInput"
+  type="file"
+  accept="image/*"
+>
+
+<img
+  id="imagePreview"
+  class="image-preview"
+  alt="Preview"
+>
+
+</div>
+
+
+<button
+  class="primary-button"
+  id="saveButton"
+  type="button"
+>
+  บันทึกรายการ
+</button>
+
+
+<button
+  class="secondary-button"
+  id="cancelEditButton"
+  type="button"
+  style="display:none"
+>
+  ยกเลิกการแก้ไข
+</button>
 
 </aside>
 
 
 <div class="right-column">
 
+
 <section class="card chart-card">
 
-  <div class="section-header">
-    <h2>กราฟต้นทุนต่อบาท</h2>
-    <p>เปรียบเทียบต้นทุนของแต่ละรหัสสินค้า</p>
-  </div>
+<div class="section-header">
 
-  <canvas
-    id="costChart"
-    width="1000"
-    height="260"
-  ></canvas>
+<h2>
+  กราฟต้นทุนต่อบาท
+</h2>
+
+<p>
+  เปรียบเทียบต้นทุนของแต่ละรหัสสินค้า
+</p>
+
+</div>
+
+<canvas
+  id="costChart"
+  width="1000"
+  height="260"
+></canvas>
 
 </section>
 
 
 <section class="card table-card">
 
+
 <div class="toolbar">
 
-  <div class="toolbar-left">
+<div class="toolbar-left">
 
-    <input
-      class="search"
-      id="searchInput"
-      type="search"
-      placeholder="🔍 ค้นหารหัสสินค้า..."
-    >
-
-    <select id="typeFilter">
-
-      <option value="">
-        ทุกประเภท
-      </option>
-
-      <option value="ซื้อหน้าร้าน">
-        ซื้อหน้าร้าน
-      </option>
-
-      <option value="หลุดจำนำ">
-        หลุดจำนำ
-      </option>
-
-    </select>
+<input
+  class="search"
+  id="searchInput"
+  type="search"
+  placeholder="🔍 ค้นหารหัสสินค้า..."
+>
 
 
-    <select id="sortSelect">
+<select id="typeFilter">
 
-      <option value="newest">
-        ล่าสุด
-      </option>
+<option value="">
+  ทุกประเภท
+</option>
 
-      <option value="cost-high">
-        ต้นทุน/บาท สูง → ต่ำ
-      </option>
+<option value="ซื้อหน้าร้าน">
+  ซื้อหน้าร้าน
+</option>
 
-      <option value="cost-low">
-        ต้นทุน/บาท ต่ำ → สูง
-      </option>
+<option value="หลุดจำนำ">
+  หลุดจำนำ
+</option>
 
-      <option value="weight-high">
-        น้ำหนักมาก → น้อย
-      </option>
-
-    </select>
-
-  </div>
+</select>
 
 
-  <button
-    class="export-button"
-    id="exportButton"
-    type="button"
-  >
-    ⬇ Export CSV
-  </button>
+<select id="karatFilter">
+
+<option value="">
+  ทุกกะรัต
+</option>
+
+<option value="24K">
+  24K
+</option>
+
+<option value="23K">
+  23K
+</option>
+
+<option value="18K">
+  18K
+</option>
+
+<option value="14K">
+  14K
+</option>
+
+<option value="9K">
+  9K
+</option>
+
+</select>
+
+
+<select id="sortSelect">
+
+<option value="newest">
+  ล่าสุด
+</option>
+
+<option value="cost-high">
+  ต้นทุน/บาท สูง → ต่ำ
+</option>
+
+<option value="cost-low">
+  ต้นทุน/บาท ต่ำ → สูง
+</option>
+
+<option value="weight-high">
+  น้ำหนักมาก → น้อย
+</option>
+
+</select>
+
+</div>
+
+
+<button
+  class="export-button"
+  id="exportButton"
+  type="button"
+>
+  ⬇ Export CSV
+</button>
 
 </div>
 
@@ -881,16 +1059,18 @@ tbody tr:hover {
 <table>
 
 <thead>
+
 <tr>
   <th>สินค้า</th>
   <th>ประเภท</th>
-  <th>ทอง</th>
+  <th>กะรัต</th>
   <th>น้ำหนัก</th>
   <th>ต้นทุน</th>
   <th>ต้นทุน/บาท</th>
   <th>วันที่</th>
   <th></th>
 </tr>
+
 </thead>
 
 <tbody id="tableBody"></tbody>
@@ -907,6 +1087,7 @@ tbody tr:hover {
   📦 ยังไม่มีรายการสินค้า
 </div>
 
+
 </section>
 
 </div>
@@ -918,93 +1099,177 @@ tbody tr:hover {
 
 <script>
 
+/* =====================================================
+   DATA
+===================================================== */
+
 const STORAGE_KEY =
-  "goldPawnManagerDataV1";
+  "goldPawnManagerDataV2";
 
 const GOLD_PRICE_KEY =
   "goldPawnGoldPrice";
 
+
 let products = [];
-let editingId = null;
-let selectedImage = "";
+
+let editingId =
+  null;
+
+let selectedImage =
+  "";
 
 
-/* ELEMENTS */
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
 const productCode =
-  document.getElementById("productCode");
+  document.getElementById(
+    "productCode"
+  );
+
 
 const productType =
-  document.getElementById("productType");
+  document.getElementById(
+    "productType"
+  );
 
-const goldPercent =
-  document.getElementById("goldPercent");
+
+const goldKarat =
+  document.getElementById(
+    "goldKarat"
+  );
+
 
 const weight =
-  document.getElementById("weight");
+  document.getElementById(
+    "weight"
+  );
+
 
 const cost =
-  document.getElementById("cost");
+  document.getElementById(
+    "cost"
+  );
+
 
 const costPerBahtPreview =
-  document.getElementById("costPerBahtPreview");
+  document.getElementById(
+    "costPerBahtPreview"
+  );
+
 
 const saveButton =
-  document.getElementById("saveButton");
+  document.getElementById(
+    "saveButton"
+  );
+
 
 const cancelEditButton =
-  document.getElementById("cancelEditButton");
+  document.getElementById(
+    "cancelEditButton"
+  );
+
 
 const formTitle =
-  document.getElementById("formTitle");
+  document.getElementById(
+    "formTitle"
+  );
+
 
 const imageInput =
-  document.getElementById("imageInput");
+  document.getElementById(
+    "imageInput"
+  );
+
 
 const imagePreview =
-  document.getElementById("imagePreview");
+  document.getElementById(
+    "imagePreview"
+  );
+
 
 const tableBody =
-  document.getElementById("tableBody");
+  document.getElementById(
+    "tableBody"
+  );
+
 
 const emptyState =
-  document.getElementById("emptyState");
+  document.getElementById(
+    "emptyState"
+  );
+
 
 const searchInput =
-  document.getElementById("searchInput");
+  document.getElementById(
+    "searchInput"
+  );
+
 
 const typeFilter =
-  document.getElementById("typeFilter");
+  document.getElementById(
+    "typeFilter"
+  );
+
+
+const karatFilter =
+  document.getElementById(
+    "karatFilter"
+  );
+
 
 const sortSelect =
-  document.getElementById("sortSelect");
+  document.getElementById(
+    "sortSelect"
+  );
+
 
 const exportButton =
-  document.getElementById("exportButton");
+  document.getElementById(
+    "exportButton"
+  );
+
 
 const goldPrice =
-  document.getElementById("goldPrice");
+  document.getElementById(
+    "goldPrice"
+  );
+
 
 const totalItems =
-  document.getElementById("totalItems");
+  document.getElementById(
+    "totalItems"
+  );
+
 
 const totalCost =
-  document.getElementById("totalCost");
+  document.getElementById(
+    "totalCost"
+  );
+
 
 const totalWeight =
-  document.getElementById("totalWeight");
+  document.getElementById(
+    "totalWeight"
+  );
+
 
 const averageCost =
-  document.getElementById("averageCost");
+  document.getElementById(
+    "averageCost"
+  );
+
 
 const chart =
-  document.getElementById("costChart");
+  document.getElementById(
+    "costChart"
+  );
 
 
-/* ==============================
-   แปลงข้อความเป็นตัวเลข
-   รองรับ 56,375
-============================== */
+/* =====================================================
+   PARSE NUMBER
+===================================================== */
 
 function parseNumber(value) {
 
@@ -1012,40 +1277,65 @@ function parseNumber(value) {
     value === null ||
     value === undefined
   ) {
+
     return 0;
+
   }
+
 
   const cleaned =
     String(value)
-      .replace(/,/g, "")
-      .replace(/\s/g, "")
+      .replace(
+        /,/g,
+        ""
+      )
+      .replace(
+        /\s/g,
+        ""
+      )
       .trim();
 
-  const number =
-    Number(cleaned);
 
-  return Number.isFinite(number)
+  const number =
+    Number(
+      cleaned
+    );
+
+
+  return Number.isFinite(
+    number
+  )
     ? number
     : 0;
+
 }
 
 
-/* FORMAT */
+/* =====================================================
+   FORMAT
+===================================================== */
 
 function numberFormat(value) {
 
-  return Number(value || 0)
+  return Number(
+    value || 0
+  )
     .toLocaleString(
       "th-TH",
       {
-        maximumFractionDigits: 2
+        maximumFractionDigits:
+          2
       }
     );
 
 }
 
 
-/* COST PER BAHT */
+/* =====================================================
+   COST PER BAHT
+
+   ต้นทุน ÷ น้ำหนัก × 15.2
+===================================================== */
 
 function calculateCostPerBaht(
   productCost,
@@ -1053,25 +1343,39 @@ function calculateCostPerBaht(
 ) {
 
   const c =
-    parseNumber(productCost);
+    parseNumber(
+      productCost
+    );
+
 
   const w =
-    parseNumber(productWeight);
+    parseNumber(
+      productWeight
+    );
+
 
   if (
     c <= 0 ||
     w <= 0
   ) {
+
     return 0;
+
   }
 
+
   return Math.ceil(
-    c / w * 15.2
+    c /
+    w *
+    15.2
   );
+
 }
 
 
-/* LIVE PREVIEW */
+/* =====================================================
+   LIVE PREVIEW
+===================================================== */
 
 function updateCostPreview() {
 
@@ -1081,16 +1385,21 @@ function updateCostPreview() {
       weight.value
     );
 
+
   costPerBahtPreview.textContent =
-    numberFormat(result) +
+    numberFormat(
+      result
+    ) +
     " บาท";
 
 }
+
 
 cost.addEventListener(
   "input",
   updateCostPreview
 );
+
 
 weight.addEventListener(
   "input",
@@ -1098,7 +1407,9 @@ weight.addEventListener(
 );
 
 
-/* IMAGE */
+/* =====================================================
+   IMAGE
+===================================================== */
 
 imageInput.addEventListener(
   "change",
@@ -1107,27 +1418,36 @@ imageInput.addEventListener(
     const file =
       imageInput.files[0];
 
+
     if (!file) {
       return;
     }
 
+
     if (
       file.size >
-      2 * 1024 * 1024
+      2 *
+      1024 *
+      1024
     ) {
 
       alert(
         "รูปใหญ่เกินไป กรุณาใช้รูปไม่เกิน 2 MB"
       );
 
-      imageInput.value = "";
+
+      imageInput.value =
+        "";
+
 
       return;
+
     }
 
 
     const reader =
       new FileReader();
+
 
     reader.onload =
       event => {
@@ -1135,21 +1455,28 @@ imageInput.addEventListener(
         selectedImage =
           event.target.result;
 
+
         imagePreview.src =
           selectedImage;
 
+
         imagePreview.style.display =
           "block";
+
       };
+
 
     reader.readAsDataURL(
       file
     );
+
   }
 );
 
 
-/* SAVE */
+/* =====================================================
+   SAVE
+===================================================== */
 
 saveButton.addEventListener(
   "click",
@@ -1160,20 +1487,23 @@ saveButton.addEventListener(
 function saveProduct() {
 
   const code =
-    productCode.value.trim();
+    productCode.value
+      .trim();
+
 
   const type =
     productType.value;
 
-  const percent =
-    parseNumber(
-      goldPercent.value
-    );
+
+  const karat =
+    goldKarat.value;
+
 
   const productWeight =
     parseNumber(
       weight.value
     );
+
 
   const productCost =
     parseNumber(
@@ -1190,6 +1520,7 @@ function saveProduct() {
     productCode.focus();
 
     return;
+
   }
 
 
@@ -1204,6 +1535,7 @@ function saveProduct() {
     weight.focus();
 
     return;
+
   }
 
 
@@ -1218,6 +1550,7 @@ function saveProduct() {
     cost.focus();
 
     return;
+
   }
 
 
@@ -1233,19 +1566,24 @@ function saveProduct() {
     const index =
       products.findIndex(
         item =>
-          item.id === editingId
+          item.id ===
+          editingId
       );
 
 
-    if (index !== -1) {
+    if (
+      index !== -1
+    ) {
 
       products[index] = {
 
         ...products[index],
 
         code,
+
         type,
-        percent,
+
+        karat,
 
         weight:
           productWeight,
@@ -1257,6 +1595,7 @@ function saveProduct() {
 
         image:
           selectedImage
+
       };
 
     }
@@ -1271,8 +1610,10 @@ function saveProduct() {
         crypto.randomUUID(),
 
       code,
+
       type,
-      percent,
+
+      karat,
 
       weight:
         productWeight,
@@ -1288,66 +1629,98 @@ function saveProduct() {
       createdAt:
         new Date()
           .toISOString()
+
     });
 
   }
 
 
   saveData();
+
   resetForm();
+
   renderAll();
+
 }
 
 
-/* RESET */
+/* =====================================================
+   RESET
+===================================================== */
 
 function resetForm() {
 
-  editingId = null;
-  selectedImage = "";
+  editingId =
+    null;
 
-  productCode.value = "";
+
+  selectedImage =
+    "";
+
+
+  productCode.value =
+    "";
+
 
   productType.value =
     "ซื้อหน้าร้าน";
 
-  goldPercent.value =
-    "96.5";
 
-  weight.value = "";
+  goldKarat.value =
+    "24K";
 
-  cost.value = "";
 
-  imageInput.value = "";
+  weight.value =
+    "";
 
-  imagePreview.src = "";
+
+  cost.value =
+    "";
+
+
+  imageInput.value =
+    "";
+
+
+  imagePreview.src =
+    "";
+
 
   imagePreview.style.display =
     "none";
 
+
   costPerBahtPreview.textContent =
     "0 บาท";
+
 
   formTitle.textContent =
     "➕ เพิ่มรายการทอง";
 
+
   saveButton.textContent =
     "บันทึกรายการ";
 
+
   cancelEditButton.style.display =
     "none";
+
 }
 
 
-/* EDIT */
+/* =====================================================
+   EDIT
+===================================================== */
 
 function editProduct(id) {
 
   const product =
     products.find(
       item =>
-        item.id === id
+        item.id ===
+        id
     );
+
 
   if (!product) {
     return;
@@ -1357,31 +1730,42 @@ function editProduct(id) {
   editingId =
     product.id;
 
+
   productCode.value =
     product.code;
+
 
   productType.value =
     product.type;
 
-  goldPercent.value =
-    product.percent;
+
+  goldKarat.value =
+    product.karat ||
+    "24K";
+
 
   weight.value =
     product.weight;
+
 
   cost.value =
     numberFormat(
       product.cost
     );
 
+
   selectedImage =
-    product.image || "";
+    product.image ||
+    "";
 
 
-  if (selectedImage) {
+  if (
+    selectedImage
+  ) {
 
     imagePreview.src =
       selectedImage;
+
 
     imagePreview.style.display =
       "block";
@@ -1392,16 +1776,20 @@ function editProduct(id) {
 
     imagePreview.style.display =
       "none";
+
   }
 
 
   updateCostPreview();
 
+
   formTitle.textContent =
     "✏️ แก้ไขรายการ";
 
+
   saveButton.textContent =
     "บันทึกการแก้ไข";
+
 
   cancelEditButton.style.display =
     "block";
@@ -1411,6 +1799,7 @@ function editProduct(id) {
     top: 0,
     behavior: "smooth"
   });
+
 }
 
 
@@ -1420,15 +1809,19 @@ cancelEditButton.addEventListener(
 );
 
 
-/* DELETE */
+/* =====================================================
+   DELETE
+===================================================== */
 
 function deleteProduct(id) {
 
   const product =
     products.find(
       item =>
-        item.id === id
+        item.id ===
+        id
     );
+
 
   if (!product) {
     return;
@@ -1449,16 +1842,21 @@ function deleteProduct(id) {
   products =
     products.filter(
       item =>
-        item.id !== id
+        item.id !==
+        id
     );
 
 
   saveData();
+
   renderAll();
+
 }
 
 
-/* STORAGE */
+/* =====================================================
+   STORAGE
+===================================================== */
 
 function saveData() {
 
@@ -1466,19 +1864,26 @@ function saveData() {
 
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify(products)
+      JSON.stringify(
+        products
+      )
     );
 
   }
 
   catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     alert(
       "พื้นที่จัดเก็บเต็ม อาจเกิดจากรูปภาพมีขนาดใหญ่เกินไป"
     );
+
   }
+
 }
 
 
@@ -1491,21 +1896,31 @@ function loadData() {
         STORAGE_KEY
       );
 
+
     products =
       saved
-        ? JSON.parse(saved)
-        : [];
+        ?
+        JSON.parse(
+          saved
+        )
+        :
+        [];
 
   }
 
   catch (error) {
 
-    products = [];
+    products =
+      [];
+
   }
+
 }
 
 
-/* GOLD PRICE */
+/* =====================================================
+   GOLD PRICE
+===================================================== */
 
 goldPrice.addEventListener(
   "input",
@@ -1515,6 +1930,7 @@ goldPrice.addEventListener(
       GOLD_PRICE_KEY,
       goldPrice.value
     );
+
   }
 );
 
@@ -1526,14 +1942,20 @@ function loadGoldPrice() {
       GOLD_PRICE_KEY
     );
 
+
   if (saved) {
+
     goldPrice.value =
       saved;
+
   }
+
 }
 
 
-/* FILTER */
+/* =====================================================
+   FILTER
+===================================================== */
 
 function getFilteredProducts() {
 
@@ -1542,8 +1964,13 @@ function getFilteredProducts() {
       .trim()
       .toLowerCase();
 
+
   const type =
     typeFilter.value;
+
+
+  const karat =
+    karatFilter.value;
 
 
   let result =
@@ -1553,16 +1980,29 @@ function getFilteredProducts() {
         const matchCode =
           item.code
             .toLowerCase()
-            .includes(search);
+            .includes(
+              search
+            );
+
 
         const matchType =
           !type ||
-          item.type === type;
+          item.type ===
+          type;
+
+
+        const matchKarat =
+          !karat ||
+          item.karat ===
+          karat;
+
 
         return (
           matchCode &&
-          matchType
+          matchType &&
+          matchKarat
         );
+
       }
     );
 
@@ -1608,13 +2048,19 @@ function getFilteredProducts() {
 
       result.sort(
         (a,b) =>
-          new Date(b.createdAt) -
-          new Date(a.createdAt)
+          new Date(
+            b.createdAt
+          ) -
+          new Date(
+            a.createdAt
+          )
       );
+
   }
 
 
   return result;
+
 }
 
 
@@ -1623,10 +2069,18 @@ searchInput.addEventListener(
   renderAll
 );
 
+
 typeFilter.addEventListener(
   "change",
   renderAll
 );
+
+
+karatFilter.addEventListener(
+  "change",
+  renderAll
+);
+
 
 sortSelect.addEventListener(
   "change",
@@ -1634,20 +2088,26 @@ sortSelect.addEventListener(
 );
 
 
-/* TABLE */
+/* =====================================================
+   TABLE
+===================================================== */
 
 function renderTable() {
 
   const list =
     getFilteredProducts();
 
+
   tableBody.innerHTML =
     "";
 
+
   emptyState.style.display =
     list.length
-      ? "none"
-      : "block";
+      ?
+      "none"
+      :
+      "block";
 
 
   list.forEach(
@@ -1672,16 +2132,16 @@ function renderTable() {
         product.image
           ?
           `
-          <img
-            class="product-image"
-            src="${product.image}"
-          >
+            <img
+              class="product-image"
+              src="${product.image}"
+            >
           `
           :
           `
-          <div class="no-image">
-            🏆
-          </div>
+            <div class="no-image">
+              🏆
+            </div>
           `;
 
 
@@ -1697,6 +2157,7 @@ function renderTable() {
       tr.innerHTML = `
 
         <td>
+
           <div class="product-cell">
 
             ${imageHTML}
@@ -1706,18 +2167,27 @@ function renderTable() {
             </div>
 
           </div>
+
         </td>
 
 
         <td>
-          <span class="badge ${typeClass}">
+
+          <span
+            class="badge ${typeClass}"
+          >
             ${product.type}
           </span>
+
         </td>
 
 
         <td>
-          ${product.percent}%
+
+          <span class="karat-badge">
+            ${product.karat || "24K"}
+          </span>
+
         </td>
 
 
@@ -1752,6 +2222,7 @@ function renderTable() {
               ✏️
             </button>
 
+
             <button
               class="action-btn delete-btn"
               onclick="deleteProduct('${product.id}')"
@@ -1762,18 +2233,23 @@ function renderTable() {
           </div>
 
         </td>
+
       `;
 
 
       tableBody.appendChild(
         tr
       );
+
     }
   );
+
 }
 
 
-/* KPI */
+/* =====================================================
+   KPI
+===================================================== */
 
 function renderKPI() {
 
@@ -1785,7 +2261,9 @@ function renderKPI() {
     products.reduce(
       (sum,item) =>
         sum +
-        Number(item.cost),
+        Number(
+          item.cost
+        ),
       0
     );
 
@@ -1794,7 +2272,9 @@ function renderKPI() {
     products.reduce(
       (sum,item) =>
         sum +
-        Number(item.weight),
+        Number(
+          item.weight
+        ),
       0
     );
 
@@ -1812,20 +2292,34 @@ function renderKPI() {
 
 
   totalItems.textContent =
-    numberFormat(count);
+    numberFormat(
+      count
+    );
+
 
   totalCost.textContent =
-    numberFormat(sumCost);
+    numberFormat(
+      sumCost
+    );
+
 
   totalWeight.textContent =
-    numberFormat(sumWeight);
+    numberFormat(
+      sumWeight
+    );
+
 
   averageCost.textContent =
-    numberFormat(avg);
+    numberFormat(
+      avg
+    );
+
 }
 
 
-/* CHART */
+/* =====================================================
+   CHART
+===================================================== */
 
 function drawChart() {
 
@@ -1834,28 +2328,43 @@ function drawChart() {
       "2d"
     );
 
+
   const rect =
     chart.getBoundingClientRect();
 
+
   const dpr =
-    window.devicePixelRatio || 1;
+    window.devicePixelRatio ||
+    1;
+
 
   chart.width =
-    rect.width * dpr;
+    rect.width *
+    dpr;
+
 
   chart.height =
-    250 * dpr;
+    250 *
+    dpr;
 
-  ctx.scale(
+
+  ctx.setTransform(
     dpr,
-    dpr
+    0,
+    0,
+    dpr,
+    0,
+    0
   );
+
 
   const width =
     rect.width;
 
+
   const height =
     250;
+
 
   ctx.clearRect(
     0,
@@ -1867,22 +2376,29 @@ function drawChart() {
 
   const list =
     getFilteredProducts()
-      .slice(0,20)
+      .slice(
+        0,
+        20
+      )
       .reverse();
 
 
   if (
-    list.length === 0
+    list.length ===
+    0
   ) {
 
     ctx.fillStyle =
       "#999";
 
+
     ctx.font =
       "13px Arial";
 
+
     ctx.textAlign =
       "center";
+
 
     ctx.fillText(
       "เพิ่มสินค้าเพื่อแสดงกราฟ",
@@ -1890,15 +2406,17 @@ function drawChart() {
       height / 2
     );
 
+
     return;
+
   }
 
 
   const padding = {
-    left:55,
-    right:25,
-    top:20,
-    bottom:45
+    left: 55,
+    right: 25,
+    top: 20,
+    bottom: 45
   };
 
 
@@ -1910,10 +2428,15 @@ function drawChart() {
 
 
   let minValue =
-    Math.min(...values);
+    Math.min(
+      ...values
+    );
+
 
   let maxValue =
-    Math.max(...values);
+    Math.max(
+      ...values
+    );
 
 
   if (
@@ -1921,8 +2444,13 @@ function drawChart() {
     maxValue
   ) {
 
-    minValue -= 1000;
-    maxValue += 1000;
+    minValue -=
+      1000;
+
+
+    maxValue +=
+      1000;
+
   }
 
 
@@ -1930,17 +2458,22 @@ function drawChart() {
     maxValue -
     minValue;
 
+
   minValue -=
-    range * .15;
+    range *
+    .15;
+
 
   maxValue +=
-    range * .15;
+    range *
+    .15;
 
 
   const chartWidth =
     width -
     padding.left -
     padding.right;
+
 
   const chartHeight =
     height -
@@ -1950,6 +2483,7 @@ function drawChart() {
 
   ctx.strokeStyle =
     "#eae7df";
+
 
   ctx.lineWidth =
     1;
@@ -1963,14 +2497,19 @@ function drawChart() {
 
     const y =
       padding.top +
-      chartHeight / 4 * i;
+      chartHeight /
+      4 *
+      i;
+
 
     ctx.beginPath();
+
 
     ctx.moveTo(
       padding.left,
       y
     );
+
 
     ctx.lineTo(
       width -
@@ -1978,7 +2517,9 @@ function drawChart() {
       y
     );
 
+
     ctx.stroke();
+
   }
 
 
@@ -1986,26 +2527,29 @@ function drawChart() {
     index => {
 
       if (
-        list.length === 1
+        list.length ===
+        1
       ) {
 
         return (
           padding.left +
-          chartWidth / 2
+          chartWidth /
+          2
         );
+
       }
+
 
       return (
         padding.left +
+        chartWidth /
         (
-          chartWidth /
-          (
-            list.length -
-            1
-          )
+          list.length -
+          1
         ) *
         index
       );
+
     };
 
 
@@ -2024,13 +2568,16 @@ function drawChart() {
         ) *
         chartHeight
       );
+
     };
 
 
   ctx.beginPath();
 
+
   ctx.strokeStyle =
     "#9a1520";
+
 
   ctx.lineWidth =
     2.5;
@@ -2040,7 +2587,10 @@ function drawChart() {
     (item,index) => {
 
       const x =
-        getX(index);
+        getX(
+          index
+        );
+
 
       const y =
         getY(
@@ -2051,12 +2601,23 @@ function drawChart() {
       if (
         index === 0
       ) {
-        ctx.moveTo(x,y);
+
+        ctx.moveTo(
+          x,
+          y
+        );
+
       }
 
       else {
-        ctx.lineTo(x,y);
+
+        ctx.lineTo(
+          x,
+          y
+        );
+
       }
+
     }
   );
 
@@ -2068,7 +2629,10 @@ function drawChart() {
     (item,index) => {
 
       const x =
-        getX(index);
+        getX(
+          index
+        );
+
 
       const y =
         getY(
@@ -2078,24 +2642,31 @@ function drawChart() {
 
       ctx.beginPath();
 
+
       ctx.arc(
         x,
         y,
         5,
         0,
-        Math.PI * 2
+        Math.PI *
+        2
       );
+
 
       ctx.fillStyle =
         "#c49a3a";
 
+
       ctx.fill();
+
 
       ctx.strokeStyle =
         "#ffffff";
 
+
       ctx.lineWidth =
         2;
+
 
       ctx.stroke();
 
@@ -2103,23 +2674,31 @@ function drawChart() {
       ctx.fillStyle =
         "#777";
 
+
       ctx.font =
         "9px Arial";
+
 
       ctx.textAlign =
         "center";
 
+
       ctx.fillText(
         item.code,
         x,
-        height - 20
+        height -
+        20
       );
+
     }
   );
+
 }
 
 
-/* CSV */
+/* =====================================================
+   CSV
+===================================================== */
 
 exportButton.addEventListener(
   "click",
@@ -2130,25 +2709,36 @@ exportButton.addEventListener(
 function exportCSV() {
 
   if (
-    products.length === 0
+    products.length ===
+    0
   ) {
 
     alert(
       "ยังไม่มีข้อมูลสำหรับ Export"
     );
 
+
     return;
+
   }
 
 
   const rows = [[
+
     "รหัสสินค้า",
+
     "ประเภท",
-    "เปอร์เซ็นต์ทอง",
+
+    "กะรัต",
+
     "น้ำหนักกรัม",
+
     "ต้นทุน",
+
     "ต้นทุนต่อบาท",
+
     "วันที่"
+
   ]];
 
 
@@ -2156,19 +2746,28 @@ function exportCSV() {
     product => {
 
       rows.push([
+
         product.code,
+
         product.type,
-        product.percent,
+
+        product.karat,
+
         product.weight,
+
         product.cost,
+
         product.costPerBaht,
+
         new Date(
           product.createdAt
         )
           .toLocaleDateString(
             "th-TH"
           )
+
       ]);
+
     }
   );
 
@@ -2185,9 +2784,13 @@ function exportCSV() {
                 '""'
               )}"`
         )
-          .join(",")
+          .join(
+            ","
+          )
     )
-      .join("\n");
+      .join(
+        "\n"
+      );
 
 
   const blob =
@@ -2211,49 +2814,84 @@ function exportCSV() {
       "a"
     );
 
+
   link.href =
     url;
+
 
   link.download =
     `gold-data-${new Date()
       .toISOString()
-      .slice(0,10)}.csv`;
+      .slice(
+        0,
+        10
+      )}.csv`;
+
 
   link.click();
+
 
   URL.revokeObjectURL(
     url
   );
+
 }
 
 
-/* SAFE HTML */
+/* =====================================================
+   SAFE HTML
+===================================================== */
 
 function escapeHTML(text) {
 
   return String(text)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
 
 
-/* RENDER ALL */
+/* =====================================================
+   RENDER
+===================================================== */
 
 function renderAll() {
 
   renderKPI();
+
   renderTable();
+
   drawChart();
+
 }
 
 
-/* START */
+/* =====================================================
+   START
+===================================================== */
 
 loadData();
+
 loadGoldPrice();
+
 renderAll();
 
 
@@ -2262,8 +2900,10 @@ window.addEventListener(
   drawChart
 );
 
+
 window.editProduct =
   editProduct;
+
 
 window.deleteProduct =
   deleteProduct;
