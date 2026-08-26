@@ -434,43 +434,8 @@ main {
   gap:10px;
 }
 
-/* COST */
-
-.cost-preview {
-  margin:18px 0;
-
-  padding:17px;
-
-  border-radius:15px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #fff8df,
-      #f7edcf
-    );
-
-  border:
-    1px solid
-    #ead59b;
-}
-
-.cost-preview span {
-  display:block;
-
-  color:#765d24;
-
-  font-size:11px;
-}
-
-.cost-preview strong {
-  display:block;
-
-  margin-top:6px;
-
-  color:#7c5b16;
-
-  font-size:27px;
+.two-column.single-column {
+  grid-template-columns:1fr;
 }
 
 /* IMAGE */
@@ -705,6 +670,13 @@ tbody tr:hover {
 
 .code {
   font-weight:bold;
+}
+
+.product-name {
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.35;
 }
 
 /* TYPE BADGES */
@@ -1108,21 +1080,6 @@ tbody tr:hover {
 <div class="form-group">
 
   <label>
-    รหัสสินค้า
-  </label>
-
-  <input
-    id="productCode"
-    type="text"
-    placeholder="เช่น A001"
-  >
-
-</div>
-
-
-<div class="form-group">
-
-  <label>
     ประเภทสินค้า
   </label>
 
@@ -1149,9 +1106,41 @@ tbody tr:hover {
 </div>
 
 
-<div class="two-column">
+<div class="form-group">
+
+  <label>
+    รหัสสินค้า
+  </label>
+
+  <input
+    id="productCode"
+    type="text"
+    autocomplete="off"
+    placeholder="เช่น A001"
+  >
+
+</div>
+
 
 <div class="form-group">
+
+  <label>
+    ชื่อสินค้า
+  </label>
+
+  <input
+    id="productName"
+    type="text"
+    autocomplete="off"
+    placeholder="เช่น สร้อยคอทองคำ / iPhone 12"
+  >
+
+</div>
+
+
+<div class="two-column" id="goldDetailsRow">
+
+<div class="form-group" id="goldKaratGroup">
 
 <label>
   กะรัตทอง
@@ -1206,6 +1195,47 @@ tbody tr:hover {
 <div class="form-group">
 
 <label>
+  หน่วยนับ
+</label>
+
+<select id="unit">
+
+  <option value="ชิ้น">
+    ชิ้น
+  </option>
+
+  <option value="อัน">
+    อัน
+  </option>
+
+  <option value="วง">
+    วง
+  </option>
+
+  <option value="เส้น">
+    เส้น
+  </option>
+
+  <option value="ตัว">
+    ตัว
+  </option>
+
+  <option value="ผืน">
+    ผืน
+  </option>
+
+  <option value="เครื่อง">
+    เครื่อง
+  </option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
   ต้นทุนซื้อ (บาท)
 </label>
 
@@ -1220,15 +1250,36 @@ tbody tr:hover {
 </div>
 
 
-<div class="cost-preview">
+<div class="form-group" id="interestGroup">
 
-<span>
-  ต้นทุนต่อ 1 บาททอง
-</span>
+<label>
+  ดอกเบี้ย (บาท)
+</label>
 
-<strong id="costPerBahtPreview">
-  0 บาท
-</strong>
+<input
+  id="interest"
+  type="text"
+  inputmode="decimal"
+  autocomplete="off"
+  placeholder="เช่น 500"
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+  ราคาขาย (บาท)
+</label>
+
+<input
+  id="salePrice"
+  type="text"
+  inputmode="decimal"
+  autocomplete="off"
+  placeholder="เช่น 65,000"
+>
 
 </div>
 
@@ -1283,11 +1334,11 @@ tbody tr:hover {
 <div class="section-header">
 
 <h2>
-  กราฟต้นทุนต่อบาท
+  จำนวนสินค้าในแต่ละประเภท
 </h2>
 
 <p>
-  เปรียบเทียบต้นทุนของแต่ละรหัสสินค้า
+  กราฟแท่งแสดงจำนวนสินค้าทั้งหมด แยกตามประเภทสินค้า
 </p>
 
 </div>
@@ -1312,7 +1363,7 @@ tbody tr:hover {
   class="search"
   id="searchInput"
   type="search"
-  placeholder="🔍 ค้นหารหัสสินค้า..."
+  placeholder="🔍 ค้นหารหัสหรือชื่อสินค้า..."
 >
 
 
@@ -1429,7 +1480,19 @@ tbody tr:hover {
   </th>
 
   <th>
+    หน่วยนับ
+  </th>
+
+  <th>
     ต้นทุน
+  </th>
+
+  <th>
+    ดอกเบี้ย
+  </th>
+
+  <th>
+    ราคาขาย
   </th>
 
   <th>
@@ -2016,6 +2079,12 @@ const productCode =
   );
 
 
+const productName =
+  document.getElementById(
+    "productName"
+  );
+
+
 const productType =
   document.getElementById(
     "productType"
@@ -2028,9 +2097,27 @@ const goldKarat =
   );
 
 
+const goldKaratGroup =
+  document.getElementById(
+    "goldKaratGroup"
+  );
+
+
+const goldDetailsRow =
+  document.getElementById(
+    "goldDetailsRow"
+  );
+
+
 const weight =
   document.getElementById(
     "weight"
+  );
+
+
+const unit =
+  document.getElementById(
+    "unit"
   );
 
 
@@ -2040,9 +2127,21 @@ const cost =
   );
 
 
-const costPerBahtPreview =
+const interest =
   document.getElementById(
-    "costPerBahtPreview"
+    "interest"
+  );
+
+
+const interestGroup =
+  document.getElementById(
+    "interestGroup"
+  );
+
+
+const salePrice =
+  document.getElementById(
+    "salePrice"
   );
 
 
@@ -2149,6 +2248,90 @@ const chart =
 
 
 /* =====================================================
+   GOLD FIELD VISIBILITY
+===================================================== */
+
+function isGoldProductType(type) {
+
+  return (
+    type === "ทองคำ" ||
+    type === "หลุดทองคำ"
+  );
+
+}
+
+
+function updateGoldKaratVisibility() {
+
+  const showGoldFields =
+    isGoldProductType(
+      productType.value
+    );
+
+
+  goldDetailsRow.style.display =
+    showGoldFields
+      ? "grid"
+      : "none";
+
+
+  goldKarat.disabled =
+    !showGoldFields;
+
+
+  weight.disabled =
+    !showGoldFields;
+
+
+}
+
+
+function isLostProductType(type) {
+
+  return (
+    type === "หลุดเบ็ดเตล็ด" ||
+    type === "หลุดทองคำ"
+  );
+
+}
+
+
+function updateInterestVisibility() {
+
+  const showInterest =
+    isLostProductType(
+      productType.value
+    );
+
+
+  interestGroup.style.display =
+    showInterest
+      ? "block"
+      : "none";
+
+
+  interest.disabled =
+    !showInterest;
+
+}
+
+
+function updateConditionalFields() {
+
+  updateGoldKaratVisibility();
+
+  updateInterestVisibility();
+
+}
+
+
+productType.addEventListener(
+  "change",
+  updateConditionalFields
+);
+
+
+/* =====================================================
    NUMBER
 ===================================================== */
 
@@ -2248,40 +2431,6 @@ function calculateCostPerBaht(
 
 
 /* =====================================================
-   LIVE PREVIEW
-===================================================== */
-
-function updateCostPreview() {
-
-  const result =
-    calculateCostPerBaht(
-      cost.value,
-      weight.value
-    );
-
-
-  costPerBahtPreview.textContent =
-    numberFormat(
-      result
-    ) +
-    " บาท";
-
-}
-
-
-cost.addEventListener(
-  "input",
-  updateCostPreview
-);
-
-
-weight.addEventListener(
-  "input",
-  updateCostPreview
-);
-
-
-/* =====================================================
    IMAGE
 ===================================================== */
 
@@ -2365,23 +2514,50 @@ function saveProduct() {
       .trim();
 
 
+  const name =
+    productName.value
+      .trim();
+
+
   const type =
     productType.value;
 
 
   const karat =
-    goldKarat.value;
+    isGoldProductType(type)
+      ? goldKarat.value
+      : "";
+
+
+  const productUnit =
+    unit.value;
 
 
   const productWeight =
-    parseNumber(
-      weight.value
-    );
+    isGoldProductType(type)
+      ? parseNumber(
+          weight.value
+        )
+      : 0;
 
 
   const productCost =
     parseNumber(
       cost.value
+    );
+
+
+  const productInterest =
+    isLostProductType(type)
+      ? parseNumber(
+          interest.value
+        )
+      : 0;
+
+
+  const productSalePrice =
+    parseNumber(
+      salePrice.value
     );
 
 
@@ -2398,7 +2574,21 @@ function saveProduct() {
   }
 
 
+  if (!name) {
+
+    alert(
+      "กรุณากรอกชื่อสินค้า"
+    );
+
+    productName.focus();
+
+    return;
+
+  }
+
+
   if (
+    isGoldProductType(type) &&
     productWeight <= 0
   ) {
 
@@ -2429,10 +2619,12 @@ function saveProduct() {
 
 
   const costPerBaht =
-    calculateCostPerBaht(
-      productCost,
-      productWeight
-    );
+    isGoldProductType(type)
+      ? calculateCostPerBaht(
+          productCost,
+          productWeight
+        )
+      : 0;
 
 
   if (editingId) {
@@ -2455,15 +2647,26 @@ function saveProduct() {
 
         code,
 
+        name,
+
         type,
 
         karat,
+
+        unit:
+          productUnit,
 
         weight:
           productWeight,
 
         cost:
           productCost,
+
+        interest:
+          productInterest,
+
+        salePrice:
+          productSalePrice,
 
         costPerBaht,
 
@@ -2485,15 +2688,26 @@ function saveProduct() {
 
       code,
 
+      name,
+
       type,
 
       karat,
+
+      unit:
+        productUnit,
 
       weight:
         productWeight,
 
       cost:
         productCost,
+
+      interest:
+        productInterest,
+
+      salePrice:
+        productSalePrice,
 
       costPerBaht,
 
@@ -2511,9 +2725,9 @@ function saveProduct() {
 
   saveData();
 
-  resetForm();
-
   renderAll();
+
+  resetForm();
 
 }
 
@@ -2522,18 +2736,45 @@ function saveProduct() {
    RESET
 ===================================================== */
 
-function resetForm() {
-
-  editingId =
-    null;
-
+function clearProductEntryFields() {
 
   selectedImage =
     "";
 
-
   productCode.value =
     "";
+
+  productName.value =
+    "";
+
+  weight.value =
+    "";
+
+  cost.value =
+    "";
+
+  interest.value =
+    "";
+
+  salePrice.value =
+    "";
+
+  imageInput.value =
+    "";
+
+  imagePreview.src =
+    "";
+
+  imagePreview.style.display =
+    "none";
+
+}
+
+
+function resetForm() {
+
+  editingId =
+    null;
 
 
   productType.value =
@@ -2544,28 +2785,14 @@ function resetForm() {
     "24K";
 
 
-  weight.value =
-    "";
+  unit.value =
+    "ชิ้น";
 
 
-  cost.value =
-    "";
+  clearProductEntryFields();
 
 
-  imageInput.value =
-    "";
-
-
-  imagePreview.src =
-    "";
-
-
-  imagePreview.style.display =
-    "none";
-
-
-  costPerBahtPreview.textContent =
-    "0 บาท";
+  updateConditionalFields();
 
 
   formTitle.textContent =
@@ -2578,6 +2805,16 @@ function resetForm() {
 
   cancelEditButton.style.display =
     "none";
+
+
+  if (
+    document.activeElement &&
+    typeof document.activeElement.blur === "function"
+  ) {
+
+    document.activeElement.blur();
+
+  }
 
 }
 
@@ -2609,6 +2846,11 @@ function editProduct(id) {
     product.code;
 
 
+  productName.value =
+    product.name ||
+    "";
+
+
   productType.value =
     product.type;
 
@@ -2618,14 +2860,38 @@ function editProduct(id) {
     "24K";
 
 
+  updateConditionalFields();
+
+
   weight.value =
     product.weight;
+
+
+  unit.value =
+    product.unit ||
+    "ชิ้น";
 
 
   cost.value =
     numberFormat(
       product.cost
     );
+
+
+  interest.value =
+    product.interest
+      ? numberFormat(
+          product.interest
+        )
+      : "";
+
+
+  salePrice.value =
+    product.salePrice
+      ? numberFormat(
+          product.salePrice
+        )
+      : "";
 
 
   selectedImage =
@@ -2652,9 +2918,6 @@ function editProduct(id) {
       "none";
 
   }
-
-
-  updateCostPreview();
 
 
   formTitle.textContent =
@@ -2704,7 +2967,7 @@ function deleteProduct(id) {
 
   if (
     !confirm(
-      `ต้องการลบสินค้า ${product.code} หรือไม่?`
+      `ต้องการลบสินค้า ${product.code}${product.name ? ` - ${product.name}` : ""} หรือไม่?`
     )
   ) {
 
@@ -2816,8 +3079,16 @@ function getFilteredProducts() {
     products.filter(
       item => {
 
-        const matchCode =
+        const matchSearch =
           item.code
+            .toLowerCase()
+            .includes(
+              search
+            ) ||
+          String(
+            item.name ||
+            ""
+          )
             .toLowerCase()
             .includes(
               search
@@ -2832,12 +3103,15 @@ function getFilteredProducts() {
 
         const matchKarat =
           !karat ||
-          item.karat ===
-          karat;
+          (
+            isGoldProductType(item.type) &&
+            (item.karat || "24K") ===
+            karat
+          );
 
 
         return (
-          matchCode &&
+          matchSearch &&
           matchType &&
           matchKarat
         );
@@ -3023,8 +3297,16 @@ function renderTable() {
 
           ${imageHTML}
 
-          <div class="code">
-            ${escapeHTML(product.code)}
+          <div>
+
+            <div class="code">
+              ${escapeHTML(product.code)}
+            </div>
+
+            <div class="product-name">
+              ${escapeHTML(product.name || "ไม่ระบุชื่อ")}
+            </div>
+
           </div>
 
         </div>
@@ -3044,14 +3326,27 @@ function renderTable() {
       <td>
 
         <span class="karat-badge">
-          ${product.karat || "24K"}
+          ${
+            isGoldProductType(product.type)
+              ? (product.karat || "24K")
+              : "-"
+          }
         </span>
 
       </td>
 
 
       <td>
-        ${numberFormat(product.weight)} g
+        ${
+          isGoldProductType(product.type)
+            ? numberFormat(product.weight) + " g"
+            : "-"
+        }
+      </td>
+
+
+      <td>
+        ${escapeHTML(product.unit || "ชิ้น")}
       </td>
 
 
@@ -3060,8 +3355,22 @@ function renderTable() {
       </td>
 
 
+      <td>
+        ${numberFormat(product.interest || 0)}
+      </td>
+
+
+      <td>
+        ${numberFormat(product.salePrice || 0)}
+      </td>
+
+
       <td class="cost-baht">
-        ${numberFormat(product.costPerBaht)}
+        ${
+          isGoldProductType(product.type)
+            ? numberFormat(product.costPerBaht)
+            : "-"
+        }
       </td>
 
 
@@ -3127,8 +3436,17 @@ function renderKPI() {
     );
 
 
+  const goldProducts =
+    products.filter(
+      item =>
+        isGoldProductType(
+          item.type
+        )
+    );
+
+
   const sumWeight =
-    products.reduce(
+    goldProducts.reduce(
       (sum,item) =>
         sum +
         Number(
@@ -3138,11 +3456,22 @@ function renderKPI() {
     );
 
 
+  const goldCost =
+    goldProducts.reduce(
+      (sum,item) =>
+        sum +
+        Number(
+          item.cost
+        ),
+      0
+    );
+
+
   const avg =
     sumWeight > 0
       ?
       Math.ceil(
-        sumCost /
+        goldCost /
         sumWeight *
         15.2
       )
@@ -3233,18 +3562,26 @@ function drawChart() {
   );
 
 
-  const list =
-    getFilteredProducts()
-      .slice(
-        0,
-        20
-      )
-      .reverse();
+  const categories = [
+    "เบ็ดเตล็ด",
+    "ทองคำ",
+    "หลุดเบ็ดเตล็ด",
+    "หลุดทองคำ"
+  ];
+
+
+  const counts =
+    categories.map(
+      type =>
+        products.filter(
+          item =>
+            item.type === type
+        ).length
+    );
 
 
   if (
-    list.length ===
-    0
+    products.length === 0
   ) {
 
     ctx.fillStyle =
@@ -3252,7 +3589,7 @@ function drawChart() {
 
 
     ctx.font =
-      "13px Arial";
+      '13px Arial,"Noto Sans Thai",sans-serif';
 
 
     ctx.textAlign =
@@ -3272,60 +3609,11 @@ function drawChart() {
 
 
   const padding = {
-    left:55,
-    right:25,
-    top:20,
-    bottom:45
+    left:48,
+    right:22,
+    top:28,
+    bottom:58
   };
-
-
-  const values =
-    list.map(
-      item =>
-        item.costPerBaht
-    );
-
-
-  let minValue =
-    Math.min(
-      ...values
-    );
-
-
-  let maxValue =
-    Math.max(
-      ...values
-    );
-
-
-  if (
-    minValue ===
-    maxValue
-  ) {
-
-    minValue -=
-      1000;
-
-
-    maxValue +=
-      1000;
-
-  }
-
-
-  const range =
-    maxValue -
-    minValue;
-
-
-  minValue -=
-    range *
-    .15;
-
-
-  maxValue +=
-    range *
-    .15;
 
 
   const chartWidth =
@@ -3340,8 +3628,48 @@ function drawChart() {
     padding.bottom;
 
 
+  const maxCount =
+    Math.max(
+      ...counts,
+      1
+    );
+
+
+  const step =
+    Math.max(
+      1,
+      Math.ceil(
+        maxCount / 4
+      )
+    );
+
+
+  const axisMax =
+    step * 4;
+
+
   ctx.strokeStyle =
     "#eae7df";
+
+
+  ctx.lineWidth =
+    1;
+
+
+  ctx.fillStyle =
+    "#888";
+
+
+  ctx.font =
+    '10px Arial,"Noto Sans Thai",sans-serif';
+
+
+  ctx.textAlign =
+    "right";
+
+
+  ctx.textBaseline =
+    "middle";
 
 
   for (
@@ -3350,11 +3678,14 @@ function drawChart() {
     i++
   ) {
 
+    const value =
+      axisMax -
+      step * i;
+
+
     const y =
       padding.top +
-      chartHeight /
-      4 *
-      i;
+      chartHeight / 4 * i;
 
 
     ctx.beginPath();
@@ -3375,173 +3706,173 @@ function drawChart() {
 
     ctx.stroke();
 
+
+    ctx.fillText(
+      String(value),
+      padding.left - 8,
+      y
+    );
+
   }
 
 
-  const getX =
-    index => {
-
-      if (
-        list.length ===
-        1
-      ) {
-
-        return (
-          padding.left +
-          chartWidth /
-          2
-        );
-
-      }
+  const slotWidth =
+    chartWidth /
+    categories.length;
 
 
-      return (
-        padding.left +
-        chartWidth /
-        (
-          list.length -
-          1
-        ) *
-        index
-      );
-
-    };
+  const barWidth =
+    Math.min(
+      78,
+      slotWidth * 0.56
+    );
 
 
-  const getY =
-    value =>
-
-      padding.top +
-
-      (
-        maxValue -
-        value
-      ) /
-
-      (
-        maxValue -
-        minValue
-      ) *
-
-      chartHeight;
+  const barColors = [
+    "#6b7f99",
+    "#c49a3a",
+    "#d07a38",
+    "#9a1520"
+  ];
 
 
-  ctx.beginPath();
+  categories.forEach(
+    (type,index) => {
+
+      const count =
+        counts[index];
 
 
-  ctx.strokeStyle =
-    "#9a1520";
+      const barHeight =
+        count /
+        axisMax *
+        chartHeight;
 
-
-  ctx.lineWidth =
-    2.5;
-
-
-  list.forEach(
-    (item,index) => {
 
       const x =
-        getX(index);
+        padding.left +
+        slotWidth * index +
+        (
+          slotWidth -
+          barWidth
+        ) / 2;
 
 
       const y =
-        getY(
-          item.costPerBaht
-        );
+        padding.top +
+        chartHeight -
+        barHeight;
+
+
+      ctx.fillStyle =
+        barColors[index];
+
+
+      ctx.beginPath();
 
 
       if (
-        index ===
-        0
+        typeof ctx.roundRect ===
+        "function"
       ) {
 
-        ctx.moveTo(
+        ctx.roundRect(
           x,
-          y
+          y,
+          barWidth,
+          barHeight,
+          [8,8,0,0]
         );
 
       }
 
       else {
 
-        ctx.lineTo(
+        ctx.rect(
           x,
-          y
+          y,
+          barWidth,
+          barHeight
         );
 
       }
-
-    }
-  );
-
-
-  ctx.stroke();
-
-
-  list.forEach(
-    (item,index) => {
-
-      const x =
-        getX(index);
-
-
-      const y =
-        getY(
-          item.costPerBaht
-        );
-
-
-      ctx.beginPath();
-
-
-      ctx.arc(
-        x,
-        y,
-        5,
-        0,
-        Math.PI *
-        2
-      );
-
-
-      ctx.fillStyle =
-        "#c49a3a";
 
 
       ctx.fill();
 
 
-      ctx.strokeStyle =
-        "#fff";
-
-
-      ctx.lineWidth =
-        2;
-
-
-      ctx.stroke();
-
-
       ctx.fillStyle =
-        "#777";
+        "#222";
 
 
       ctx.font =
-        "9px Arial";
+        'bold 12px Arial,"Noto Sans Thai",sans-serif';
 
 
       ctx.textAlign =
         "center";
 
 
+      ctx.textBaseline =
+        "bottom";
+
+
       ctx.fillText(
-        item.code,
-        x,
-        height -
-        20
+        String(count),
+        x +
+        barWidth / 2,
+        Math.max(
+          y - 6,
+          14
+        )
+      );
+
+
+      ctx.fillStyle =
+        "#666";
+
+
+      ctx.font =
+        '10px Arial,"Noto Sans Thai",sans-serif';
+
+
+      ctx.textBaseline =
+        "top";
+
+
+      ctx.fillText(
+        type,
+        x +
+        barWidth / 2,
+        padding.top +
+        chartHeight +
+        13
       );
 
     }
+  );
+
+
+  ctx.fillStyle =
+    "#888";
+
+
+  ctx.font =
+    '10px Arial,"Noto Sans Thai",sans-serif';
+
+
+  ctx.textAlign =
+    "left";
+
+
+  ctx.textBaseline =
+    "alphabetic";
+
+
+  ctx.fillText(
+    "จำนวน (รายการ)",
+    padding.left,
+    14
   );
 
 }
@@ -3579,13 +3910,21 @@ function exportCSV() {
 
     "รหัสสินค้า",
 
+    "ชื่อสินค้า",
+
     "ประเภท",
 
     "กะรัต",
 
     "น้ำหนักกรัม",
 
+    "หน่วยนับ",
+
     "ต้นทุน",
+
+    "ดอกเบี้ย",
+
+    "ราคาขาย",
 
     "ต้นทุนต่อบาท",
 
@@ -3601,15 +3940,29 @@ function exportCSV() {
 
         product.code,
 
+        product.name || "",
+
         product.type,
 
-        product.karat,
+        isGoldProductType(product.type)
+          ? (product.karat || "24K")
+          : "",
 
-        product.weight,
+        isGoldProductType(product.type)
+          ? product.weight
+          : "",
+
+        product.unit || "ชิ้น",
 
         product.cost,
 
-        product.costPerBaht,
+        product.interest || 0,
+
+        product.salePrice || 0,
+
+        isGoldProductType(product.type)
+          ? product.costPerBaht
+          : "",
 
         new Date(
           product.createdAt
@@ -3740,10 +4093,253 @@ function renderAll() {
 
 
 /* =====================================================
+   KEYBOARD FORM NAVIGATION
+===================================================== */
+
+function getVisibleFormFields() {
+
+  return Array.from(
+    document.querySelectorAll(
+      ".form-card input:not([type='file']), .form-card select"
+    )
+  )
+  .filter(
+    element =>
+      !element.disabled &&
+      element.offsetParent !== null
+  );
+
+}
+
+
+function focusFormField(element) {
+
+  if (!element) {
+    return;
+  }
+
+
+  element.focus();
+
+
+  if (
+    element.tagName === "INPUT" &&
+    [
+      "text",
+      "search",
+      "number",
+      "tel",
+      "email"
+    ].includes(
+      element.type
+    )
+  ) {
+
+    element.select();
+
+  }
+
+}
+
+
+function focusNextFormField(currentElement) {
+
+  const fields =
+    getVisibleFormFields();
+
+
+  const currentIndex =
+    fields.indexOf(
+      currentElement
+    );
+
+
+  if (
+    currentIndex === -1
+  ) {
+
+    return;
+
+  }
+
+
+  const nextField =
+    fields[
+      currentIndex + 1
+    ];
+
+
+  if (nextField) {
+
+    focusFormField(
+      nextField
+    );
+
+  }
+
+  else {
+
+    saveButton.focus();
+
+  }
+
+}
+
+
+function focusPreviousFormField(currentElement) {
+
+  const fields =
+    getVisibleFormFields();
+
+
+  const currentIndex =
+    fields.indexOf(
+      currentElement
+    );
+
+
+  if (
+    currentIndex <= 0
+  ) {
+
+    return;
+
+  }
+
+
+  focusFormField(
+    fields[
+      currentIndex - 1
+    ]
+  );
+
+}
+
+
+function isEmptyInputAtStart(element) {
+
+  if (
+    element.tagName !== "INPUT" ||
+    element.type === "file"
+  ) {
+
+    return false;
+
+  }
+
+
+  const value =
+    String(
+      element.value || ""
+    );
+
+
+  if (value.length > 0) {
+    return false;
+  }
+
+
+  if (
+    typeof element.selectionStart === "number"
+  ) {
+
+    return element.selectionStart === 0;
+
+  }
+
+
+  return true;
+
+}
+
+
+document.querySelector(
+  ".form-card"
+)
+.addEventListener(
+  "keydown",
+  event => {
+
+    if (event.isComposing) {
+      return;
+    }
+
+
+    const target =
+      event.target;
+
+
+    if (
+      !target.matches(
+        "input:not([type='file']), select"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      event.key === "Enter" ||
+      event.key === "ArrowDown"
+    ) {
+
+      event.preventDefault();
+
+      focusNextFormField(
+        target
+      );
+
+      return;
+
+    }
+
+
+    if (
+      event.key === "ArrowUp"
+    ) {
+
+      event.preventDefault();
+
+      focusPreviousFormField(
+        target
+      );
+
+      return;
+
+    }
+
+
+    if (
+      (
+        event.key === "Backspace" ||
+        event.key === "Delete"
+      ) &&
+      isEmptyInputAtStart(
+        target
+      )
+    ) {
+
+      event.preventDefault();
+
+      focusPreviousFormField(
+        target
+      );
+
+    }
+
+  }
+);
+
+
+/* =====================================================
    START
 ===================================================== */
 
 loadData();
+
+updateConditionalFields();
 
 renderAll();
 
