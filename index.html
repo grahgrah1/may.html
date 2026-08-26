@@ -39,9 +39,7 @@ select {
   font:inherit;
 }
 
-/* =====================================================
-   HEADER
-===================================================== */
+/* HEADER */
 
 header {
   background:
@@ -53,47 +51,31 @@ header {
     );
 
   color:white;
-
   padding:20px 5%;
-
-  box-shadow:
-    0 5px 25px
-    rgba(0,0,0,.15);
+  box-shadow:0 5px 25px rgba(0,0,0,.15);
 }
 
 .header-inner {
-
   max-width:1450px;
-
   margin:auto;
 
   display:flex;
-
   align-items:center;
-
-  justify-content:
-    space-between;
-
+  justify-content:space-between;
   gap:20px;
 }
 
 .brand {
-
   display:flex;
-
   align-items:center;
-
   gap:14px;
 }
 
 .logo {
-
   width:52px;
-
   height:52px;
 
   display:grid;
-
   place-items:center;
 
   border-radius:16px;
@@ -105,28 +87,19 @@ header {
 }
 
 .brand h1 {
-
   margin:0;
-
   font-size:22px;
 }
 
 .brand p {
-
   margin:4px 0 0;
-
   font-size:12px;
-
-  color:
-    rgba(255,255,255,.65);
+  color:rgba(255,255,255,.65);
 }
 
-/* =====================================================
-   LIVE GOLD PRICE
-===================================================== */
+/* LIVE GOLD PRICE */
 
 .gold-price-box {
-
   min-width:330px;
 
   padding:13px 16px;
@@ -140,42 +113,29 @@ header {
     1px solid
     rgba(255,255,255,.12);
 
-  backdrop-filter:
-    blur(10px);
+  backdrop-filter:blur(10px);
 }
 
 .gold-price-top {
-
   display:flex;
-
   align-items:center;
-
-  justify-content:
-    space-between;
+  justify-content:space-between;
 
   gap:10px;
-
   margin-bottom:8px;
 }
 
 .gold-price-title {
-
   font-size:11px;
-
-  color:
-    rgba(255,255,255,.68);
+  color:rgba(255,255,255,.68);
 }
 
 .live-badge {
-
   display:flex;
-
   align-items:center;
-
   gap:5px;
 
   padding:4px 7px;
-
   border-radius:20px;
 
   background:
@@ -184,14 +144,11 @@ header {
   color:#9bffc2;
 
   font-size:9px;
-
   font-weight:bold;
 }
 
 .live-dot {
-
   width:6px;
-
   height:6px;
 
   border-radius:50%;
@@ -203,17 +160,12 @@ header {
 }
 
 .gold-main-price {
-
   display:flex;
-
-  align-items:
-    flex-end;
-
+  align-items:flex-end;
   gap:8px;
 }
 
 .gold-main-price span {
-
   margin-bottom:4px;
 
   font-size:11px;
@@ -223,16 +175,12 @@ header {
 }
 
 .gold-main-price strong {
-
   font-size:27px;
-
   line-height:1;
-
   letter-spacing:-1px;
 }
 
 .gold-main-price small {
-
   margin-bottom:3px;
 
   font-size:11px;
@@ -242,16 +190,11 @@ header {
 }
 
 .gold-buy-row {
-
   display:flex;
-
   align-items:center;
-
-  justify-content:
-    space-between;
+  justify-content:space-between;
 
   margin-top:9px;
-
   padding-top:8px;
 
   border-top:
@@ -262,26 +205,20 @@ header {
 }
 
 .gold-buy-label {
-
   color:
     rgba(255,255,255,.60);
 }
 
 .gold-buy-value {
-
   font-weight:bold;
 }
 
 .gold-meta {
-
   margin-top:8px;
 
   display:flex;
-
   align-items:center;
-
-  justify-content:
-    space-between;
+  justify-content:space-between;
 
   gap:8px;
 
@@ -292,7 +229,6 @@ header {
 }
 
 .refresh-price {
-
   border:0;
 
   color:white;
@@ -308,20 +244,16 @@ header {
 }
 
 .refresh-price:hover {
-
   background:
     rgba(255,255,255,.18);
 }
 
 .refresh-price.loading {
-
   opacity:.5;
-
   pointer-events:none;
 }
 
 .gold-source {
-
   margin-top:5px;
 
   font-size:8px;
@@ -331,34 +263,23 @@ header {
 }
 
 .gold-source a {
-
   color:
     rgba(255,255,255,.58);
 
   text-decoration:none;
 }
 
-/* =====================================================
-   MAIN
-===================================================== */
+/* MAIN */
 
 main {
-
-  width:
-    min(1450px,94%);
-
+  width:min(1450px,94%);
   margin:auto;
-
-  padding:
-    28px 0 80px;
+  padding:28px 0 80px;
 }
 
-/* =====================================================
-   KPI
-===================================================== */
+/* KPI */
 
 .kpi-grid {
-
   display:grid;
 
   grid-template-columns:
@@ -370,13 +291,11 @@ main {
 }
 
 .kpi {
-
   padding:22px;
 
   border-radius:20px;
 
-  background:
-    var(--card);
+  background:var(--card);
 
   border:
     1px solid
@@ -387,13 +306,10 @@ main {
 }
 
 .kpi-icon {
-
   width:42px;
-
   height:42px;
 
   display:grid;
-
   place-items:center;
 
   border-radius:13px;
@@ -407,38 +323,25 @@ main {
 }
 
 .kpi-label {
-
-  color:
-    var(--muted);
-
+  color:var(--muted);
   font-size:12px;
 }
 
 .kpi-value {
-
   margin-top:7px;
-
   font-size:26px;
-
   font-weight:800;
 }
 
 .kpi-sub {
-
   margin-top:6px;
-
-  color:
-    var(--muted);
-
+  color:var(--muted);
   font-size:11px;
 }
 
-/* =====================================================
-   LAYOUT
-===================================================== */
+/* LAYOUT */
 
 .layout {
-
   display:grid;
 
   grid-template-columns:
@@ -450,9 +353,7 @@ main {
 }
 
 .card {
-
-  background:
-    var(--card);
+  background:var(--card);
 
   border:
     1px solid
@@ -464,56 +365,40 @@ main {
     var(--shadow);
 }
 
-/* =====================================================
-   FORM
-===================================================== */
+/* FORM */
 
 .form-card {
-
   position:sticky;
-
   top:20px;
-
   padding:22px;
 }
 
 .form-card h2 {
-
   margin:0 0 6px;
-
   font-size:20px;
 }
 
 .form-card > p {
-
-  margin:
-    0 0 22px;
-
-  color:
-    var(--muted);
-
+  margin:0 0 22px;
+  color:var(--muted);
   font-size:12px;
 }
 
 .form-group {
-
   margin-bottom:15px;
 }
 
 .form-group label {
-
   display:block;
 
   margin-bottom:7px;
 
   font-size:12px;
-
   font-weight:bold;
 }
 
 .form-group input,
 .form-group select {
-
   width:100%;
 
   border:
@@ -522,8 +407,7 @@ main {
 
   border-radius:12px;
 
-  padding:
-    12px 13px;
+  padding:12px 13px;
 
   outline:none;
 
@@ -534,9 +418,7 @@ main {
 
 .form-group input:focus,
 .form-group select:focus {
-
-  border-color:
-    var(--gold);
+  border-color:var(--gold);
 
   box-shadow:
     0 0 0 3px
@@ -544,7 +426,6 @@ main {
 }
 
 .two-column {
-
   display:grid;
 
   grid-template-columns:
@@ -553,14 +434,10 @@ main {
   gap:10px;
 }
 
-/* =====================================================
-   COST
-===================================================== */
+/* COST */
 
 .cost-preview {
-
-  margin:
-    18px 0;
+  margin:18px 0;
 
   padding:17px;
 
@@ -579,7 +456,6 @@ main {
 }
 
 .cost-preview span {
-
   display:block;
 
   color:#765d24;
@@ -588,7 +464,6 @@ main {
 }
 
 .cost-preview strong {
-
   display:block;
 
   margin-top:6px;
@@ -598,16 +473,12 @@ main {
   font-size:27px;
 }
 
-/* =====================================================
-   IMAGE
-===================================================== */
+/* IMAGE */
 
 .image-preview {
-
   display:none;
 
   width:100%;
-
   height:150px;
 
   margin-top:10px;
@@ -621,23 +492,17 @@ main {
     var(--border);
 }
 
-/* =====================================================
-   BUTTONS
-===================================================== */
+/* BUTTONS */
 
 .primary-button {
-
   width:100%;
 
   border:0;
-
   border-radius:13px;
 
-  padding:
-    13px 16px;
+  padding:13px 16px;
 
-  background:
-    var(--red);
+  background:var(--red);
 
   color:white;
 
@@ -647,13 +512,10 @@ main {
 }
 
 .primary-button:hover {
-
-  background:
-    var(--red2);
+  background:var(--red2);
 }
 
 .secondary-button {
-
   width:100%;
 
   margin-top:8px;
@@ -671,75 +533,51 @@ main {
   cursor:pointer;
 }
 
-/* =====================================================
-   RIGHT
-===================================================== */
+/* RIGHT */
 
 .right-column {
-
   display:grid;
-
   gap:20px;
 }
 
-/* =====================================================
-   CHART
-===================================================== */
+/* CHART */
 
 .chart-card {
-
   padding:22px;
 }
 
 .section-header {
-
   margin-bottom:17px;
 }
 
 .section-header h2 {
-
   margin:0;
-
   font-size:18px;
 }
 
 .section-header p {
-
-  margin:
-    5px 0 0;
-
-  color:
-    var(--muted);
-
+  margin:5px 0 0;
+  color:var(--muted);
   font-size:11px;
 }
 
 canvas {
-
   width:100%;
-
   height:250px;
-
   border-radius:14px;
 }
 
-/* =====================================================
-   TABLE
-===================================================== */
+/* TABLE */
 
 .table-card {
-
   overflow:hidden;
 }
 
 .toolbar {
-
   padding:20px;
 
   display:flex;
-
-  justify-content:
-    space-between;
+  justify-content:space-between;
 
   gap:12px;
 
@@ -749,9 +587,7 @@ canvas {
 }
 
 .toolbar-left {
-
   display:flex;
-
   flex-wrap:wrap;
 
   gap:9px;
@@ -761,15 +597,13 @@ canvas {
 
 .toolbar input,
 .toolbar select {
-
   border:
     1px solid
     var(--border);
 
   border-radius:11px;
 
-  padding:
-    10px 12px;
+  padding:10px 12px;
 
   outline:none;
 
@@ -777,20 +611,16 @@ canvas {
 }
 
 .search {
-
   min-width:250px;
-
   flex:1;
 }
 
 .export-button {
-
   border:0;
 
   border-radius:11px;
 
-  padding:
-    10px 15px;
+  padding:10px 15px;
 
   background:#171717;
 
@@ -800,12 +630,10 @@ canvas {
 }
 
 .table-wrapper {
-
   overflow-x:auto;
 }
 
 table {
-
   width:100%;
 
   border-collapse:
@@ -815,9 +643,7 @@ table {
 }
 
 th {
-
-  padding:
-    13px 15px;
+  padding:13px 15px;
 
   text-align:left;
 
@@ -833,9 +659,7 @@ th {
 }
 
 td {
-
-  padding:
-    14px 15px;
+  padding:14px 15px;
 
   border-bottom:
     1px solid
@@ -845,23 +669,17 @@ td {
 }
 
 tbody tr:hover {
-
   background:#fffdf7;
 }
 
 .product-cell {
-
   display:flex;
-
   align-items:center;
-
   gap:10px;
 }
 
 .product-image {
-
   width:45px;
-
   height:45px;
 
   border-radius:10px;
@@ -872,13 +690,10 @@ tbody tr:hover {
 }
 
 .no-image {
-
   width:45px;
-
   height:45px;
 
   display:grid;
-
   place-items:center;
 
   border-radius:10px;
@@ -889,20 +704,15 @@ tbody tr:hover {
 }
 
 .code {
-
   font-weight:bold;
 }
 
-/* =====================================================
-   BADGES
-===================================================== */
+/* TYPE BADGES */
 
 .badge {
-
   display:inline-block;
 
-  padding:
-    6px 9px;
+  padding:6px 9px;
 
   border-radius:30px;
 
@@ -911,28 +721,32 @@ tbody tr:hover {
   font-weight:bold;
 }
 
-.badge-shop {
-
-  background:#e9f6ee;
-
-  color:#247243;
+.badge-misc {
+  background:#e9eef6;
+  color:#445b78;
 }
 
-.badge-pawn {
+.badge-gold {
+  background:#fff4cf;
+  color:#8a6714;
+}
 
-  background:#fff0de;
+.badge-lost-misc {
+  background:#ffe8d7;
+  color:#9a4d13;
+}
 
-  color:#9a5816;
+.badge-lost-gold {
+  background:#ffe0e2;
+  color:#9a1f29;
 }
 
 .karat-badge {
-
   display:inline-block;
 
   min-width:45px;
 
-  padding:
-    6px 10px;
+  padding:6px 10px;
 
   text-align:center;
 
@@ -952,74 +766,54 @@ tbody tr:hover {
 }
 
 .cost-baht {
-
-  color:
-    var(--red);
-
+  color:var(--red);
   font-weight:800;
 }
 
 .actions {
-
   display:flex;
-
   gap:6px;
 }
 
 .action-btn {
-
   width:34px;
-
   height:34px;
 
   border:0;
-
   border-radius:9px;
 
   cursor:pointer;
 }
 
 .edit-btn {
-
   background:#fff1cb;
 }
 
 .delete-btn {
-
   background:#ffe2e2;
 }
 
 .empty {
-
-  padding:
-    55px 20px;
-
+  padding:55px 20px;
   text-align:center;
-
-  color:
-    var(--muted);
+  color:var(--muted);
 }
 
-/* =====================================================
-   MOBILE
-===================================================== */
+/* MOBILE */
 
 @media(max-width:1050px) {
 
   .kpi-grid {
-
     grid-template-columns:
       1fr 1fr;
   }
 
   .layout {
-
     grid-template-columns:
       1fr;
   }
 
   .form-card {
-
     position:static;
   }
 }
@@ -1027,26 +821,20 @@ tbody tr:hover {
 @media(max-width:700px) {
 
   header {
-
     padding:15px;
   }
 
   .header-inner {
-
     flex-direction:column;
-
     align-items:stretch;
   }
 
   .gold-price-box {
-
     width:100%;
-
     min-width:0;
   }
 
   .kpi-grid {
-
     grid-template-columns:
       1fr 1fr;
 
@@ -1054,31 +842,25 @@ tbody tr:hover {
   }
 
   .kpi {
-
     padding:16px;
   }
 
   .kpi-value {
-
     font-size:19px;
   }
 
   .toolbar {
-
     flex-direction:column;
   }
 
   .toolbar-left {
-
     flex-direction:column;
   }
 
   .toolbar input,
   .toolbar select,
   .search {
-
     width:100%;
-
     min-width:0;
   }
 
@@ -1088,10 +870,6 @@ tbody tr:hover {
 </head>
 
 <body>
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
 
 <header>
 
@@ -1117,8 +895,6 @@ tbody tr:hover {
 
   </div>
 
-
-  <!-- LIVE GOLD -->
 
   <div class="gold-price-box">
 
@@ -1212,14 +988,8 @@ tbody tr:hover {
 </header>
 
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
 <main>
 
-
-<!-- KPI -->
 
 <section class="kpi-grid">
 
@@ -1324,14 +1094,10 @@ tbody tr:hover {
 <section class="layout">
 
 
-<!-- =====================================================
-     ADD PRODUCT
-===================================================== -->
-
 <aside class="card form-card">
 
 <h2 id="formTitle">
-  ➕ เพิ่มรายการทอง
+  ➕ เพิ่มรายการสินค้า
 </h2>
 
 <p>
@@ -1357,17 +1123,25 @@ tbody tr:hover {
 <div class="form-group">
 
   <label>
-    ประเภท
+    ประเภทสินค้า
   </label>
 
   <select id="productType">
 
-    <option value="ซื้อหน้าร้าน">
-      ซื้อหน้าร้าน
+    <option value="เบ็ดเตล็ด">
+      เบ็ดเตล็ด
     </option>
 
-    <option value="หลุดจำนำ">
-      หลุดจำนำ
+    <option value="ทองคำ">
+      ทองคำ
+    </option>
+
+    <option value="หลุดเบ็ดเตล็ด">
+      หลุดเบ็ดเตล็ด
+    </option>
+
+    <option value="หลุดทองคำ">
+      หลุดทองคำ
     </option>
 
   </select>
@@ -1501,10 +1275,6 @@ tbody tr:hover {
 </aside>
 
 
-<!-- =====================================================
-     RIGHT
-===================================================== -->
-
 <div class="right-column">
 
 
@@ -1552,12 +1322,20 @@ tbody tr:hover {
   ทุกประเภท
 </option>
 
-<option value="ซื้อหน้าร้าน">
-  ซื้อหน้าร้าน
+<option value="เบ็ดเตล็ด">
+  เบ็ดเตล็ด
 </option>
 
-<option value="หลุดจำนำ">
-  หลุดจำนำ
+<option value="ทองคำ">
+  ทองคำ
+</option>
+
+<option value="หลุดเบ็ดเตล็ด">
+  หลุดเบ็ดเตล็ด
+</option>
+
+<option value="หลุดทองคำ">
+  หลุดทองคำ
 </option>
 
 </select>
@@ -1701,29 +1479,22 @@ tbody tr:hover {
 ===================================================== */
 
 const STORAGE_KEY =
-  "goldPawnManagerDataV2";
+  "goldPawnManagerDataV3";
 
 
 const GOLD_LIVE_CACHE_KEY =
   "goldPawnLivePriceCacheV1";
 
 
-let products =
-  [];
+let products = [];
 
+let editingId = null;
 
-let editingId =
-  null;
-
-
-let selectedImage =
-  "";
+let selectedImage = "";
 
 
 /* =====================================================
-   LIVE GOLD API
-
-   สร้าง URL แยกส่วน
+   GOLD API
 ===================================================== */
 
 const GOLD_API_URL =
@@ -1755,7 +1526,7 @@ const GOLD_SOURCE_URL =
 
 
 /* =====================================================
-   ELEMENTS
+   GOLD ELEMENTS
 ===================================================== */
 
 const goldSellPrice =
@@ -1799,7 +1570,7 @@ goldSourceLink.href =
 
 
 /* =====================================================
-   GOLD PRICE FORMAT
+   GOLD FORMAT
 ===================================================== */
 
 function formatGoldPrice(value) {
@@ -1817,30 +1588,24 @@ function formatGoldPrice(value) {
   }
 
 
-  return number
-    .toLocaleString(
-      "th-TH",
-      {
-        minimumFractionDigits:0,
-        maximumFractionDigits:2
-      }
-    );
+  return number.toLocaleString(
+    "th-TH",
+    {
+      maximumFractionDigits:2
+    }
+  );
 
 }
 
 
 /* =====================================================
-   FORMAT UPDATE TIME
+   DATE FORMAT
 ===================================================== */
 
-function formatGoldDate(
-  value
-) {
+function formatGoldDate(value) {
 
   if (!value) {
-
     return "";
-
   }
 
 
@@ -1862,30 +1627,15 @@ function formatGoldDate(
   return new Intl.DateTimeFormat(
     "th-TH",
     {
-
-      timeZone:
-        "Asia/Bangkok",
-
-      day:
-        "2-digit",
-
-      month:
-        "2-digit",
-
-      year:
-        "numeric",
-
-      hour:
-        "2-digit",
-
-      minute:
-        "2-digit"
-
+      timeZone:"Asia/Bangkok",
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
     }
   )
-  .format(
-    date
-  );
+  .format(date);
 
 }
 
@@ -1914,15 +1664,11 @@ function renderLiveGoldPrice(
 
   let status =
     cached
-    ?
-    "ข้อมูลล่าสุดที่บันทึกไว้"
-    :
-    "อัปเดต";
+      ? "ข้อมูลล่าสุดที่บันทึกไว้"
+      : "อัปเดต";
 
 
-  if (
-    data.updatedAt
-  ) {
+  if (data.updatedAt) {
 
     status +=
       " " +
@@ -1933,9 +1679,7 @@ function renderLiveGoldPrice(
   }
 
 
-  if (
-    data.round
-  ) {
+  if (data.round) {
 
     status +=
       ` • ครั้งที่ ${data.round}`;
@@ -1955,7 +1699,7 @@ function renderLiveGoldPrice(
 
 
 /* =====================================================
-   PRIMARY API
+   PRIMARY GOLD API
 ===================================================== */
 
 async function fetchPrimaryGoldPrice() {
@@ -1971,9 +1715,7 @@ async function fetchPrimaryGoldPrice() {
     );
 
 
-  if (
-    !response.ok
-  ) {
+  if (!response.ok) {
 
     throw new Error(
       "Primary API error"
@@ -2027,7 +1769,7 @@ async function fetchPrimaryGoldPrice() {
       "",
 
     source:
-      "ข้อมูล: ราคาทอง.today • อ้างอิงสมาคมค้าทองคำ"
+      "ข้อมูลราคาทองประเทศไทย"
 
   };
 
@@ -2035,7 +1777,7 @@ async function fetchPrimaryGoldPrice() {
 
 
 /* =====================================================
-   FALLBACK API
+   FALLBACK GOLD API
 ===================================================== */
 
 async function fetchFallbackGoldPrice() {
@@ -2051,9 +1793,7 @@ async function fetchFallbackGoldPrice() {
     );
 
 
-  if (
-    !response.ok
-  ) {
+  if (!response.ok) {
 
     throw new Error(
       "Fallback API error"
@@ -2076,9 +1816,7 @@ async function fetchFallbackGoldPrice() {
       ?.gold_bar;
 
 
-  if (
-    !bar
-  ) {
+  if (!bar) {
 
     throw new Error(
       "Invalid fallback data"
@@ -2129,8 +1867,7 @@ async function fetchFallbackGoldPrice() {
 
     sell,
 
-    round:
-      "",
+    round:"",
 
     updatedAt:
       responseData.update_date +
@@ -2138,7 +1875,7 @@ async function fetchFallbackGoldPrice() {
       responseData.update_time,
 
     source:
-      "Thai Gold API • อ้างอิงสมาคมค้าทองคำ"
+      "ข้อมูลราคาทองประเทศไทย"
 
   };
 
@@ -2146,7 +1883,7 @@ async function fetchFallbackGoldPrice() {
 
 
 /* =====================================================
-   FETCH LIVE GOLD
+   FETCH GOLD
 ===================================================== */
 
 async function fetchLiveGoldPrice() {
@@ -2172,15 +1909,7 @@ async function fetchLiveGoldPrice() {
 
     }
 
-    catch (
-      primaryError
-    ) {
-
-      console.warn(
-        "Primary gold API failed:",
-        primaryError
-      );
-
+    catch {
 
       data =
         await fetchFallbackGoldPrice();
@@ -2202,12 +1931,9 @@ async function fetchLiveGoldPrice() {
 
   }
 
-  catch (
-    error
-  ) {
+  catch(error) {
 
     console.error(
-      "Gold price error:",
       error
     );
 
@@ -2218,9 +1944,7 @@ async function fetchLiveGoldPrice() {
       );
 
 
-    if (
-      cached
-    ) {
+    if (cached) {
 
       try {
 
@@ -2270,19 +1994,11 @@ async function fetchLiveGoldPrice() {
 }
 
 
-/* =====================================================
-   MANUAL REFRESH
-===================================================== */
-
 refreshGoldButton.addEventListener(
   "click",
   fetchLiveGoldPrice
 );
 
-
-/* =====================================================
-   AUTO REFRESH ทุก 60 วินาที
-===================================================== */
 
 setInterval(
   fetchLiveGoldPrice,
@@ -2433,7 +2149,7 @@ const chart =
 
 
 /* =====================================================
-   PARSE NUMBER
+   NUMBER
 ===================================================== */
 
 function parseNumber(value) {
@@ -2475,10 +2191,6 @@ function parseNumber(value) {
 
 }
 
-
-/* =====================================================
-   FORMAT NUMBER
-===================================================== */
 
 function numberFormat(value) {
 
@@ -2536,7 +2248,7 @@ function calculateCostPerBaht(
 
 
 /* =====================================================
-   LIVE CALCULATION
+   LIVE PREVIEW
 ===================================================== */
 
 function updateCostPreview() {
@@ -2582,9 +2294,7 @@ imageInput.addEventListener(
 
 
     if (!file) {
-
       return;
-
     }
 
 
@@ -2639,7 +2349,7 @@ imageInput.addEventListener(
 
 
 /* =====================================================
-   SAVE
+   SAVE PRODUCT
 ===================================================== */
 
 saveButton.addEventListener(
@@ -2725,9 +2435,7 @@ function saveProduct() {
     );
 
 
-  if (
-    editingId
-  ) {
+  if (editingId) {
 
     const index =
       products.findIndex(
@@ -2829,7 +2537,7 @@ function resetForm() {
 
 
   productType.value =
-    "ซื้อหน้าร้าน";
+    "เบ็ดเตล็ด";
 
 
   goldKarat.value =
@@ -2861,7 +2569,7 @@ function resetForm() {
 
 
   formTitle.textContent =
-    "➕ เพิ่มรายการทอง";
+    "➕ เพิ่มรายการสินค้า";
 
 
   saveButton.textContent =
@@ -2889,9 +2597,7 @@ function editProduct(id) {
 
 
   if (!product) {
-
     return;
-
   }
 
 
@@ -2964,11 +2670,8 @@ function editProduct(id) {
 
 
   window.scrollTo({
-
     top:0,
-
     behavior:"smooth"
-
   });
 
 }
@@ -2995,9 +2698,7 @@ function deleteProduct(id) {
 
 
   if (!product) {
-
     return;
-
   }
 
 
@@ -3036,20 +2737,15 @@ function saveData() {
   try {
 
     localStorage.setItem(
-
       STORAGE_KEY,
-
       JSON.stringify(
         products
       )
-
     );
 
   }
 
-  catch (
-    error
-  ) {
+  catch(error) {
 
     console.error(
       error
@@ -3077,12 +2773,12 @@ function loadData() {
 
     products =
       saved
-      ?
-      JSON.parse(
-        saved
-      )
-      :
-      [];
+        ?
+        JSON.parse(
+          saved
+        )
+        :
+        [];
 
   }
 
@@ -3122,10 +2818,10 @@ function getFilteredProducts() {
 
         const matchCode =
           item.code
-          .toLowerCase()
-          .includes(
-            search
-          );
+            .toLowerCase()
+            .includes(
+              search
+            );
 
 
         const matchType =
@@ -3232,6 +2928,31 @@ sortSelect.addEventListener(
 
 
 /* =====================================================
+   TYPE BADGE CLASS
+===================================================== */
+
+function getTypeBadgeClass(type) {
+
+  switch(type) {
+
+    case "ทองคำ":
+      return "badge-gold";
+
+    case "หลุดเบ็ดเตล็ด":
+      return "badge-lost-misc";
+
+    case "หลุดทองคำ":
+      return "badge-lost-gold";
+
+    default:
+      return "badge-misc";
+
+  }
+
+}
+
+
+/* =====================================================
    TABLE
 ===================================================== */
 
@@ -3247,10 +2968,8 @@ function renderTable() {
 
   emptyState.style.display =
     list.length
-    ?
-    "none"
-    :
-    "block";
+      ? "none"
+      : "block";
 
 
   list.forEach(
@@ -3273,29 +2992,26 @@ function renderTable() {
 
       const imageHTML =
         product.image
-        ?
-        `
-        <img
-          class="product-image"
-          src="${product.image}"
-          alt=""
-        >
-        `
-        :
-        `
-        <div class="no-image">
-          🏆
-        </div>
-        `;
+          ?
+          `
+          <img
+            class="product-image"
+            src="${product.image}"
+            alt=""
+          >
+          `
+          :
+          `
+          <div class="no-image">
+            📦
+          </div>
+          `;
 
 
       const typeClass =
-        product.type ===
-        "ซื้อหน้าร้าน"
-        ?
-        "badge-shop"
-        :
-        "badge-pawn";
+        getTypeBadgeClass(
+          product.type
+        );
 
 
       tr.innerHTML =
@@ -3319,7 +3035,7 @@ function renderTable() {
       <td>
 
         <span class="badge ${typeClass}">
-          ${product.type}
+          ${escapeHTML(product.type)}
         </span>
 
       </td>
@@ -3402,10 +3118,7 @@ function renderKPI() {
 
   const sumCost =
     products.reduce(
-      (
-        sum,
-        item
-      ) =>
+      (sum,item) =>
         sum +
         Number(
           item.cost
@@ -3416,10 +3129,7 @@ function renderKPI() {
 
   const sumWeight =
     products.reduce(
-      (
-        sum,
-        item
-      ) =>
+      (sum,item) =>
         sum +
         Number(
           item.weight
@@ -3430,14 +3140,14 @@ function renderKPI() {
 
   const avg =
     sumWeight > 0
-    ?
-    Math.ceil(
-      sumCost /
-      sumWeight *
-      15.2
-    )
-    :
-    0;
+      ?
+      Math.ceil(
+        sumCost /
+        sumWeight *
+        15.2
+      )
+      :
+      0;
 
 
   totalItems.textContent =
@@ -3525,11 +3235,11 @@ function drawChart() {
 
   const list =
     getFilteredProducts()
-    .slice(
-      0,
-      20
-    )
-    .reverse();
+      .slice(
+        0,
+        20
+      )
+      .reverse();
 
 
   if (
@@ -3550,13 +3260,9 @@ function drawChart() {
 
 
     ctx.fillText(
-
       "เพิ่มสินค้าเพื่อแสดงกราฟ",
-
       width / 2,
-
       height / 2
-
     );
 
 
@@ -3566,15 +3272,10 @@ function drawChart() {
 
 
   const padding = {
-
     left:55,
-
     right:25,
-
     top:20,
-
     bottom:45
-
   };
 
 
@@ -3737,15 +3438,10 @@ function drawChart() {
 
 
   list.forEach(
-    (
-      item,
-      index
-    ) => {
+    (item,index) => {
 
       const x =
-        getX(
-          index
-        );
+        getX(index);
 
 
       const y =
@@ -3783,15 +3479,10 @@ function drawChart() {
 
 
   list.forEach(
-    (
-      item,
-      index
-    ) => {
+    (item,index) => {
 
       const x =
-        getX(
-          index
-        );
+        getX(index);
 
 
       const y =
@@ -3857,7 +3548,7 @@ function drawChart() {
 
 
 /* =====================================================
-   CSV EXPORT
+   CSV
 ===================================================== */
 
 exportButton.addEventListener(
@@ -3983,8 +3674,8 @@ function exportCSV() {
 
   link.download =
     `gold-data-${new Date()
-    .toISOString()
-    .slice(0,10)}.csv`;
+      .toISOString()
+      .slice(0,10)}.csv`;
 
 
   link.click();
@@ -4055,11 +3746,6 @@ function renderAll() {
 loadData();
 
 renderAll();
-
-
-/*
-  ดึงราคาทองทันทีตอนเปิดเว็บ
-*/
 
 fetchLiveGoldPrice();
 
