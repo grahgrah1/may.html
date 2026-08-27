@@ -838,10 +838,241 @@ tbody tr:hover {
 
 }
 
+
+/* =====================================================
+   LOGIN / ACCOUNT
+===================================================== */
+
+#loginScreen {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    linear-gradient(
+      135deg,
+      #65080f,
+      #971019 55%,
+      #741018
+    );
+}
+
+.login-card {
+  width:min(420px,100%);
+  padding:32px;
+  border-radius:22px;
+  background:#fff;
+  box-shadow:0 24px 70px rgba(0,0,0,.25);
+}
+
+.login-logo {
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  margin:0 auto 18px;
+  border-radius:18px;
+  background:var(--gold-light);
+  font-size:30px;
+}
+
+.login-card h2 {
+  margin:0;
+  text-align:center;
+  font-size:24px;
+}
+
+.login-card > p {
+  margin:8px 0 24px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.login-field {
+  margin-bottom:13px;
+}
+
+.login-field label {
+  display:block;
+  margin-bottom:7px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.login-field input {
+  width:100%;
+  padding:13px 14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  outline:none;
+  background:#fff;
+}
+
+.login-field input:focus {
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(196,154,58,.12);
+}
+
+#loginButton {
+  width:100%;
+  margin-top:5px;
+  border:0;
+  border-radius:12px;
+  padding:13px 15px;
+  background:var(--red);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#loginButton:hover {
+  background:var(--red2);
+}
+
+#loginButton:disabled {
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+#loginMessage {
+  min-height:18px;
+  margin-top:13px;
+  text-align:center;
+  color:var(--red2);
+  font-size:12px;
+}
+
+.account-box {
+  min-width:190px;
+  padding:12px 14px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  background:rgba(255,255,255,.10);
+}
+
+.account-label {
+  color:rgba(255,255,255,.58);
+  font-size:9px;
+}
+
+#currentUserEmail {
+  display:block;
+  max-width:210px;
+  margin-top:4px;
+  overflow:hidden;
+  color:#fff;
+  font-size:11px;
+  font-weight:bold;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.logout-button {
+  width:100%;
+  margin-top:9px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:9px;
+  padding:7px 9px;
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  font-size:10px;
+  cursor:pointer;
+}
+
+.logout-button:hover {
+  background:rgba(255,255,255,.18);
+}
+
+@media(max-width:1050px) {
+  .header-inner {
+    flex-wrap:wrap;
+  }
+}
+
+@media(max-width:700px) {
+  .account-box {
+    width:100%;
+  }
+
+  #currentUserEmail {
+    max-width:none;
+  }
+}
+
+
 </style>
 </head>
 
 <body>
+
+
+<div id="loginScreen">
+
+  <div class="login-card">
+
+    <div class="login-logo">
+      🏆
+    </div>
+
+    <h2>
+      Gold & Pawn Manager
+    </h2>
+
+    <p>
+      เข้าสู่ระบบเพื่อจัดการข้อมูลสินค้า
+    </p>
+
+    <div class="login-field">
+
+      <label for="loginEmail">
+        Email
+      </label>
+
+      <input
+        id="loginEmail"
+        type="email"
+        autocomplete="email"
+        placeholder="กรอกอีเมล"
+      >
+
+    </div>
+
+    <div class="login-field">
+
+      <label for="loginPassword">
+        Password
+      </label>
+
+      <input
+        id="loginPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="กรอกรหัสผ่าน"
+      >
+
+    </div>
+
+    <button
+      id="loginButton"
+      type="button"
+    >
+      เข้าสู่ระบบ
+    </button>
+
+    <div id="loginMessage"></div>
+
+  </div>
+
+</div>
+
+
+<div
+  id="appScreen"
+  style="display:none"
+>
+
 
 <header>
 
@@ -952,6 +1183,27 @@ tbody tr:hover {
       </a>
 
     </div>
+
+  </div>
+
+
+  <div class="account-box">
+
+    <div class="account-label">
+      ผู้ใช้งาน
+    </div>
+
+    <span id="currentUserEmail">
+      -
+    </span>
+
+    <button
+      id="logoutButton"
+      class="logout-button"
+      type="button"
+    >
+      ออกจากระบบ
+    </button>
 
   </div>
 
@@ -1534,6 +1786,8 @@ tbody tr:hover {
 
 </main>
 
+</div>
+
 
 <!-- =====================================================
      SUPABASE LIBRARY
@@ -1560,6 +1814,358 @@ const supabaseClient =
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
   );
+
+
+/* =====================================================
+   AUTHENTICATION
+===================================================== */
+
+const loginScreen =
+  document.getElementById(
+    "loginScreen"
+  );
+
+
+const appScreen =
+  document.getElementById(
+    "appScreen"
+  );
+
+
+const loginEmail =
+  document.getElementById(
+    "loginEmail"
+  );
+
+
+const loginPassword =
+  document.getElementById(
+    "loginPassword"
+  );
+
+
+const loginButton =
+  document.getElementById(
+    "loginButton"
+  );
+
+
+const loginMessage =
+  document.getElementById(
+    "loginMessage"
+  );
+
+
+const logoutButton =
+  document.getElementById(
+    "logoutButton"
+  );
+
+
+const currentUserEmail =
+  document.getElementById(
+    "currentUserEmail"
+  );
+
+
+let appInitialized = false;
+
+
+function showLogin() {
+
+  loginScreen.style.display =
+    "flex";
+
+  appScreen.style.display =
+    "none";
+
+  currentUserEmail.textContent =
+    "-";
+
+}
+
+
+function showApp(user) {
+
+  loginScreen.style.display =
+    "none";
+
+  appScreen.style.display =
+    "block";
+
+  currentUserEmail.textContent =
+    user?.email ||
+    "ผู้ใช้งาน";
+
+}
+
+
+function initializeApp() {
+
+  if (appInitialized) {
+    return;
+  }
+
+
+  appInitialized =
+    true;
+
+
+  loadData();
+
+  updateConditionalFields();
+
+  renderAll();
+
+  fetchLiveGoldPrice();
+
+}
+
+
+async function login() {
+
+  const email =
+    loginEmail.value
+      .trim();
+
+
+  const password =
+    loginPassword.value;
+
+
+  if (
+    !email ||
+    !password
+  ) {
+
+    loginMessage.textContent =
+      "กรุณากรอก Email และ Password";
+
+    return;
+
+  }
+
+
+  loginButton.disabled =
+    true;
+
+
+  loginButton.textContent =
+    "กำลังเข้าสู่ระบบ...";
+
+
+  loginMessage.textContent =
+    "";
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth
+        .signInWithPassword({
+          email,
+          password
+        });
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    showApp(
+      data.user
+    );
+
+
+    initializeApp();
+
+
+    loginPassword.value =
+      "";
+
+  }
+
+  catch(error) {
+
+    console.error(
+      error
+    );
+
+
+    loginMessage.textContent =
+      "เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password";
+
+  }
+
+  finally {
+
+    loginButton.disabled =
+      false;
+
+
+    loginButton.textContent =
+      "เข้าสู่ระบบ";
+
+  }
+
+}
+
+
+async function logout() {
+
+  logoutButton.disabled =
+    true;
+
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient.auth
+        .signOut();
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    products =
+      [];
+
+
+    renderAll();
+
+
+    showLogin();
+
+
+    loginEmail.focus();
+
+  }
+
+  catch(error) {
+
+    console.error(
+      error
+    );
+
+
+    alert(
+      "ออกจากระบบไม่สำเร็จ กรุณาลองใหม่"
+    );
+
+  }
+
+  finally {
+
+    logoutButton.disabled =
+      false;
+
+  }
+
+}
+
+
+async function checkLogin() {
+
+  const {
+    data: {
+      session
+    },
+    error
+  } =
+    await supabaseClient.auth
+      .getSession();
+
+
+  if (error) {
+
+    console.error(
+      error
+    );
+
+    showLogin();
+
+    return;
+
+  }
+
+
+  if (
+    session?.user
+  ) {
+
+    showApp(
+      session.user
+    );
+
+
+    initializeApp();
+
+  }
+
+  else {
+
+    showLogin();
+
+  }
+
+}
+
+
+loginButton.addEventListener(
+  "click",
+  login
+);
+
+
+loginPassword.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Enter"
+    ) {
+
+      event.preventDefault();
+
+      login();
+
+    }
+
+  }
+);
+
+
+logoutButton.addEventListener(
+  "click",
+  logout
+);
+
+
+supabaseClient.auth.onAuthStateChange(
+  (
+    event,
+    session
+  ) => {
+
+    if (
+      event === "SIGNED_OUT" ||
+      !session
+    ) {
+
+      showLogin();
+
+    }
+
+  }
+);
 
 
 /* =====================================================
@@ -4362,13 +4968,7 @@ document.querySelector(
    START
 ===================================================== */
 
-loadData();
-
-updateConditionalFields();
-
-renderAll();
-
-fetchLiveGoldPrice();
+checkLogin();
 
 
 window.addEventListener(
