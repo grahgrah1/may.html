@@ -3592,6 +3592,40 @@ imageInput.addEventListener(
 
 
 /* =====================================================
+   PRODUCT CODE - PREVENT DUPLICATES
+===================================================== */
+
+function normalizeProductCode(value) {
+
+  return String(
+    value || ""
+  )
+    .trim()
+    .toUpperCase();
+
+}
+
+
+function hasDuplicateProductCode(code) {
+
+  const normalizedCode =
+    normalizeProductCode(
+      code
+    );
+
+
+  return products.some(
+    item =>
+      item.id !== editingId &&
+      normalizeProductCode(
+        item.code
+      ) === normalizedCode
+  );
+
+}
+
+
+/* =====================================================
    SAVE PRODUCT - SUPABASE
 ===================================================== */
 
@@ -3605,8 +3639,13 @@ saveButton.addEventListener(
 async function saveProduct() {
 
   const code =
-    productCode.value
-      .trim();
+    normalizeProductCode(
+      productCode.value
+    );
+
+
+  productCode.value =
+    code;
 
 
   const name =
@@ -3663,6 +3702,25 @@ async function saveProduct() {
     );
 
     productCode.focus();
+
+    return;
+
+  }
+
+
+  if (
+    hasDuplicateProductCode(
+      code
+    )
+  ) {
+
+    alert(
+      `รหัสสินค้า ${code} มีอยู่แล้ว\nกรุณาใช้รหัสสินค้าอื่น`
+    );
+
+    productCode.focus();
+
+    productCode.select();
 
     return;
 
@@ -3921,15 +3979,33 @@ async function saveProduct() {
     }
 
 
-    const message =
-      error?.message ||
-      "Unknown error";
+    if (
+      error?.code === "23505"
+    ) {
+
+      alert(
+        `รหัสสินค้า ${code} มีอยู่แล้ว\nกรุณาใช้รหัสสินค้าอื่น`
+      );
+
+      productCode.focus();
+
+      productCode.select();
+
+    }
+
+    else {
+
+      const message =
+        error?.message ||
+        "Unknown error";
 
 
-    alert(
-      "บันทึกข้อมูลไม่สำเร็จ\n\n" +
-      message
-    );
+      alert(
+        "บันทึกข้อมูลไม่สำเร็จ\n\n" +
+        message
+      );
+
+    }
 
   }
 
