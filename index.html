@@ -1545,7 +1545,7 @@ tbody tr:hover {
 <input
   id="imageInput"
   type="file"
-  accept="image/*"
+  accept="image/jpeg,image/png,image/webp,image/gif"
 >
 
 <img
@@ -2215,7 +2215,288 @@ let products = [];
 
 let editingId = null;
 
+/* URL รูปที่บันทึกอยู่ในฐานข้อมูล */
 let selectedImage = "";
+
+/* ไฟล์รูปใหม่ที่ผู้ใช้เพิ่งเลือก */
+let selectedImageFile = null;
+
+/* Object URL สำหรับ preview รูปในเครื่องก่อนอัปโหลด */
+let selectedImagePreviewUrl = "";
+
+const PRODUCT_IMAGE_BUCKET =
+  "product-images";
+
+
+/* =====================================================
+   SUPABASE STORAGE - PRODUCT IMAGES
+===================================================== */
+
+function getSafeImageExtension(file) {
+
+  const fileName =
+    String(
+      file?.name ||
+      ""
+    );
+
+
+  const rawExtension =
+    fileName.includes(".")
+      ? fileName
+          .split(".")
+          .pop()
+          .toLowerCase()
+      : "";
+
+
+  const allowedExtensions =
+    [
+      "jpg",
+      "jpeg",
+      "png",
+      "webp",
+      "gif"
+    ];
+
+
+  if (
+    allowedExtensions.includes(
+      rawExtension
+    )
+  ) {
+
+    return rawExtension;
+
+  }
+
+
+  const mimeExtensionMap = {
+    "image/jpeg":"jpg",
+    "image/png":"png",
+    "image/webp":"webp",
+    "image/gif":"gif"
+  };
+
+
+  return (
+    mimeExtensionMap[
+      file?.type
+    ] ||
+    "jpg"
+  );
+
+}
+
+
+async function uploadProductImage(file) {
+
+  if (!file) {
+    return null;
+  }
+
+
+  const {
+    data: {
+      user
+    },
+    error:
+      userError
+  } =
+    await supabaseClient.auth
+      .getUser();
+
+
+  if (
+    userError ||
+    !user
+  ) {
+
+    throw new Error(
+      "ไม่พบผู้ใช้งาน กรุณาเข้าสู่ระบบใหม่"
+    );
+
+  }
+
+
+  const extension =
+    getSafeImageExtension(
+      file
+    );
+
+
+  const path =
+    `${user.id}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+
+  const {
+    error:
+      uploadError
+  } =
+    await supabaseClient.storage
+      .from(
+        PRODUCT_IMAGE_BUCKET
+      )
+      .upload(
+        path,
+        file,
+        {
+          cacheControl:"3600",
+          upsert:false,
+          contentType:
+            file.type ||
+            undefined
+        }
+      );
+
+
+  if (uploadError) {
+    throw uploadError;
+  }
+
+
+  const {
+    data:
+      publicUrlData
+  } =
+    supabaseClient.storage
+      .from(
+        PRODUCT_IMAGE_BUCKET
+      )
+      .getPublicUrl(
+        path
+      );
+
+
+  const url =
+    publicUrlData
+      ?.publicUrl;
+
+
+  if (!url) {
+
+    await supabaseClient.storage
+      .from(
+        PRODUCT_IMAGE_BUCKET
+      )
+      .remove(
+        [
+          path
+        ]
+      );
+
+
+    throw new Error(
+      "ไม่สามารถสร้าง URL ของรูปสินค้าได้"
+    );
+
+  }
+
+
+  return {
+    url,
+    path
+  };
+
+}
+
+
+function getStoragePathFromPublicUrl(
+  imageUrl
+) {
+
+  if (!imageUrl) {
+    return "";
+  }
+
+
+  const marker =
+    `/storage/v1/object/public/${PRODUCT_IMAGE_BUCKET}/`;
+
+
+  const markerIndex =
+    imageUrl.indexOf(
+      marker
+    );
+
+
+  if (
+    markerIndex === -1
+  ) {
+
+    return "";
+
+  }
+
+
+  return decodeURIComponent(
+    imageUrl.slice(
+      markerIndex +
+      marker.length
+    )
+  );
+
+}
+
+
+async function deleteStoredProductImage(
+  imageUrl
+) {
+
+  const path =
+    getStoragePathFromPublicUrl(
+      imageUrl
+    );
+
+
+  if (!path) {
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient.storage
+      .from(
+        PRODUCT_IMAGE_BUCKET
+      )
+      .remove(
+        [
+          path
+        ]
+      );
+
+
+  if (error) {
+
+    console.warn(
+      "ลบรูปจาก Supabase Storage ไม่สำเร็จ",
+      error
+    );
+
+  }
+
+}
+
+
+function clearImagePreviewObjectUrl() {
+
+  if (
+    selectedImagePreviewUrl
+  ) {
+
+    URL.revokeObjectURL(
+      selectedImagePreviewUrl
+    );
+
+
+    selectedImagePreviewUrl =
+      "";
+
+  }
+
+}
 
 
 /* =====================================================
@@ -2301,7 +2582,8 @@ function createDatabaseProductPayload({
   productCost,
   productInterest,
   productSalePrice,
-  costPerBaht
+  costPerBaht,
+  imageUrl
 }) {
 
   return {
@@ -2336,7 +2618,7 @@ function createDatabaseProductPayload({
       costPerBaht,
 
     image_url:
-      selectedImage ||
+      imageUrl ||
       null
 
   };
@@ -3235,6 +3517,35 @@ imageInput.addEventListener(
     }
 
 
+    const allowedImageTypes =
+      [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif"
+      ];
+
+
+    if (
+      !allowedImageTypes.includes(
+        file.type
+      )
+    ) {
+
+      alert(
+        "รองรับเฉพาะ JPG, PNG, WEBP และ GIF"
+      );
+
+
+      imageInput.value =
+        "";
+
+
+      return;
+
+    }
+
+
     if (
       file.size >
       2 *
@@ -3256,30 +3567,25 @@ imageInput.addEventListener(
     }
 
 
-    const reader =
-      new FileReader();
+    clearImagePreviewObjectUrl();
 
 
-    reader.onload =
-      event => {
-
-        selectedImage =
-          event.target.result;
+    selectedImageFile =
+      file;
 
 
-        imagePreview.src =
-          selectedImage;
+    selectedImagePreviewUrl =
+      URL.createObjectURL(
+        file
+      );
 
 
-        imagePreview.style.display =
-          "block";
-
-      };
+    imagePreview.src =
+      selectedImagePreviewUrl;
 
 
-    reader.readAsDataURL(
-      file
-    );
+    imagePreview.style.display =
+      "block";
 
   }
 );
@@ -3288,6 +3594,7 @@ imageInput.addEventListener(
 /* =====================================================
    SAVE PRODUCT - SUPABASE
 ===================================================== */
+
 
 saveButton.addEventListener(
   "click",
@@ -3415,19 +3722,16 @@ async function saveProduct() {
       : 0;
 
 
-  const payload =
-    createDatabaseProductPayload({
-      code,
-      name,
-      type,
-      karat,
-      productUnit,
-      productWeight,
-      productCost,
-      productInterest,
-      productSalePrice,
-      costPerBaht
-    });
+  const previousImageUrl =
+    selectedImage;
+
+
+  let uploadedImage =
+    null;
+
+
+  let imageUrl =
+    selectedImage;
 
 
   const originalButtonText =
@@ -3445,6 +3749,48 @@ async function saveProduct() {
 
 
   try {
+
+    if (
+      selectedImageFile
+    ) {
+
+      saveButton.textContent =
+        "กำลังอัปโหลดรูป...";
+
+
+      uploadedImage =
+        await uploadProductImage(
+          selectedImageFile
+        );
+
+
+      imageUrl =
+        uploadedImage.url;
+
+
+      saveButton.textContent =
+        editingId
+          ? "กำลังบันทึกการแก้ไข..."
+          : "กำลังบันทึก...";
+
+    }
+
+
+    const payload =
+      createDatabaseProductPayload({
+        code,
+        name,
+        type,
+        karat,
+        productUnit,
+        productWeight,
+        productCost,
+        productInterest,
+        productSalePrice,
+        costPerBaht,
+        imageUrl
+      });
+
 
     let data;
 
@@ -3526,6 +3872,20 @@ async function saveProduct() {
 
       }
 
+
+      if (
+        uploadedImage &&
+        previousImageUrl &&
+        previousImageUrl !==
+          imageUrl
+      ) {
+
+        await deleteStoredProductImage(
+          previousImageUrl
+        );
+
+      }
+
     }
 
     else {
@@ -3550,6 +3910,17 @@ async function saveProduct() {
     );
 
 
+    if (
+      uploadedImage?.url
+    ) {
+
+      await deleteStoredProductImage(
+        uploadedImage.url
+      );
+
+    }
+
+
     const message =
       error?.message ||
       "Unknown error";
@@ -3568,10 +3939,21 @@ async function saveProduct() {
       false;
 
 
-    saveButton.textContent =
+    if (
       editingId
-        ? originalButtonText
-        : "บันทึกรายการ";
+    ) {
+
+      saveButton.textContent =
+        originalButtonText;
+
+    }
+
+    else {
+
+      saveButton.textContent =
+        "บันทึกรายการ";
+
+    }
 
   }
 
@@ -3584,8 +3966,16 @@ async function saveProduct() {
 
 function clearProductEntryFields() {
 
+  clearImagePreviewObjectUrl();
+
+
   selectedImage =
     "";
+
+
+  selectedImageFile =
+    null;
+
 
   productCode.value =
     "";
@@ -3740,6 +4130,17 @@ function editProduct(id) {
       : "";
 
 
+  clearImagePreviewObjectUrl();
+
+
+  selectedImageFile =
+    null;
+
+
+  imageInput.value =
+    "";
+
+
   selectedImage =
     product.image ||
     "";
@@ -3838,6 +4239,17 @@ async function deleteProduct(id) {
 
     if (error) {
       throw error;
+    }
+
+
+    if (
+      product.image
+    ) {
+
+      await deleteStoredProductImage(
+        product.image
+      );
+
     }
 
 
