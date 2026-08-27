@@ -1900,7 +1900,7 @@ function showApp(user) {
 }
 
 
-function initializeApp() {
+async function initializeApp() {
 
   if (appInitialized) {
     return;
@@ -1911,13 +1911,34 @@ function initializeApp() {
     true;
 
 
-  loadData();
+  try {
 
-  updateConditionalFields();
+    updateConditionalFields();
 
-  renderAll();
+    await loadData();
 
-  fetchLiveGoldPrice();
+    renderAll();
+
+    fetchLiveGoldPrice();
+
+  }
+
+  catch(error) {
+
+    appInitialized =
+      false;
+
+
+    console.error(
+      error
+    );
+
+
+    alert(
+      "ไม่สามารถโหลดข้อมูลสินค้าจาก Supabase ได้ กรุณาลองใหม่"
+    );
+
+  }
 
 }
 
@@ -1981,7 +2002,7 @@ async function login() {
     );
 
 
-    initializeApp();
+    await initializeApp();
 
 
     loginPassword.value =
@@ -2038,6 +2059,12 @@ async function logout() {
     products =
       [];
 
+
+    appInitialized =
+      false;
+
+
+    resetForm();
 
     renderAll();
 
@@ -2106,7 +2133,7 @@ async function checkLogin() {
     );
 
 
-    initializeApp();
+    await initializeApp();
 
   }
 
@@ -2160,6 +2187,12 @@ supabaseClient.auth.onAuthStateChange(
       !session
     ) {
 
+      appInitialized =
+        false;
+
+      products =
+        [];
+
       showLogin();
 
     }
@@ -2169,12 +2202,10 @@ supabaseClient.auth.onAuthStateChange(
 
 
 /* =====================================================
-   STORAGE
+   LOCAL CACHE
+   ใช้ localStorage เฉพาะ cache ราคาทองเท่านั้น
+   ข้อมูลสินค้าเก็บใน Supabase Database
 ===================================================== */
-
-const STORAGE_KEY =
-  "goldPawnManagerDataV3";
-
 
 const GOLD_LIVE_CACHE_KEY =
   "goldPawnLivePriceCacheV1";
@@ -2185,6 +2216,132 @@ let products = [];
 let editingId = null;
 
 let selectedImage = "";
+
+
+/* =====================================================
+   SUPABASE PRODUCT MAPPING
+===================================================== */
+
+function databaseRowToProduct(row) {
+
+  return {
+
+    id:
+      row.id,
+
+    code:
+      row.code ||
+      "",
+
+    name:
+      row.name ||
+      "",
+
+    type:
+      row.type ||
+      "เบ็ดเตล็ด",
+
+    karat:
+      row.karat ||
+      "",
+
+    weight:
+      Number(
+        row.weight ||
+        0
+      ),
+
+    unit:
+      row.unit ||
+      "ชิ้น",
+
+    cost:
+      Number(
+        row.cost ||
+        0
+      ),
+
+    interest:
+      Number(
+        row.interest ||
+        0
+      ),
+
+    salePrice:
+      Number(
+        row.sale_price ||
+        0
+      ),
+
+    costPerBaht:
+      Number(
+        row.cost_per_baht ||
+        0
+      ),
+
+    image:
+      row.image_url ||
+      "",
+
+    createdAt:
+      row.created_at
+
+  };
+
+}
+
+
+function createDatabaseProductPayload({
+  code,
+  name,
+  type,
+  karat,
+  productUnit,
+  productWeight,
+  productCost,
+  productInterest,
+  productSalePrice,
+  costPerBaht
+}) {
+
+  return {
+
+    code,
+
+    name,
+
+    type,
+
+    karat:
+      isGoldProductType(type)
+        ? karat
+        : null,
+
+    weight:
+      productWeight,
+
+    unit:
+      productUnit,
+
+    cost:
+      productCost,
+
+    interest:
+      productInterest,
+
+    sale_price:
+      productSalePrice,
+
+    cost_per_baht:
+      costPerBaht,
+
+    image_url:
+      selectedImage ||
+      null
+
+  };
+
+}
 
 
 /* =====================================================
@@ -3129,7 +3286,7 @@ imageInput.addEventListener(
 
 
 /* =====================================================
-   SAVE PRODUCT
+   SAVE PRODUCT - SUPABASE
 ===================================================== */
 
 saveButton.addEventListener(
@@ -3138,7 +3295,7 @@ saveButton.addEventListener(
 );
 
 
-function saveProduct() {
+async function saveProduct() {
 
   const code =
     productCode.value
@@ -3258,107 +3415,165 @@ function saveProduct() {
       : 0;
 
 
-  if (editingId) {
+  const payload =
+    createDatabaseProductPayload({
+      code,
+      name,
+      type,
+      karat,
+      productUnit,
+      productWeight,
+      productCost,
+      productInterest,
+      productSalePrice,
+      costPerBaht
+    });
 
-    const index =
-      products.findIndex(
-        item =>
-          item.id ===
-          editingId
-      );
+
+  const originalButtonText =
+    saveButton.textContent;
 
 
-    if (
-      index !== -1
-    ) {
+  saveButton.disabled =
+    true;
 
-      products[index] = {
 
-        ...products[index],
+  saveButton.textContent =
+    editingId
+      ? "กำลังบันทึกการแก้ไข..."
+      : "กำลังบันทึก...";
 
-        code,
 
-        name,
+  try {
 
-        type,
+    let data;
 
-        karat,
+    let error;
 
-        unit:
-          productUnit,
 
-        weight:
-          productWeight,
+    if (editingId) {
 
-        cost:
-          productCost,
+      const result =
+        await supabaseClient
+          .from("products")
+          .update(
+            payload
+          )
+          .eq(
+            "id",
+            editingId
+          )
+          .select("*")
+          .single();
 
-        interest:
-          productInterest,
 
-        salePrice:
-          productSalePrice,
+      data =
+        result.data;
 
-        costPerBaht,
-
-        image:
-          selectedImage
-
-      };
+      error =
+        result.error;
 
     }
 
+    else {
+
+      const result =
+        await supabaseClient
+          .from("products")
+          .insert(
+            payload
+          )
+          .select("*")
+          .single();
+
+
+      data =
+        result.data;
+
+      error =
+        result.error;
+
+    }
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    const savedProduct =
+      databaseRowToProduct(
+        data
+      );
+
+
+    if (editingId) {
+
+      const index =
+        products.findIndex(
+          item =>
+            item.id ===
+            editingId
+        );
+
+
+      if (
+        index !== -1
+      ) {
+
+        products[index] =
+          savedProduct;
+
+      }
+
+    }
+
+    else {
+
+      products.unshift(
+        savedProduct
+      );
+
+    }
+
+
+    renderAll();
+
+    resetForm();
+
   }
 
-  else {
+  catch(error) {
 
-    products.unshift({
+    console.error(
+      error
+    );
 
-      id:
-        crypto.randomUUID(),
 
-      code,
+    const message =
+      error?.message ||
+      "Unknown error";
 
-      name,
 
-      type,
-
-      karat,
-
-      unit:
-        productUnit,
-
-      weight:
-        productWeight,
-
-      cost:
-        productCost,
-
-      interest:
-        productInterest,
-
-      salePrice:
-        productSalePrice,
-
-      costPerBaht,
-
-      image:
-        selectedImage,
-
-      createdAt:
-        new Date()
-          .toISOString()
-
-    });
+    alert(
+      "บันทึกข้อมูลไม่สำเร็จ\n\n" +
+      message
+    );
 
   }
 
+  finally {
 
-  saveData();
+    saveButton.disabled =
+      false;
 
-  renderAll();
 
-  resetForm();
+    saveButton.textContent =
+      editingId
+        ? originalButtonText
+        : "บันทึกรายการ";
+
+  }
 
 }
 
@@ -3578,10 +3793,10 @@ cancelEditButton.addEventListener(
 
 
 /* =====================================================
-   DELETE
+   DELETE - SUPABASE
 ===================================================== */
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
 
   const product =
     products.find(
@@ -3607,35 +3822,43 @@ function deleteProduct(id) {
   }
 
 
-  products =
-    products.filter(
-      item =>
-        item.id !==
-        id
-    );
-
-
-  saveData();
-
-  renderAll();
-
-}
-
-
-/* =====================================================
-   STORAGE
-===================================================== */
-
-function saveData() {
-
   try {
 
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(
-        products
-      )
-    );
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("products")
+        .delete()
+        .eq(
+          "id",
+          id
+        );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    products =
+      products.filter(
+        item =>
+          item.id !==
+          id
+      );
+
+
+    if (
+      editingId === id
+    ) {
+
+      resetForm();
+
+    }
+
+
+    renderAll();
 
   }
 
@@ -3647,7 +3870,7 @@ function saveData() {
 
 
     alert(
-      "พื้นที่จัดเก็บเต็ม อาจเกิดจากรูปภาพมีขนาดใหญ่เกินไป"
+      "ลบข้อมูลไม่สำเร็จ กรุณาลองใหม่"
     );
 
   }
@@ -3655,33 +3878,37 @@ function saveData() {
 }
 
 
-function loadData() {
+/* =====================================================
+   LOAD PRODUCTS - SUPABASE
+===================================================== */
 
-  try {
+async function loadData() {
 
-    const saved =
-      localStorage.getItem(
-        STORAGE_KEY
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
       );
 
 
-    products =
-      saved
-        ?
-        JSON.parse(
-          saved
-        )
-        :
-        [];
-
+  if (error) {
+    throw error;
   }
 
-  catch {
 
-    products =
-      [];
-
-  }
+  products =
+    (data || [])
+      .map(
+        databaseRowToProduct
+      );
 
 }
 
