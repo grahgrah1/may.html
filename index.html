@@ -2152,6 +2152,26 @@ loginButton.addEventListener(
 );
 
 
+/* กด Enter ที่ช่อง Email -> ไปช่อง Password */
+loginEmail.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Enter"
+    ) {
+
+      event.preventDefault();
+
+      loginPassword.focus();
+
+    }
+
+  }
+);
+
+
+/* กด Enter ที่ช่อง Password -> เข้าสู่ระบบ */
 loginPassword.addEventListener(
   "keydown",
   event => {
