@@ -771,6 +771,120 @@ tbody tr:hover {
   color:var(--muted);
 }
 
+
+/* =====================================================
+   PRODUCT IMAGE LIGHTBOX
+===================================================== */
+
+.product-image-clickable {
+  cursor:zoom-in;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+}
+
+.product-image-clickable:hover {
+  transform:scale(1.06);
+  box-shadow:0 6px 18px rgba(0,0,0,.16);
+  opacity:.92;
+}
+
+.image-modal {
+  position:fixed;
+  inset:0;
+  z-index:9999;
+
+  display:none;
+  align-items:center;
+  justify-content:center;
+
+  padding:28px;
+
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(5px);
+}
+
+.image-modal.open {
+  display:flex;
+}
+
+.image-modal-content {
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  max-width:96vw;
+  max-height:94vh;
+}
+
+.image-modal img {
+  display:block;
+
+  max-width:92vw;
+  max-height:90vh;
+
+  object-fit:contain;
+
+  border-radius:16px;
+
+  background:#111;
+
+  box-shadow:
+    0 25px 80px rgba(0,0,0,.45);
+
+  cursor:zoom-out;
+}
+
+.image-modal-close {
+  position:absolute;
+  top:-18px;
+  right:-18px;
+  z-index:2;
+
+  width:42px;
+  height:42px;
+
+  display:grid;
+  place-items:center;
+
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50%;
+
+  background:rgba(20,20,20,.80);
+  color:#fff;
+
+  font-size:27px;
+  line-height:1;
+
+  cursor:pointer;
+}
+
+.image-modal-close:hover {
+  background:#fff;
+  color:#111;
+}
+
+@media(max-width:700px) {
+  .image-modal {
+    padding:16px;
+  }
+
+  .image-modal img {
+    max-width:94vw;
+    max-height:86vh;
+    border-radius:12px;
+  }
+
+  .image-modal-close {
+    top:-16px;
+    right:-6px;
+  }
+}
+
+
 /* MOBILE */
 
 @media(max-width:1050px) {
@@ -1785,6 +1899,39 @@ tbody tr:hover {
 </section>
 
 </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     PRODUCT IMAGE LIGHTBOX
+===================================================== -->
+
+<div
+  id="imageModal"
+  class="image-modal"
+  aria-hidden="true"
+>
+
+  <div class="image-modal-content">
+
+    <button
+      id="imageModalClose"
+      class="image-modal-close"
+      type="button"
+      aria-label="ปิดรูปภาพ"
+    >
+      ×
+    </button>
+
+    <img
+      id="imageModalImage"
+      src=""
+      alt="รูปสินค้าแบบขยาย"
+    >
+
+  </div>
 
 </div>
 
@@ -3337,6 +3484,146 @@ const chart =
   );
 
 
+const imageModal =
+  document.getElementById(
+    "imageModal"
+  );
+
+
+const imageModalImage =
+  document.getElementById(
+    "imageModalImage"
+  );
+
+
+const imageModalClose =
+  document.getElementById(
+    "imageModalClose"
+  );
+
+
+/* =====================================================
+   PRODUCT IMAGE LIGHTBOX
+===================================================== */
+
+function openProductImage(
+  imageUrl
+) {
+
+  if (!imageUrl) {
+    return;
+  }
+
+
+  imageModalImage.src =
+    imageUrl;
+
+
+  imageModal.classList.add(
+    "open"
+  );
+
+
+  imageModal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+function closeProductImage() {
+
+  imageModal.classList.remove(
+    "open"
+  );
+
+
+  imageModal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  imageModalImage.src =
+    "";
+
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+imageModalClose.addEventListener(
+  "click",
+  closeProductImage
+);
+
+
+imageModal.addEventListener(
+  "click",
+  event => {
+
+    if (
+      event.target === imageModal ||
+      event.target === imageModalImage
+    ) {
+
+      closeProductImage();
+
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Escape" &&
+      imageModal.classList.contains(
+        "open"
+      )
+    ) {
+
+      closeProductImage();
+
+    }
+
+  }
+);
+
+
+tableBody.addEventListener(
+  "click",
+  event => {
+
+    const clickedImage =
+      event.target.closest(
+        ".product-image-clickable"
+      );
+
+
+    if (!clickedImage) {
+      return;
+    }
+
+
+    openProductImage(
+      clickedImage.dataset.imageUrl
+    );
+
+  }
+);
+
+
 /* =====================================================
    GOLD FIELD VISIBILITY
 ===================================================== */
@@ -4635,9 +4922,11 @@ function renderTable() {
           ?
           `
           <img
-            class="product-image"
-            src="${product.image}"
-            alt=""
+            class="product-image product-image-clickable"
+            src="${escapeHTML(product.image)}"
+            data-image-url="${escapeHTML(product.image)}"
+            alt="${escapeHTML(product.name || product.code || "สินค้า")}"
+            title="คลิกเพื่อขยายรูป"
           >
           `
           :
