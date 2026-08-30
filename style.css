@@ -1,1 +1,1107 @@
+:root {
+  --bg:#f5f5f3;
+  --card:#ffffff;
+  --red:#8f1018;
+  --red2:#b71923;
+  --gold:#c49a3a;
+  --gold-light:#f7edcf;
+  --text:#191919;
+  --muted:#777;
+  --border:#e7e3dc;
+  --green:#13864a;
+  --shadow:0 10px 30px rgba(0,0,0,.07);
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  font-family:Arial,"Noto Sans Thai",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,
+input,
+select {
+  font:inherit;
+}
+
+/* HEADER */
+
+header {
+  background:
+    linear-gradient(
+      135deg,
+      #65080f,
+      #971019 55%,
+      #741018
+    );
+
+  color:white;
+  padding:20px 5%;
+  box-shadow:0 5px 25px rgba(0,0,0,.15);
+}
+
+.header-inner {
+  max-width:1450px;
+  margin:auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.logo {
+  width:52px;
+  height:52px;
+
+  display:grid;
+  place-items:center;
+
+  border-radius:16px;
+
+  background:
+    rgba(255,255,255,.12);
+
+  font-size:28px;
+}
+
+.brand h1 {
+  margin:0;
+  font-size:22px;
+}
+
+.brand p {
+  margin:4px 0 0;
+  font-size:12px;
+  color:rgba(255,255,255,.65);
+}
+
+/* LIVE GOLD PRICE */
+
+.gold-price-box {
+  min-width:330px;
+
+  padding:13px 16px;
+
+  border-radius:17px;
+
+  background:
+    rgba(255,255,255,.11);
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+
+  backdrop-filter:blur(10px);
+}
+
+.gold-price-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.gold-price-title {
+  font-size:11px;
+  color:rgba(255,255,255,.68);
+}
+
+.live-badge {
+  display:flex;
+  align-items:center;
+  gap:5px;
+
+  padding:4px 7px;
+  border-radius:20px;
+
+  background:
+    rgba(35,210,110,.16);
+
+  color:#9bffc2;
+
+  font-size:9px;
+  font-weight:bold;
+}
+
+.live-dot {
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:#45ef88;
+
+  box-shadow:
+    0 0 8px #45ef88;
+}
+
+.gold-main-price {
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+}
+
+.gold-main-price span {
+  margin-bottom:4px;
+
+  font-size:11px;
+
+  color:
+    rgba(255,255,255,.65);
+}
+
+.gold-main-price strong {
+  font-size:27px;
+  line-height:1;
+  letter-spacing:-1px;
+}
+
+.gold-main-price small {
+  margin-bottom:3px;
+
+  font-size:11px;
+
+  color:
+    rgba(255,255,255,.75);
+}
+
+.gold-buy-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  margin-top:9px;
+  padding-top:8px;
+
+  border-top:
+    1px solid
+    rgba(255,255,255,.10);
+
+  font-size:11px;
+}
+
+.gold-buy-label {
+  color:
+    rgba(255,255,255,.60);
+}
+
+.gold-buy-value {
+  font-weight:bold;
+}
+
+.gold-meta {
+  margin-top:8px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:8px;
+
+  color:
+    rgba(255,255,255,.50);
+
+  font-size:9px;
+}
+
+.refresh-price {
+  border:0;
+
+  color:white;
+
+  background:
+    rgba(255,255,255,.10);
+
+  border-radius:8px;
+
+  padding:5px 8px;
+
+  cursor:pointer;
+}
+
+.refresh-price:hover {
+  background:
+    rgba(255,255,255,.18);
+}
+
+.refresh-price.loading {
+  opacity:.5;
+  pointer-events:none;
+}
+
+.gold-source {
+  margin-top:5px;
+
+  font-size:8px;
+
+  color:
+    rgba(255,255,255,.42);
+}
+
+.gold-source a {
+  color:
+    rgba(255,255,255,.58);
+
+  text-decoration:none;
+}
+
+/* MAIN */
+
+main {
+  width:min(1450px,94%);
+  margin:auto;
+  padding:28px 0 80px;
+}
+
+/* KPI */
+
+.kpi-grid {
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:16px;
+
+  margin-bottom:24px;
+}
+
+.kpi {
+  padding:22px;
+
+  border-radius:20px;
+
+  background:var(--card);
+
+  border:
+    1px solid
+    var(--border);
+
+  box-shadow:
+    var(--shadow);
+}
+
+.kpi-icon {
+  width:42px;
+  height:42px;
+
+  display:grid;
+  place-items:center;
+
+  border-radius:13px;
+
+  background:
+    var(--gold-light);
+
+  margin-bottom:18px;
+
+  font-size:21px;
+}
+
+.kpi-label {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.kpi-value {
+  margin-top:7px;
+  font-size:26px;
+  font-weight:800;
+}
+
+.kpi-sub {
+  margin-top:6px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* LAYOUT */
+
+.layout {
+  display:grid;
+
+  grid-template-columns:
+    390px 1fr;
+
+  gap:20px;
+
+  align-items:start;
+}
+
+.card {
+  background:var(--card);
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:20px;
+
+  box-shadow:
+    var(--shadow);
+}
+
+/* FORM */
+
+.form-card {
+  position:sticky;
+  top:20px;
+  padding:22px;
+}
+
+.form-card h2 {
+  margin:0 0 6px;
+  font-size:20px;
+}
+
+.form-card > p {
+  margin:0 0 22px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.form-group {
+  margin-bottom:15px;
+}
+
+.form-group label {
+  display:block;
+
+  margin-bottom:7px;
+
+  font-size:12px;
+  font-weight:bold;
+}
+
+.form-group input,
+.form-group select {
+  width:100%;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:12px;
+
+  padding:12px 13px;
+
+  outline:none;
+
+  background:#fff;
+
+  transition:.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color:var(--gold);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(196,154,58,.12);
+}
+
+.two-column {
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:10px;
+}
+
+.two-column.single-column {
+  grid-template-columns:1fr;
+}
+
+/* IMAGE */
+
+.image-preview {
+  display:none;
+
+  width:100%;
+  height:150px;
+
+  margin-top:10px;
+
+  border-radius:14px;
+
+  object-fit:cover;
+
+  border:
+    1px solid
+    var(--border);
+}
+
+/* BUTTONS */
+
+.primary-button {
+  width:100%;
+
+  border:0;
+  border-radius:13px;
+
+  padding:13px 16px;
+
+  background:var(--red);
+
+  color:white;
+
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+.primary-button:hover {
+  background:var(--red2);
+}
+
+.secondary-button {
+  width:100%;
+
+  margin-top:8px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:13px;
+
+  padding:12px;
+
+  background:#fff;
+
+  cursor:pointer;
+}
+
+/* RIGHT */
+
+.right-column {
+  display:grid;
+  gap:20px;
+}
+
+/* CHART */
+
+.chart-card {
+  padding:22px;
+}
+
+.section-header {
+  margin-bottom:17px;
+}
+
+.section-header h2 {
+  margin:0;
+  font-size:18px;
+}
+
+.section-header p {
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:11px;
+}
+
+canvas {
+  width:100%;
+  height:250px;
+  border-radius:14px;
+}
+
+/* TABLE */
+
+.table-card {
+  overflow:hidden;
+}
+
+.toolbar {
+  padding:20px;
+
+  display:flex;
+  justify-content:space-between;
+
+  gap:12px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.toolbar-left {
+  display:flex;
+  flex-wrap:wrap;
+
+  gap:9px;
+
+  flex:1;
+}
+
+.toolbar input,
+.toolbar select {
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:11px;
+
+  padding:10px 12px;
+
+  outline:none;
+
+  background:#fff;
+}
+
+.search {
+  min-width:250px;
+  flex:1;
+}
+
+.export-button {
+  border:0;
+
+  border-radius:11px;
+
+  padding:10px 15px;
+
+  background:#171717;
+
+  color:white;
+
+  cursor:pointer;
+}
+
+.table-wrapper {
+  overflow-x:auto;
+}
+
+table {
+  width:100%;
+
+  border-collapse:
+    collapse;
+
+  min-width:950px;
+}
+
+th {
+  padding:13px 15px;
+
+  text-align:left;
+
+  background:#faf9f6;
+
+  color:#777;
+
+  font-size:11px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+td {
+  padding:14px 15px;
+
+  border-bottom:
+    1px solid
+    #efede8;
+
+  font-size:13px;
+}
+
+tbody tr:hover {
+  background:#fffdf7;
+}
+
+.product-cell {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.product-image {
+  width:45px;
+  height:45px;
+
+  border-radius:10px;
+
+  object-fit:cover;
+
+  background:#eee;
+}
+
+.no-image {
+  width:45px;
+  height:45px;
+
+  display:grid;
+  place-items:center;
+
+  border-radius:10px;
+
+  background:#f0eee9;
+
+  color:#aaa;
+}
+
+.code {
+  font-weight:bold;
+}
+
+.product-name {
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.35;
+}
+
+/* TYPE BADGES */
+
+.badge {
+  display:inline-block;
+
+  padding:6px 9px;
+
+  border-radius:30px;
+
+  font-size:10px;
+
+  font-weight:bold;
+}
+
+.badge-misc {
+  background:#e9eef6;
+  color:#445b78;
+}
+
+.badge-gold {
+  background:#fff4cf;
+  color:#8a6714;
+}
+
+.badge-lost-misc {
+  background:#ffe8d7;
+  color:#9a4d13;
+}
+
+.badge-lost-gold {
+  background:#ffe0e2;
+  color:#9a1f29;
+}
+
+.karat-badge {
+  display:inline-block;
+
+  min-width:45px;
+
+  padding:6px 10px;
+
+  text-align:center;
+
+  border-radius:30px;
+
+  background:#fff4cb;
+
+  color:#806015;
+
+  border:
+    1px solid
+    #ecd58c;
+
+  font-size:11px;
+
+  font-weight:800;
+}
+
+.cost-baht {
+  color:var(--red);
+  font-weight:800;
+}
+
+.actions {
+  display:flex;
+  gap:6px;
+}
+
+.action-btn {
+  width:34px;
+  height:34px;
+
+  border:0;
+  border-radius:9px;
+
+  cursor:pointer;
+}
+
+.edit-btn {
+  background:#fff1cb;
+}
+
+.delete-btn {
+  background:#ffe2e2;
+}
+
+.empty {
+  padding:55px 20px;
+  text-align:center;
+  color:var(--muted);
+}
+
+
+/* =====================================================
+   PRODUCT IMAGE LIGHTBOX
+===================================================== */
+
+.product-image-clickable {
+  cursor:zoom-in;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease;
+}
+
+.product-image-clickable:hover {
+  transform:scale(1.06);
+  box-shadow:0 6px 18px rgba(0,0,0,.16);
+  opacity:.92;
+}
+
+.image-modal {
+  position:fixed;
+  inset:0;
+  z-index:9999;
+
+  display:none;
+  align-items:center;
+  justify-content:center;
+
+  padding:28px;
+
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(5px);
+}
+
+.image-modal.open {
+  display:flex;
+}
+
+.image-modal-content {
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  max-width:96vw;
+  max-height:94vh;
+}
+
+.image-modal img {
+  display:block;
+
+  max-width:92vw;
+  max-height:90vh;
+
+  object-fit:contain;
+
+  border-radius:16px;
+
+  background:#111;
+
+  box-shadow:
+    0 25px 80px rgba(0,0,0,.45);
+
+  cursor:zoom-out;
+}
+
+.image-modal-close {
+  position:absolute;
+  top:-18px;
+  right:-18px;
+  z-index:2;
+
+  width:42px;
+  height:42px;
+
+  display:grid;
+  place-items:center;
+
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50%;
+
+  background:rgba(20,20,20,.80);
+  color:#fff;
+
+  font-size:27px;
+  line-height:1;
+
+  cursor:pointer;
+}
+
+.image-modal-close:hover {
+  background:#fff;
+  color:#111;
+}
+
+@media(max-width:700px) {
+  .image-modal {
+    padding:16px;
+  }
+
+  .image-modal img {
+    max-width:94vw;
+    max-height:86vh;
+    border-radius:12px;
+  }
+
+  .image-modal-close {
+    top:-16px;
+    right:-6px;
+  }
+}
+
+
+/* MOBILE */
+
+@media(max-width:1050px) {
+
+  .kpi-grid {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .layout {
+    grid-template-columns:
+      1fr;
+  }
+
+  .form-card {
+    position:static;
+  }
+}
+
+@media(max-width:700px) {
+
+  header {
+    padding:15px;
+  }
+
+  .header-inner {
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .gold-price-box {
+    width:100%;
+    min-width:0;
+  }
+
+  .kpi-grid {
+    grid-template-columns:
+      1fr 1fr;
+
+    gap:9px;
+  }
+
+  .kpi {
+    padding:16px;
+  }
+
+  .kpi-value {
+    font-size:19px;
+  }
+
+  .toolbar {
+    flex-direction:column;
+  }
+
+  .toolbar-left {
+    flex-direction:column;
+  }
+
+  .toolbar input,
+  .toolbar select,
+  .search {
+    width:100%;
+    min-width:0;
+  }
+
+}
+
+
+/* =====================================================
+   LOGIN / ACCOUNT
+===================================================== */
+
+#loginScreen {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    linear-gradient(
+      135deg,
+      #65080f,
+      #971019 55%,
+      #741018
+    );
+}
+
+.login-card {
+  width:min(420px,100%);
+  padding:32px;
+  border-radius:22px;
+  background:#fff;
+  box-shadow:0 24px 70px rgba(0,0,0,.25);
+}
+
+.login-logo {
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  margin:0 auto 18px;
+  border-radius:18px;
+  background:var(--gold-light);
+  font-size:30px;
+}
+
+.login-card h2 {
+  margin:0;
+  text-align:center;
+  font-size:24px;
+}
+
+.login-card > p {
+  margin:8px 0 24px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.login-field {
+  margin-bottom:13px;
+}
+
+.login-field label {
+  display:block;
+  margin-bottom:7px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.login-field input {
+  width:100%;
+  padding:13px 14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  outline:none;
+  background:#fff;
+}
+
+.login-field input:focus {
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(196,154,58,.12);
+}
+
+#loginButton {
+  width:100%;
+  margin-top:5px;
+  border:0;
+  border-radius:12px;
+  padding:13px 15px;
+  background:var(--red);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#loginButton:hover {
+  background:var(--red2);
+}
+
+#loginButton:disabled {
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+#loginMessage {
+  min-height:18px;
+  margin-top:13px;
+  text-align:center;
+  color:var(--red2);
+  font-size:12px;
+}
+
+.account-box {
+  min-width:190px;
+  padding:12px 14px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  background:rgba(255,255,255,.10);
+}
+
+.account-label {
+  color:rgba(255,255,255,.58);
+  font-size:9px;
+}
+
+#currentUserEmail {
+  display:block;
+  max-width:210px;
+  margin-top:4px;
+  overflow:hidden;
+  color:#fff;
+  font-size:11px;
+  font-weight:bold;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.logout-button {
+  width:100%;
+  margin-top:9px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:9px;
+  padding:7px 9px;
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  font-size:10px;
+  cursor:pointer;
+}
+
+.logout-button:hover {
+  background:rgba(255,255,255,.18);
+}
+
+@media(max-width:1050px) {
+  .header-inner {
+    flex-wrap:wrap;
+  }
+}
+
+@media(max-width:700px) {
+  .account-box {
+    width:100%;
+  }
+
+  #currentUserEmail {
+    max-width:none;
+  }
+}
 
