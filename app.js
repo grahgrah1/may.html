@@ -8,15 +8,37 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_uZqlWakHz1pqoiZqOTe3Aw_ZazllG12";
 
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
 
 /* =====================================================
-   AUTHENTICATION
+   GLOBAL STATE
+===================================================== */
+
+const GOLD_LIVE_CACHE_KEY =
+  "goldPawnLivePriceCacheV1";
+
+const PRODUCT_IMAGE_BUCKET =
+  "product-images";
+
+let products = [];
+
+let editingId = null;
+
+let selectedImage = "";
+
+let selectedImageFile = null;
+
+let selectedImagePreviewUrl = "";
+
+let appInitialized = false;
+
+
+/* =====================================================
+   ELEMENTS
 ===================================================== */
 
 const loginScreen =
@@ -59,667 +81,6 @@ const currentUserEmail =
     "currentUserEmail"
   );
 
-let appInitialized = false;
-
-
-function showLogin() {
-
-  loginScreen.style.display =
-    "flex";
-
-  appScreen.style.display =
-    "none";
-
-  currentUserEmail.textContent =
-    "-";
-}
-
-
-function showApp(user) {
-
-  loginScreen.style.display =
-    "none";
-
-  appScreen.style.display =
-    "block";
-
-  currentUserEmail.textContent =
-    user?.email ||
-    "ผู้ใช้งาน";
-}
-
-
-async function initializeApp() {
-
-  if (appInitialized) {
-    return;
-  }
-
-  appInitialized = true;
-
-  try {
-
-    updateConditionalFields();
-
-    await loadData();
-
-    renderAll();
-
-    fetchLiveGoldPrice();
-
-  } catch(error) {
-
-    appInitialized = false;
-
-    console.error(error);
-
-    alert(
-      "ไม่สามารถโหลดข้อมูลสินค้าจาก Supabase ได้ กรุณาลองใหม่"
-    );
-  }
-}
-
-
-async function login() {
-
-  const email =
-    loginEmail.value.trim();
-
-  const password =
-    loginPassword.value;
-
-  if (!email || !password) {
-
-    loginMessage.textContent =
-      "กรุณากรอก Email และ Password";
-
-    return;
-  }
-
-  loginButton.disabled = true;
-
-  loginButton.textContent =
-    "กำลังเข้าสู่ระบบ...";
-
-  loginMessage.textContent = "";
-
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth
-        .signInWithPassword({
-          email,
-          password
-        });
-
-    if (error) {
-      throw error;
-    }
-
-    showApp(data.user);
-
-    await initializeApp();
-
-    loginPassword.value = "";
-
-  } catch(error) {
-
-    console.error(error);
-
-    loginMessage.textContent =
-      "เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password";
-
-  } finally {
-
-    loginButton.disabled = false;
-
-    loginButton.textContent =
-      "เข้าสู่ระบบ";
-  }
-}
-
-
-async function logout() {
-
-  logoutButton.disabled = true;
-
-  try {
-
-    const { error } =
-      await supabaseClient.auth
-        .signOut();
-
-    if (error) {
-      throw error;
-    }
-
-    products = [];
-
-    appInitialized = false;
-
-    resetForm();
-
-    renderAll();
-
-    showLogin();
-
-    loginEmail.focus();
-
-  } catch(error) {
-
-    console.error(error);
-
-    alert(
-      "ออกจากระบบไม่สำเร็จ กรุณาลองใหม่"
-    );
-
-  } finally {
-
-    logoutButton.disabled = false;
-  }
-}
-
-
-async function checkLogin() {
-
-  const {
-    data: {
-      session
-    },
-    error
-  } =
-    await supabaseClient.auth
-      .getSession();
-
-  if (error) {
-
-    console.error(error);
-
-    showLogin();
-
-    return;
-  }
-
-  if (session?.user) {
-
-    showApp(session.user);
-
-    await initializeApp();
-
-  } else {
-
-    showLogin();
-  }
-}
-
-
-loginButton.addEventListener(
-  "click",
-  login
-);
-
-
-/* กด Enter ที่ช่อง Email -> ไปช่อง Password */
-
-loginEmail.addEventListener(
-  "keydown",
-  event => {
-
-    if (event.key === "Enter") {
-
-      event.preventDefault();
-
-      loginPassword.focus();
-    }
-  }
-);
-
-
-/* กด Enter ที่ช่อง Password -> เข้าสู่ระบบ */
-
-loginPassword.addEventListener(
-  "keydown",
-  event => {
-
-    if (event.key === "Enter") {
-
-      event.preventDefault();
-
-      login();
-    }
-  }
-);
-
-
-logoutButton.addEventListener(
-  "click",
-  logout
-);
-
-
-supabaseClient.auth.onAuthStateChange(
-  (
-    event,
-    session
-  ) => {
-
-    if (
-      event === "SIGNED_OUT" ||
-      !session
-    ) {
-
-      appInitialized = false;
-
-      products = [];
-
-      showLogin();
-    }
-  }
-);
-
-
-/* =====================================================
-   LOCAL CACHE
-   ใช้ localStorage เฉพาะ cache ราคาทองเท่านั้น
-   ข้อมูลสินค้าเก็บใน Supabase Database
-===================================================== */
-
-const GOLD_LIVE_CACHE_KEY =
-  "goldPawnLivePriceCacheV1";
-
-let products = [];
-
-let editingId = null;
-
-/* URL รูปที่บันทึกอยู่ในฐานข้อมูล */
-let selectedImage = "";
-
-/* ไฟล์รูปใหม่ที่ผู้ใช้เพิ่งเลือก */
-let selectedImageFile = null;
-
-/* Object URL สำหรับ preview รูปในเครื่องก่อนอัปโหลด */
-let selectedImagePreviewUrl = "";
-
-const PRODUCT_IMAGE_BUCKET =
-  "product-images";
-
-
-/* =====================================================
-   SUPABASE STORAGE - PRODUCT IMAGES
-===================================================== */
-
-function getSafeImageExtension(file) {
-
-  const fileName =
-    String(
-      file?.name || ""
-    );
-
-  const rawExtension =
-    fileName.includes(".")
-      ? fileName
-          .split(".")
-          .pop()
-          .toLowerCase()
-      : "";
-
-  const allowedExtensions = [
-    "jpg",
-    "jpeg",
-    "png",
-    "webp",
-    "gif"
-  ];
-
-  if (
-    allowedExtensions.includes(
-      rawExtension
-    )
-  ) {
-    return rawExtension;
-  }
-
-  const mimeExtensionMap = {
-    "image/jpeg":"jpg",
-    "image/png":"png",
-    "image/webp":"webp",
-    "image/gif":"gif"
-  };
-
-  return (
-    mimeExtensionMap[
-      file?.type
-    ] ||
-    "jpg"
-  );
-}
-
-
-async function uploadProductImage(file) {
-
-  if (!file) {
-    return null;
-  }
-
-  const {
-    data: {
-      user
-    },
-    error: userError
-  } =
-    await supabaseClient.auth
-      .getUser();
-
-  if (
-    userError ||
-    !user
-  ) {
-
-    throw new Error(
-      "ไม่พบผู้ใช้งาน กรุณาเข้าสู่ระบบใหม่"
-    );
-  }
-
-  const extension =
-    getSafeImageExtension(
-      file
-    );
-
-  const path =
-    `${user.id}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
-
-  const {
-    error: uploadError
-  } =
-    await supabaseClient.storage
-      .from(
-        PRODUCT_IMAGE_BUCKET
-      )
-      .upload(
-        path,
-        file,
-        {
-          cacheControl:"3600",
-          upsert:false,
-          contentType:
-            file.type ||
-            undefined
-        }
-      );
-
-  if (uploadError) {
-    throw uploadError;
-  }
-
-  const {
-    data: publicUrlData
-  } =
-    supabaseClient.storage
-      .from(
-        PRODUCT_IMAGE_BUCKET
-      )
-      .getPublicUrl(
-        path
-      );
-
-  const url =
-    publicUrlData
-      ?.publicUrl;
-
-  if (!url) {
-
-    await supabaseClient.storage
-      .from(
-        PRODUCT_IMAGE_BUCKET
-      )
-      .remove([
-        path
-      ]);
-
-    throw new Error(
-      "ไม่สามารถสร้าง URL ของรูปสินค้าได้"
-    );
-  }
-
-  return {
-    url,
-    path
-  };
-}
-
-
-function getStoragePathFromPublicUrl(
-  imageUrl
-) {
-
-  if (!imageUrl) {
-    return "";
-  }
-
-  const marker =
-    `/storage/v1/object/public/${PRODUCT_IMAGE_BUCKET}/`;
-
-  const markerIndex =
-    imageUrl.indexOf(
-      marker
-    );
-
-  if (
-    markerIndex === -1
-  ) {
-    return "";
-  }
-
-  return decodeURIComponent(
-    imageUrl.slice(
-      markerIndex +
-      marker.length
-    )
-  );
-}
-
-
-async function deleteStoredProductImage(
-  imageUrl
-) {
-
-  const path =
-    getStoragePathFromPublicUrl(
-      imageUrl
-    );
-
-  if (!path) {
-    return;
-  }
-
-  const {
-    error
-  } =
-    await supabaseClient.storage
-      .from(
-        PRODUCT_IMAGE_BUCKET
-      )
-      .remove([
-        path
-      ]);
-
-  if (error) {
-
-    console.warn(
-      "ลบรูปจาก Supabase Storage ไม่สำเร็จ",
-      error
-    );
-  }
-}
-
-
-function clearImagePreviewObjectUrl() {
-
-  if (
-    selectedImagePreviewUrl
-  ) {
-
-    URL.revokeObjectURL(
-      selectedImagePreviewUrl
-    );
-
-    selectedImagePreviewUrl = "";
-  }
-}
-
-
-/* =====================================================
-   SUPABASE PRODUCT MAPPING
-===================================================== */
-
-function databaseRowToProduct(row) {
-
-  return {
-
-    id:
-      row.id,
-
-    code:
-      row.code || "",
-
-    name:
-      row.name || "",
-
-    type:
-      row.type ||
-      "เบ็ดเตล็ด",
-
-    karat:
-      row.karat || "",
-
-    weight:
-      Number(
-        row.weight || 0
-      ),
-
-    unit:
-      row.unit ||
-      "ชิ้น",
-
-    cost:
-      Number(
-        row.cost || 0
-      ),
-
-    interest:
-      Number(
-        row.interest || 0
-      ),
-
-    salePrice:
-      Number(
-        row.sale_price || 0
-      ),
-
-    costPerBaht:
-      Number(
-        row.cost_per_baht || 0
-      ),
-
-    image:
-      row.image_url || "",
-
-    createdAt:
-      row.created_at
-
-  };
-}
-
-
-function createDatabaseProductPayload({
-  code,
-  name,
-  type,
-  karat,
-  productUnit,
-  productWeight,
-  productCost,
-  productInterest,
-  productSalePrice,
-  costPerBaht,
-  imageUrl
-}) {
-
-  return {
-
-    code,
-
-    name,
-
-    type,
-
-    karat:
-      isGoldProductType(type)
-        ? karat
-        : null,
-
-    weight:
-      productWeight,
-
-    unit:
-      productUnit,
-
-    cost:
-      productCost,
-
-    interest:
-      productInterest,
-
-    sale_price:
-      productSalePrice,
-
-    cost_per_baht:
-      costPerBaht,
-
-    image_url:
-      imageUrl ||
-      null
-
-  };
-}
-
-
-/* =====================================================
-   GOLD API
-===================================================== */
-
-const GOLD_API_URL =
-  [
-    "https:",
-    "",
-    "www.thaigoldtoday.com",
-    "api",
-    "gold-price"
-  ].join("/");
-
-const GOLD_API_FALLBACK =
-  [
-    "https:",
-    "",
-    "api.chnwt.dev",
-    "thai-gold-api",
-    "latest"
-  ].join("/");
-
-const GOLD_SOURCE_URL =
-  [
-    "https:",
-    "",
-    "www.thaigoldtoday.com"
-  ].join("/");
-
-
-/* =====================================================
-   GOLD ELEMENTS
-===================================================== */
 
 const goldSellPrice =
   document.getElementById(
@@ -751,23 +112,1110 @@ const goldSourceLink =
     "goldSourceLink"
   );
 
+
+const goldPageSellPrice =
+  document.getElementById(
+    "goldPageSellPrice"
+  );
+
+const goldPageBuyPrice =
+  document.getElementById(
+    "goldPageBuyPrice"
+  );
+
+const goldPageStatus =
+  document.getElementById(
+    "goldPageStatus"
+  );
+
+const goldPageSourceLink =
+  document.getElementById(
+    "goldPageSourceLink"
+  );
+
+const goldPageRefreshButton =
+  document.getElementById(
+    "goldPageRefreshButton"
+  );
+
+
+const productType =
+  document.getElementById(
+    "productType"
+  );
+
+const productCode =
+  document.getElementById(
+    "productCode"
+  );
+
+const productName =
+  document.getElementById(
+    "productName"
+  );
+
+const goldDetailsRow =
+  document.getElementById(
+    "goldDetailsRow"
+  );
+
+const goldKarat =
+  document.getElementById(
+    "goldKarat"
+  );
+
+const weight =
+  document.getElementById(
+    "weight"
+  );
+
+const unit =
+  document.getElementById(
+    "unit"
+  );
+
+const cost =
+  document.getElementById(
+    "cost"
+  );
+
+const interestGroup =
+  document.getElementById(
+    "interestGroup"
+  );
+
+const interest =
+  document.getElementById(
+    "interest"
+  );
+
+const salePrice =
+  document.getElementById(
+    "salePrice"
+  );
+
+const imageInput =
+  document.getElementById(
+    "imageInput"
+  );
+
+const imagePreview =
+  document.getElementById(
+    "imagePreview"
+  );
+
+const saveButton =
+  document.getElementById(
+    "saveButton"
+  );
+
+const cancelEditButton =
+  document.getElementById(
+    "cancelEditButton"
+  );
+
+const formTitle =
+  document.getElementById(
+    "formTitle"
+  );
+
+
+const searchInput =
+  document.getElementById(
+    "searchInput"
+  );
+
+const typeFilter =
+  document.getElementById(
+    "typeFilter"
+  );
+
+const karatFilter =
+  document.getElementById(
+    "karatFilter"
+  );
+
+const sortSelect =
+  document.getElementById(
+    "sortSelect"
+  );
+
+const exportButton =
+  document.getElementById(
+    "exportButton"
+  );
+
+const tableBody =
+  document.getElementById(
+    "tableBody"
+  );
+
+const emptyState =
+  document.getElementById(
+    "emptyState"
+  );
+
+
+const totalItems =
+  document.getElementById(
+    "totalItems"
+  );
+
+const totalCost =
+  document.getElementById(
+    "totalCost"
+  );
+
+const totalWeight =
+  document.getElementById(
+    "totalWeight"
+  );
+
+const averageCost =
+  document.getElementById(
+    "averageCost"
+  );
+
+const chart =
+  document.getElementById(
+    "costChart"
+  );
+
+
+const reportTotalItems =
+  document.getElementById(
+    "reportTotalItems"
+  );
+
+const reportTotalCost =
+  document.getElementById(
+    "reportTotalCost"
+  );
+
+const reportGoldWeight =
+  document.getElementById(
+    "reportGoldWeight"
+  );
+
+const reportAverageCost =
+  document.getElementById(
+    "reportAverageCost"
+  );
+
+const reportExportButton =
+  document.getElementById(
+    "reportExportButton"
+  );
+
+
+const imageModal =
+  document.getElementById(
+    "imageModal"
+  );
+
+const imageModalImage =
+  document.getElementById(
+    "imageModalImage"
+  );
+
+const imageModalClose =
+  document.getElementById(
+    "imageModalClose"
+  );
+
+
+const navTabs =
+  Array.from(
+    document.querySelectorAll(
+      ".nav-tab"
+    )
+  );
+
+const appPages =
+  Array.from(
+    document.querySelectorAll(
+      ".app-page"
+    )
+  );
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function parseNumber(value) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
+    return 0;
+
+  }
+
+  const cleaned =
+    String(value)
+      .replace(
+        /,/g,
+        ""
+      )
+      .replace(
+        /\s/g,
+        ""
+      )
+      .trim();
+
+  const number =
+    Number(
+      cleaned
+    );
+
+  return Number.isFinite(
+    number
+  )
+    ? number
+    : 0;
+
+}
+
+
+function numberFormat(value) {
+
+  return Number(
+    value || 0
+  )
+  .toLocaleString(
+    "th-TH",
+    {
+      maximumFractionDigits:2
+    }
+  );
+
+}
+
+
+function escapeHTML(text) {
+
+  return String(text)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+function normalizeProductCode(value) {
+
+  return String(
+    value || ""
+  )
+  .trim()
+  .toUpperCase();
+
+}
+
+
+function isGoldProductType(type) {
+
+  return (
+    type === "ทองคำ" ||
+    type === "หลุดทองคำ"
+  );
+
+}
+
+
+function isLostProductType(type) {
+
+  return (
+    type === "หลุดเบ็ดเตล็ด" ||
+    type === "หลุดทองคำ"
+  );
+
+}
+
+
+function calculateCostPerBaht(
+  productCost,
+  productWeight
+) {
+
+  const c =
+    parseNumber(
+      productCost
+    );
+
+  const w =
+    parseNumber(
+      productWeight
+    );
+
+  if (
+    c <= 0 ||
+    w <= 0
+  ) {
+
+    return 0;
+
+  }
+
+  return Math.ceil(
+    c /
+    w *
+    15.2
+  );
+
+}
+
+
+/* =====================================================
+   AUTHENTICATION
+===================================================== */
+
+function showLogin() {
+
+  loginScreen.style.display =
+    "flex";
+
+  appScreen.style.display =
+    "none";
+
+  currentUserEmail.textContent =
+    "-";
+
+}
+
+
+function showApp(user) {
+
+  loginScreen.style.display =
+    "none";
+
+  appScreen.style.display =
+    "block";
+
+  currentUserEmail.textContent =
+    user?.email ||
+    "ผู้ใช้งาน";
+
+}
+
+
+async function initializeApp() {
+
+  if (
+    appInitialized
+  ) {
+
+    return;
+
+  }
+
+  appInitialized =
+    true;
+
+  try {
+
+    updateConditionalFields();
+
+    await loadData();
+
+    renderAll();
+
+    fetchLiveGoldPrice();
+
+  }
+
+  catch(error) {
+
+    appInitialized =
+      false;
+
+    console.error(
+      error
+    );
+
+    alert(
+      "ไม่สามารถโหลดข้อมูลสินค้าจาก Supabase ได้ กรุณาลองใหม่"
+    );
+
+  }
+
+}
+
+
+async function login() {
+
+  const email =
+    loginEmail.value
+      .trim();
+
+  const password =
+    loginPassword.value;
+
+  if (
+    !email ||
+    !password
+  ) {
+
+    loginMessage.textContent =
+      "กรุณากรอก Email และ Password";
+
+    return;
+
+  }
+
+  loginButton.disabled =
+    true;
+
+  loginButton.textContent =
+    "กำลังเข้าสู่ระบบ...";
+
+  loginMessage.textContent =
+    "";
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth
+        .signInWithPassword({
+          email,
+          password
+        });
+
+    if (
+      error
+    ) {
+
+      throw error;
+
+    }
+
+    showApp(
+      data.user
+    );
+
+    await initializeApp();
+
+    loginPassword.value =
+      "";
+
+  }
+
+  catch(error) {
+
+    console.error(
+      error
+    );
+
+    loginMessage.textContent =
+      "เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password";
+
+  }
+
+  finally {
+
+    loginButton.disabled =
+      false;
+
+    loginButton.textContent =
+      "เข้าสู่ระบบ";
+
+  }
+
+}
+
+
+async function logout() {
+
+  logoutButton.disabled =
+    true;
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient.auth
+        .signOut();
+
+    if (
+      error
+    ) {
+
+      throw error;
+
+    }
+
+    products =
+      [];
+
+    appInitialized =
+      false;
+
+    resetForm();
+
+    renderAll();
+
+    showLogin();
+
+    loginEmail.focus();
+
+  }
+
+  catch(error) {
+
+    console.error(
+      error
+    );
+
+    alert(
+      "ออกจากระบบไม่สำเร็จ กรุณาลองใหม่"
+    );
+
+  }
+
+  finally {
+
+    logoutButton.disabled =
+      false;
+
+  }
+
+}
+
+
+async function checkLogin() {
+
+  const {
+    data: {
+      session
+    },
+    error
+  } =
+    await supabaseClient.auth
+      .getSession();
+
+  if (
+    error
+  ) {
+
+    console.error(
+      error
+    );
+
+    showLogin();
+
+    return;
+
+  }
+
+  if (
+    session?.user
+  ) {
+
+    showApp(
+      session.user
+    );
+
+    await initializeApp();
+
+  }
+
+  else {
+
+    showLogin();
+
+  }
+
+}
+
+
+/* =====================================================
+   PRODUCT IMAGE STORAGE
+===================================================== */
+
+function getSafeImageExtension(file) {
+
+  const fileName =
+    String(
+      file?.name ||
+      ""
+    );
+
+  const rawExtension =
+    fileName.includes(".")
+      ?
+      fileName
+        .split(".")
+        .pop()
+        .toLowerCase()
+      :
+      "";
+
+  const allowedExtensions = [
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+    "gif"
+  ];
+
+  if (
+    allowedExtensions.includes(
+      rawExtension
+    )
+  ) {
+
+    return rawExtension;
+
+  }
+
+  const mimeExtensionMap = {
+    "image/jpeg":"jpg",
+    "image/png":"png",
+    "image/webp":"webp",
+    "image/gif":"gif"
+  };
+
+  return (
+    mimeExtensionMap[
+      file?.type
+    ] ||
+    "jpg"
+  );
+
+}
+
+
+async function uploadProductImage(file) {
+
+  if (
+    !file
+  ) {
+
+    return null;
+
+  }
+
+  const {
+    data: {
+      user
+    },
+    error:
+      userError
+  } =
+    await supabaseClient.auth
+      .getUser();
+
+  if (
+    userError ||
+    !user
+  ) {
+
+    throw new Error(
+      "ไม่พบผู้ใช้งาน กรุณาเข้าสู่ระบบใหม่"
+    );
+
+  }
+
+  const extension =
+    getSafeImageExtension(
+      file
+    );
+
+  const path =
+    `${user.id}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+  const {
+    error:
+      uploadError
+  } =
+    await supabaseClient.storage
+      .from(
+        PRODUCT_IMAGE_BUCKET
+      )
+      .upload(
+        path,
+        file,
+        {
+          cacheControl:"3600",
+          upsert:false,
+          contentType:
+            file.type ||
+            undefined
+        }
+      );
+
+  if (
+    uploadError
+  ) {
+
+    throw uploadError;
+
+  }
+
+  const {
+    data:
+      publicUrlData
+  } =
+    supabaseClient.storage
+      .from(
+        PRODUCT_IMAGE_BUCKET
+      )
+      .getPublicUrl(
+        path
+      );
+
+  const url =
+    publicUrlData
+      ?.publicUrl;
+
+  if (
+    !url
+  ) {
+
+    await supabaseClient.storage
+      .from(
+        PRODUCT_IMAGE_BUCKET
+      )
+      .remove([
+        path
+      ]);
+
+    throw new Error(
+      "ไม่สามารถสร้าง URL ของรูปสินค้าได้"
+    );
+
+  }
+
+  return {
+    url,
+    path
+  };
+
+}
+
+
+function getStoragePathFromPublicUrl(
+  imageUrl
+) {
+
+  if (
+    !imageUrl
+  ) {
+
+    return "";
+
+  }
+
+  const marker =
+    `/storage/v1/object/public/${PRODUCT_IMAGE_BUCKET}/`;
+
+  const markerIndex =
+    imageUrl.indexOf(
+      marker
+    );
+
+  if (
+    markerIndex === -1
+  ) {
+
+    return "";
+
+  }
+
+  return decodeURIComponent(
+    imageUrl.slice(
+      markerIndex +
+      marker.length
+    )
+  );
+
+}
+
+
+async function deleteStoredProductImage(
+  imageUrl
+) {
+
+  const path =
+    getStoragePathFromPublicUrl(
+      imageUrl
+    );
+
+  if (
+    !path
+  ) {
+
+    return;
+
+  }
+
+  const {
+    error
+  } =
+    await supabaseClient.storage
+      .from(
+        PRODUCT_IMAGE_BUCKET
+      )
+      .remove([
+        path
+      ]);
+
+  if (
+    error
+  ) {
+
+    console.warn(
+      "ลบรูปจาก Supabase Storage ไม่สำเร็จ",
+      error
+    );
+
+  }
+
+}
+
+
+function clearImagePreviewObjectUrl() {
+
+  if (
+    !selectedImagePreviewUrl
+  ) {
+
+    return;
+
+  }
+
+  URL.revokeObjectURL(
+    selectedImagePreviewUrl
+  );
+
+  selectedImagePreviewUrl =
+    "";
+
+}
+
+
+/* =====================================================
+   PRODUCT DATABASE MAPPING
+===================================================== */
+
+function databaseRowToProduct(row) {
+
+  return {
+
+    id:
+      row.id,
+
+    code:
+      row.code ||
+      "",
+
+    name:
+      row.name ||
+      "",
+
+    type:
+      row.type ||
+      "เบ็ดเตล็ด",
+
+    karat:
+      row.karat ||
+      "",
+
+    weight:
+      Number(
+        row.weight ||
+        0
+      ),
+
+    unit:
+      row.unit ||
+      "ชิ้น",
+
+    cost:
+      Number(
+        row.cost ||
+        0
+      ),
+
+    interest:
+      Number(
+        row.interest ||
+        0
+      ),
+
+    salePrice:
+      Number(
+        row.sale_price ||
+        0
+      ),
+
+    costPerBaht:
+      Number(
+        row.cost_per_baht ||
+        0
+      ),
+
+    image:
+      row.image_url ||
+      "",
+
+    createdAt:
+      row.created_at
+
+  };
+
+}
+
+
+function createDatabaseProductPayload({
+  code,
+  name,
+  type,
+  karat,
+  productUnit,
+  productWeight,
+  productCost,
+  productInterest,
+  productSalePrice,
+  costPerBaht,
+  imageUrl
+}) {
+
+  return {
+
+    code,
+
+    name,
+
+    type,
+
+    karat:
+      isGoldProductType(type)
+        ?
+        karat
+        :
+        null,
+
+    weight:
+      productWeight,
+
+    unit:
+      productUnit,
+
+    cost:
+      productCost,
+
+    interest:
+      productInterest,
+
+    sale_price:
+      productSalePrice,
+
+    cost_per_baht:
+      costPerBaht,
+
+    image_url:
+      imageUrl ||
+      null
+
+  };
+
+}
+
+
+/* =====================================================
+   GOLD PRICE API
+===================================================== */
+
+const GOLD_API_URL =
+  [
+    "https:",
+    "",
+    "www.thaigoldtoday.com",
+    "api",
+    "gold-price"
+  ]
+  .join("/");
+
+
+const GOLD_API_FALLBACK =
+  [
+    "https:",
+    "",
+    "api.chnwt.dev",
+    "thai-gold-api",
+    "latest"
+  ]
+  .join("/");
+
+
+const GOLD_SOURCE_URL =
+  [
+    "https:",
+    "",
+    "www.thaigoldtoday.com"
+  ]
+  .join("/");
+
+
 goldSourceLink.href =
   GOLD_SOURCE_URL;
 
 
-/* =====================================================
-   GOLD FORMAT
-===================================================== */
+if (
+  goldPageSourceLink
+) {
+
+  goldPageSourceLink.href =
+    GOLD_SOURCE_URL;
+
+}
+
 
 function formatGoldPrice(value) {
 
   const number =
-    Number(value);
+    Number(
+      value
+    );
 
   if (
-    !Number.isFinite(number)
+    !Number.isFinite(
+      number
+    )
   ) {
+
     return "--";
+
   }
 
   return number.toLocaleString(
@@ -776,28 +1224,33 @@ function formatGoldPrice(value) {
       maximumFractionDigits:2
     }
   );
+
 }
 
 
-/* =====================================================
-   DATE FORMAT
-===================================================== */
-
 function formatGoldDate(value) {
 
-  if (!value) {
+  if (
+    !value
+  ) {
+
     return "";
+
   }
 
   const date =
-    new Date(value);
+    new Date(
+      value
+    );
 
   if (
     Number.isNaN(
       date.getTime()
     )
   ) {
+
     return value;
+
   }
 
   return new Intl.DateTimeFormat(
@@ -811,13 +1264,12 @@ function formatGoldDate(value) {
       minute:"2-digit"
     }
   )
-  .format(date);
+  .format(
+    date
+  );
+
 }
 
-
-/* =====================================================
-   DISPLAY LIVE GOLD
-===================================================== */
 
 function renderLiveGoldPrice(
   data,
@@ -830,29 +1282,31 @@ function renderLiveGoldPrice(
     );
 
   goldBuyPrice.textContent =
-    formatGoldPrice(
-      data.buy
-    ) +
-    " บาท";
+    `${formatGoldPrice(data.buy)} บาท`;
 
   let status =
     cached
-      ? "ข้อมูลล่าสุดที่บันทึกไว้"
-      : "อัปเดต";
+      ?
+      "ข้อมูลล่าสุดที่บันทึกไว้"
+      :
+      "อัปเดต";
 
-  if (data.updatedAt) {
+  if (
+    data.updatedAt
+  ) {
 
     status +=
-      " " +
-      formatGoldDate(
-        data.updatedAt
-      );
+      ` ${formatGoldDate(data.updatedAt)}`;
+
   }
 
-  if (data.round) {
+  if (
+    data.round
+  ) {
 
     status +=
       ` • ครั้งที่ ${data.round}`;
+
   }
 
   goldPriceStatus.textContent =
@@ -861,30 +1315,62 @@ function renderLiveGoldPrice(
   goldSourceText.textContent =
     data.source ||
     "ข้อมูลราคาทองประเทศไทย";
+
+
+  if (
+    goldPageSellPrice
+  ) {
+
+    goldPageSellPrice.textContent =
+      formatGoldPrice(
+        data.sell
+      );
+
+  }
+
+
+  if (
+    goldPageBuyPrice
+  ) {
+
+    goldPageBuyPrice.textContent =
+      formatGoldPrice(
+        data.buy
+      );
+
+  }
+
+
+  if (
+    goldPageStatus
+  ) {
+
+    goldPageStatus.textContent =
+      status;
+
+  }
+
 }
 
-
-/* =====================================================
-   PRIMARY GOLD API
-===================================================== */
 
 async function fetchPrimaryGoldPrice() {
 
   const response =
     await fetch(
-      GOLD_API_URL +
-      "?t=" +
-      Date.now(),
+      `${GOLD_API_URL}?t=${Date.now()}`,
       {
         cache:"no-store"
       }
     );
 
-  if (!response.ok) {
+  if (
+    !response.ok
+  ) {
 
     throw new Error(
       "Primary API error"
     );
+
   }
 
   const json =
@@ -905,6 +1391,7 @@ async function fetchPrimaryGoldPrice() {
     throw new Error(
       "Invalid primary data"
     );
+
   }
 
   return {
@@ -931,30 +1418,28 @@ async function fetchPrimaryGoldPrice() {
       "ข้อมูลราคาทองประเทศไทย"
 
   };
+
 }
 
-
-/* =====================================================
-   FALLBACK GOLD API
-===================================================== */
 
 async function fetchFallbackGoldPrice() {
 
   const response =
     await fetch(
-      GOLD_API_FALLBACK +
-      "?t=" +
-      Date.now(),
+      `${GOLD_API_FALLBACK}?t=${Date.now()}`,
       {
         cache:"no-store"
       }
     );
 
-  if (!response.ok) {
+  if (
+    !response.ok
+  ) {
 
     throw new Error(
       "Fallback API error"
     );
+
   }
 
   const json =
@@ -968,11 +1453,14 @@ async function fetchFallbackGoldPrice() {
       ?.price
       ?.gold_bar;
 
-  if (!bar) {
+  if (
+    !bar
+  ) {
 
     throw new Error(
       "Invalid fallback data"
     );
+
   }
 
   const buy =
@@ -1005,6 +1493,7 @@ async function fetchFallbackGoldPrice() {
     throw new Error(
       "Invalid fallback price"
     );
+
   }
 
   return {
@@ -1016,29 +1505,43 @@ async function fetchFallbackGoldPrice() {
     round:"",
 
     updatedAt:
-      responseData.update_date +
-      " " +
-      responseData.update_time,
+      `${responseData.update_date} ${responseData.update_time}`,
 
     source:
       "ข้อมูลราคาทองประเทศไทย"
 
   };
+
 }
 
 
-/* =====================================================
-   FETCH GOLD
-===================================================== */
-
 async function fetchLiveGoldPrice() {
 
-  refreshGoldButton.classList.add(
-    "loading"
-  );
+  refreshGoldButton
+    .classList
+    .add(
+      "loading"
+    );
+
+  goldPageRefreshButton
+    ?.classList
+    .add(
+      "loading"
+    );
 
   goldPriceStatus.textContent =
     "กำลังอัปเดตราคาทอง...";
+
+
+  if (
+    goldPageStatus
+  ) {
+
+    goldPageStatus.textContent =
+      "กำลังอัปเดตราคาทอง...";
+
+  }
+
 
   try {
 
@@ -1049,15 +1552,20 @@ async function fetchLiveGoldPrice() {
       data =
         await fetchPrimaryGoldPrice();
 
-    } catch {
+    }
+
+    catch {
 
       data =
         await fetchFallbackGoldPrice();
+
     }
+
 
     renderLiveGoldPrice(
       data
     );
+
 
     localStorage.setItem(
       GOLD_LIVE_CACHE_KEY,
@@ -1066,16 +1574,23 @@ async function fetchLiveGoldPrice() {
       )
     );
 
-  } catch(error) {
+  }
 
-    console.error(error);
+  catch(error) {
+
+    console.error(
+      error
+    );
 
     const cached =
       localStorage.getItem(
         GOLD_LIVE_CACHE_KEY
       );
 
-    if (cached) {
+
+    if (
+      cached
+    ) {
 
       try {
 
@@ -1086,13 +1601,28 @@ async function fetchLiveGoldPrice() {
           true
         );
 
-      } catch {
+      }
+
+      catch {
 
         goldPriceStatus.textContent =
           "ไม่สามารถโหลดราคาทองได้";
+
+
+        if (
+          goldPageStatus
+        ) {
+
+          goldPageStatus.textContent =
+            "ไม่สามารถโหลดราคาทองได้";
+
+        }
+
       }
 
-    } else {
+    }
+
+    else {
 
       goldSellPrice.textContent =
         "--";
@@ -1102,310 +1632,63 @@ async function fetchLiveGoldPrice() {
 
       goldPriceStatus.textContent =
         "ไม่สามารถโหลดราคาทองได้";
+
+
+      if (
+        goldPageSellPrice
+      ) {
+
+        goldPageSellPrice.textContent =
+          "--";
+
+      }
+
+
+      if (
+        goldPageBuyPrice
+      ) {
+
+        goldPageBuyPrice.textContent =
+          "--";
+
+      }
+
+
+      if (
+        goldPageStatus
+      ) {
+
+        goldPageStatus.textContent =
+          "ไม่สามารถโหลดราคาทองได้";
+
+      }
+
     }
 
-  } finally {
-
-    refreshGoldButton.classList.remove(
-      "loading"
-    );
-  }
-}
-
-
-refreshGoldButton.addEventListener(
-  "click",
-  fetchLiveGoldPrice
-);
-
-
-setInterval(
-  fetchLiveGoldPrice,
-  60 * 1000
-);
-
-
-/* =====================================================
-   PRODUCT ELEMENTS
-===================================================== */
-
-const productCode =
-  document.getElementById(
-    "productCode"
-  );
-
-const productName =
-  document.getElementById(
-    "productName"
-  );
-
-const productType =
-  document.getElementById(
-    "productType"
-  );
-
-const goldKarat =
-  document.getElementById(
-    "goldKarat"
-  );
-
-const goldKaratGroup =
-  document.getElementById(
-    "goldKaratGroup"
-  );
-
-const goldDetailsRow =
-  document.getElementById(
-    "goldDetailsRow"
-  );
-
-const weight =
-  document.getElementById(
-    "weight"
-  );
-
-const unit =
-  document.getElementById(
-    "unit"
-  );
-
-const cost =
-  document.getElementById(
-    "cost"
-  );
-
-const interest =
-  document.getElementById(
-    "interest"
-  );
-
-const interestGroup =
-  document.getElementById(
-    "interestGroup"
-  );
-
-const salePrice =
-  document.getElementById(
-    "salePrice"
-  );
-
-const saveButton =
-  document.getElementById(
-    "saveButton"
-  );
-
-const cancelEditButton =
-  document.getElementById(
-    "cancelEditButton"
-  );
-
-const formTitle =
-  document.getElementById(
-    "formTitle"
-  );
-
-const imageInput =
-  document.getElementById(
-    "imageInput"
-  );
-
-const imagePreview =
-  document.getElementById(
-    "imagePreview"
-  );
-
-const tableBody =
-  document.getElementById(
-    "tableBody"
-  );
-
-const emptyState =
-  document.getElementById(
-    "emptyState"
-  );
-
-const searchInput =
-  document.getElementById(
-    "searchInput"
-  );
-
-const typeFilter =
-  document.getElementById(
-    "typeFilter"
-  );
-
-const karatFilter =
-  document.getElementById(
-    "karatFilter"
-  );
-
-const sortSelect =
-  document.getElementById(
-    "sortSelect"
-  );
-
-const exportButton =
-  document.getElementById(
-    "exportButton"
-  );
-
-const totalItems =
-  document.getElementById(
-    "totalItems"
-  );
-
-const totalCost =
-  document.getElementById(
-    "totalCost"
-  );
-
-const totalWeight =
-  document.getElementById(
-    "totalWeight"
-  );
-
-const averageCost =
-  document.getElementById(
-    "averageCost"
-  );
-
-const chart =
-  document.getElementById(
-    "costChart"
-  );
-
-const imageModal =
-  document.getElementById(
-    "imageModal"
-  );
-
-const imageModalImage =
-  document.getElementById(
-    "imageModalImage"
-  );
-
-const imageModalClose =
-  document.getElementById(
-    "imageModalClose"
-  );
-
-
-/* =====================================================
-   PRODUCT IMAGE LIGHTBOX
-===================================================== */
-
-function openProductImage(
-  imageUrl
-) {
-
-  if (!imageUrl) {
-    return;
   }
 
-  imageModalImage.src =
-    imageUrl;
+  finally {
 
-  imageModal.classList.add(
-    "open"
-  );
-
-  imageModal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.style.overflow =
-    "hidden";
-}
-
-
-function closeProductImage() {
-
-  imageModal.classList.remove(
-    "open"
-  );
-
-  imageModal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  imageModalImage.src = "";
-
-  document.body.style.overflow = "";
-}
-
-
-imageModalClose.addEventListener(
-  "click",
-  closeProductImage
-);
-
-
-imageModal.addEventListener(
-  "click",
-  event => {
-
-    if (
-      event.target === imageModal ||
-      event.target === imageModalImage
-    ) {
-
-      closeProductImage();
-    }
-  }
-);
-
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key === "Escape" &&
-      imageModal.classList.contains(
-        "open"
-      )
-    ) {
-
-      closeProductImage();
-    }
-  }
-);
-
-
-tableBody.addEventListener(
-  "click",
-  event => {
-
-    const clickedImage =
-      event.target.closest(
-        ".product-image-clickable"
+    refreshGoldButton
+      .classList
+      .remove(
+        "loading"
       );
 
-    if (!clickedImage) {
-      return;
-    }
+    goldPageRefreshButton
+      ?.classList
+      .remove(
+        "loading"
+      );
 
-    openProductImage(
-      clickedImage.dataset.imageUrl
-    );
   }
-);
+
+}
 
 
 /* =====================================================
-   GOLD FIELD VISIBILITY
+   FORM FIELD VISIBILITY
 ===================================================== */
-
-function isGoldProductType(type) {
-
-  return (
-    type === "ทองคำ" ||
-    type === "หลุดทองคำ"
-  );
-}
-
 
 function updateGoldKaratVisibility() {
 
@@ -1416,23 +1699,17 @@ function updateGoldKaratVisibility() {
 
   goldDetailsRow.style.display =
     showGoldFields
-      ? "grid"
-      : "none";
+      ?
+      "grid"
+      :
+      "none";
 
   goldKarat.disabled =
     !showGoldFields;
 
   weight.disabled =
     !showGoldFields;
-}
 
-
-function isLostProductType(type) {
-
-  return (
-    type === "หลุดเบ็ดเตล็ด" ||
-    type === "หลุดทองคำ"
-  );
 }
 
 
@@ -1445,11 +1722,14 @@ function updateInterestVisibility() {
 
   interestGroup.style.display =
     showInterest
-      ? "block"
-      : "none";
+      ?
+      "block"
+      :
+      "none";
 
   interest.disabled =
     !showInterest;
+
 }
 
 
@@ -1458,186 +1738,97 @@ function updateConditionalFields() {
   updateGoldKaratVisibility();
 
   updateInterestVisibility();
+
 }
 
 
-productType.addEventListener(
-  "change",
-  updateConditionalFields
-);
-
-
 /* =====================================================
-   NUMBER
+   IMAGE INPUT
 ===================================================== */
 
-function parseNumber(value) {
+function handleImageInputChange() {
+
+  const file =
+    imageInput.files[0];
 
   if (
-    value === null ||
-    value === undefined
+    !file
   ) {
-    return 0;
+
+    return;
+
   }
 
-  const cleaned =
-    String(value)
-      .replace(
-        /,/g,
-        ""
-      )
-      .replace(
-        /\s/g,
-        ""
-      )
-      .trim();
+  const allowedImageTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif"
+  ];
 
-  const number =
-    Number(
-      cleaned
-    );
-
-  return Number.isFinite(
-    number
-  )
-    ? number
-    : 0;
-}
-
-
-function numberFormat(value) {
-
-  return Number(
-    value || 0
-  )
-  .toLocaleString(
-    "th-TH",
-    {
-      maximumFractionDigits:2
-    }
-  );
-}
-
-
-/* =====================================================
-   COST PER BAHT
-===================================================== */
-
-function calculateCostPerBaht(
-  productCost,
-  productWeight
-) {
-
-  const c =
-    parseNumber(
-      productCost
-    );
-
-  const w =
-    parseNumber(
-      productWeight
-    );
 
   if (
-    c <= 0 ||
-    w <= 0
+    !allowedImageTypes.includes(
+      file.type
+    )
   ) {
-    return 0;
+
+    alert(
+      "รองรับเฉพาะ JPG, PNG, WEBP และ GIF"
+    );
+
+    imageInput.value =
+      "";
+
+    return;
+
   }
 
-  return Math.ceil(
-    c /
-    w *
-    15.2
-  );
+
+  if (
+    file.size >
+    2 *
+    1024 *
+    1024
+  ) {
+
+    alert(
+      "รูปใหญ่เกินไป กรุณาใช้รูปไม่เกิน 2 MB"
+    );
+
+    imageInput.value =
+      "";
+
+    return;
+
+  }
+
+
+  clearImagePreviewObjectUrl();
+
+
+  selectedImageFile =
+    file;
+
+
+  selectedImagePreviewUrl =
+    URL.createObjectURL(
+      file
+    );
+
+
+  imagePreview.src =
+    selectedImagePreviewUrl;
+
+  imagePreview.style.display =
+    "block";
+
 }
 
 
 /* =====================================================
-   IMAGE
+   DUPLICATE PRODUCT CODE
 ===================================================== */
-
-imageInput.addEventListener(
-  "change",
-  () => {
-
-    const file =
-      imageInput.files[0];
-
-    if (!file) {
-      return;
-    }
-
-    const allowedImageTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-      "image/gif"
-    ];
-
-    if (
-      !allowedImageTypes.includes(
-        file.type
-      )
-    ) {
-
-      alert(
-        "รองรับเฉพาะ JPG, PNG, WEBP และ GIF"
-      );
-
-      imageInput.value = "";
-
-      return;
-    }
-
-    if (
-      file.size >
-      2 *
-      1024 *
-      1024
-    ) {
-
-      alert(
-        "รูปใหญ่เกินไป กรุณาใช้รูปไม่เกิน 2 MB"
-      );
-
-      imageInput.value = "";
-
-      return;
-    }
-
-    clearImagePreviewObjectUrl();
-
-    selectedImageFile =
-      file;
-
-    selectedImagePreviewUrl =
-      URL.createObjectURL(
-        file
-      );
-
-    imagePreview.src =
-      selectedImagePreviewUrl;
-
-    imagePreview.style.display =
-      "block";
-  }
-);
-
-
-/* =====================================================
-   PRODUCT CODE - PREVENT DUPLICATES
-===================================================== */
-
-function normalizeProductCode(value) {
-
-  return String(
-    value || ""
-  )
-    .trim()
-    .toUpperCase();
-}
-
 
 function hasDuplicateProductCode(code) {
 
@@ -1648,23 +1839,20 @@ function hasDuplicateProductCode(code) {
 
   return products.some(
     item =>
-      item.id !== editingId &&
+      item.id !==
+        editingId &&
       normalizeProductCode(
         item.code
-      ) === normalizedCode
+      ) ===
+        normalizedCode
   );
+
 }
 
 
 /* =====================================================
-   SAVE PRODUCT - SUPABASE
+   SAVE PRODUCT
 ===================================================== */
-
-saveButton.addEventListener(
-  "click",
-  saveProduct
-);
-
 
 async function saveProduct() {
 
@@ -1673,49 +1861,67 @@ async function saveProduct() {
       productCode.value
     );
 
-  productCode.value =
-    code;
 
   const name =
     productName.value
       .trim();
 
+
   const type =
     productType.value;
 
+
   const karat =
     isGoldProductType(type)
-      ? goldKarat.value
-      : "";
+      ?
+      goldKarat.value
+      :
+      "";
+
 
   const productUnit =
     unit.value;
 
+
   const productWeight =
     isGoldProductType(type)
-      ? parseNumber(
-          weight.value
-        )
-      : 0;
+      ?
+      parseNumber(
+        weight.value
+      )
+      :
+      0;
+
 
   const productCost =
     parseNumber(
       cost.value
     );
 
+
   const productInterest =
     isLostProductType(type)
-      ? parseNumber(
-          interest.value
-        )
-      : 0;
+      ?
+      parseNumber(
+        interest.value
+      )
+      :
+      0;
+
 
   const productSalePrice =
     parseNumber(
       salePrice.value
     );
 
-  if (!code) {
+
+  productCode.value =
+    code;
+
+
+  if (
+    !code
+  ) {
 
     alert(
       "กรุณากรอกรหัสสินค้า"
@@ -1724,7 +1930,9 @@ async function saveProduct() {
     productCode.focus();
 
     return;
+
   }
+
 
   if (
     hasDuplicateProductCode(
@@ -1741,9 +1949,13 @@ async function saveProduct() {
     productCode.select();
 
     return;
+
   }
 
-  if (!name) {
+
+  if (
+    !name
+  ) {
 
     alert(
       "กรุณากรอกชื่อสินค้า"
@@ -1752,7 +1964,9 @@ async function saveProduct() {
     productName.focus();
 
     return;
+
   }
+
 
   if (
     isGoldProductType(type) &&
@@ -1766,7 +1980,9 @@ async function saveProduct() {
     weight.focus();
 
     return;
+
   }
+
 
   if (
     productCost <= 0
@@ -1779,35 +1995,44 @@ async function saveProduct() {
     cost.focus();
 
     return;
+
   }
+
 
   const costPerBaht =
     isGoldProductType(type)
-      ? calculateCostPerBaht(
-          productCost,
-          productWeight
-        )
-      : 0;
+      ?
+      calculateCostPerBaht(
+        productCost,
+        productWeight
+      )
+      :
+      0;
+
 
   const previousImageUrl =
     selectedImage;
 
+
   let uploadedImage =
     null;
+
 
   let imageUrl =
     selectedImage;
 
-  const originalButtonText =
-    saveButton.textContent;
 
   saveButton.disabled =
     true;
 
+
   saveButton.textContent =
     editingId
-      ? "กำลังบันทึกการแก้ไข..."
-      : "กำลังบันทึก...";
+      ?
+      "กำลังบันทึกการแก้ไข..."
+      :
+      "กำลังบันทึก...";
+
 
   try {
 
@@ -1818,19 +2043,26 @@ async function saveProduct() {
       saveButton.textContent =
         "กำลังอัปโหลดรูป...";
 
+
       uploadedImage =
         await uploadProductImage(
           selectedImageFile
         );
 
+
       imageUrl =
         uploadedImage.url;
 
+
       saveButton.textContent =
         editingId
-          ? "กำลังบันทึกการแก้ไข..."
-          : "กำลังบันทึก...";
+          ?
+          "กำลังบันทึกการแก้ไข..."
+          :
+          "กำลังบันทึก...";
+
     }
+
 
     const payload =
       createDatabaseProductPayload({
@@ -1847,15 +2079,19 @@ async function saveProduct() {
         imageUrl
       });
 
-    let data;
 
-    let error;
+    let result;
 
-    if (editingId) {
 
-      const result =
+    if (
+      editingId
+    ) {
+
+      result =
         await supabaseClient
-          .from("products")
+          .from(
+            "products"
+          )
           .update(
             payload
           )
@@ -1863,49 +2099,57 @@ async function saveProduct() {
             "id",
             editingId
           )
-          .select("*")
+          .select(
+            "*"
+          )
           .single();
 
-      data =
-        result.data;
+    }
 
-      error =
-        result.error;
+    else {
 
-    } else {
-
-      const result =
+      result =
         await supabaseClient
-          .from("products")
+          .from(
+            "products"
+          )
           .insert(
             payload
           )
-          .select("*")
+          .select(
+            "*"
+          )
           .single();
 
-      data =
-        result.data;
-
-      error =
-        result.error;
     }
 
-    if (error) {
-      throw error;
+
+    if (
+      result.error
+    ) {
+
+      throw result.error;
+
     }
+
 
     const savedProduct =
       databaseRowToProduct(
-        data
+        result.data
       );
 
-    if (editingId) {
+
+    if (
+      editingId
+    ) {
 
       const index =
         products.findIndex(
           item =>
-            item.id === editingId
+            item.id ===
+            editingId
         );
+
 
       if (
         index !== -1
@@ -1913,7 +2157,9 @@ async function saveProduct() {
 
         products[index] =
           savedProduct;
+
       }
+
 
       if (
         uploadedImage &&
@@ -1925,22 +2171,32 @@ async function saveProduct() {
         await deleteStoredProductImage(
           previousImageUrl
         );
+
       }
 
-    } else {
+    }
+
+    else {
 
       products.unshift(
         savedProduct
       );
+
     }
+
 
     renderAll();
 
     resetForm();
 
-  } catch(error) {
+  }
 
-    console.error(error);
+  catch(error) {
+
+    console.error(
+      error
+    );
+
 
     if (
       uploadedImage?.url
@@ -1949,10 +2205,13 @@ async function saveProduct() {
       await deleteStoredProductImage(
         uploadedImage.url
       );
+
     }
 
+
     if (
-      error?.code === "23505"
+      error?.code ===
+      "23505"
     ) {
 
       alert(
@@ -1963,178 +2222,227 @@ async function saveProduct() {
 
       productCode.select();
 
-    } else {
-
-      const message =
-        error?.message ||
-        "Unknown error";
-
-      alert(
-        "บันทึกข้อมูลไม่สำเร็จ\n\n" +
-        message
-      );
     }
 
-  } finally {
+    else {
+
+      alert(
+        `บันทึกข้อมูลไม่สำเร็จ\n\n${error?.message || "Unknown error"}`
+      );
+
+    }
+
+  }
+
+  finally {
 
     saveButton.disabled =
       false;
 
-    if (
+
+    saveButton.textContent =
       editingId
-    ) {
-
-      saveButton.textContent =
-        originalButtonText;
-
-    } else {
-
-      saveButton.textContent =
+        ?
+        "บันทึกการแก้ไข"
+        :
         "บันทึกรายการ";
-    }
+
   }
+
 }
 
 
 /* =====================================================
-   RESET
+   RESET / EDIT / DELETE
 ===================================================== */
 
 function clearProductEntryFields() {
 
   clearImagePreviewObjectUrl();
 
-  selectedImage = "";
 
-  selectedImageFile = null;
+  selectedImage =
+    "";
 
-  productCode.value = "";
 
-  productName.value = "";
+  selectedImageFile =
+    null;
 
-  weight.value = "";
 
-  cost.value = "";
+  productCode.value =
+    "";
 
-  interest.value = "";
+  productName.value =
+    "";
 
-  salePrice.value = "";
+  weight.value =
+    "";
 
-  imageInput.value = "";
+  cost.value =
+    "";
 
-  imagePreview.src = "";
+  interest.value =
+    "";
+
+  salePrice.value =
+    "";
+
+  imageInput.value =
+    "";
+
+  imagePreview.src =
+    "";
 
   imagePreview.style.display =
     "none";
+
 }
 
 
 function resetForm() {
 
-  editingId = null;
+  editingId =
+    null;
+
 
   productType.value =
     "เบ็ดเตล็ด";
 
+
   goldKarat.value =
     "24K";
+
 
   unit.value =
     "ชิ้น";
 
+
   clearProductEntryFields();
 
+
   updateConditionalFields();
+
 
   formTitle.textContent =
     "➕ เพิ่มรายการสินค้า";
 
+
   saveButton.textContent =
     "บันทึกรายการ";
+
 
   cancelEditButton.style.display =
     "none";
 
+
   if (
     document.activeElement &&
-    typeof document.activeElement.blur === "function"
+    typeof document.activeElement.blur ===
+      "function"
   ) {
 
     document.activeElement.blur();
+
   }
+
 }
 
-
-/* =====================================================
-   EDIT
-===================================================== */
 
 function editProduct(id) {
 
   const product =
     products.find(
       item =>
-        item.id === id
+        item.id ===
+        id
     );
 
-  if (!product) {
+
+  if (
+    !product
+  ) {
+
     return;
+
   }
+
 
   editingId =
     product.id;
 
+
   productCode.value =
     product.code;
 
+
   productName.value =
-    product.name || "";
+    product.name ||
+    "";
+
 
   productType.value =
     product.type;
+
 
   goldKarat.value =
     product.karat ||
     "24K";
 
+
   updateConditionalFields();
 
+
   weight.value =
-    product.weight;
+    product.weight ||
+    "";
+
 
   unit.value =
     product.unit ||
     "ชิ้น";
+
 
   cost.value =
     numberFormat(
       product.cost
     );
 
+
   interest.value =
     product.interest
-      ? numberFormat(
-          product.interest
-        )
-      : "";
+      ?
+      numberFormat(
+        product.interest
+      )
+      :
+      "";
+
 
   salePrice.value =
     product.salePrice
-      ? numberFormat(
-          product.salePrice
-        )
-      : "";
+      ?
+      numberFormat(
+        product.salePrice
+      )
+      :
+      "";
+
 
   clearImagePreviewObjectUrl();
+
 
   selectedImageFile =
     null;
 
+
   imageInput.value =
     "";
 
+
   selectedImage =
-    product.image || "";
+    product.image ||
+    "";
+
 
   if (
     selectedImage
@@ -2143,60 +2451,83 @@ function editProduct(id) {
     imagePreview.src =
       selectedImage;
 
+
     imagePreview.style.display =
       "block";
 
-  } else {
+  }
+
+  else {
+
+    imagePreview.src =
+      "";
+
 
     imagePreview.style.display =
       "none";
+
   }
+
 
   formTitle.textContent =
     "✏️ แก้ไขรายการ";
 
+
   saveButton.textContent =
     "บันทึกการแก้ไข";
 
+
   cancelEditButton.style.display =
     "block";
+
 
   window.scrollTo({
     top:0,
     behavior:"smooth"
   });
+
 }
 
-
-cancelEditButton.addEventListener(
-  "click",
-  resetForm
-);
-
-
-/* =====================================================
-   DELETE - SUPABASE
-===================================================== */
 
 async function deleteProduct(id) {
 
   const product =
     products.find(
       item =>
-        item.id === id
+        item.id ===
+        id
     );
 
-  if (!product) {
-    return;
-  }
 
   if (
-    !confirm(
-      `ต้องการลบสินค้า ${product.code}${product.name ? ` - ${product.name}` : ""} หรือไม่?`
-    )
+    !product
   ) {
+
     return;
+
   }
+
+
+  const confirmed =
+    confirm(
+      `ต้องการลบสินค้า ${product.code}${
+        product.name
+          ?
+          ` - ${product.name}`
+          :
+          ""
+      } หรือไม่?`
+    );
+
+
+  if (
+    !confirmed
+  ) {
+
+    return;
+
+  }
+
 
   try {
 
@@ -2204,16 +2535,24 @@ async function deleteProduct(id) {
       error
     } =
       await supabaseClient
-        .from("products")
+        .from(
+          "products"
+        )
         .delete()
         .eq(
           "id",
           id
         );
 
-    if (error) {
+
+    if (
+      error
+    ) {
+
       throw error;
+
     }
+
 
     if (
       product.image
@@ -2222,36 +2561,50 @@ async function deleteProduct(id) {
       await deleteStoredProductImage(
         product.image
       );
+
     }
+
 
     products =
       products.filter(
         item =>
-          item.id !== id
+          item.id !==
+          id
       );
 
+
     if (
-      editingId === id
+      editingId ===
+      id
     ) {
 
       resetForm();
+
     }
+
 
     renderAll();
 
-  } catch(error) {
+  }
 
-    console.error(error);
+  catch(error) {
+
+    console.error(
+      error
+    );
+
 
     alert(
       "ลบข้อมูลไม่สำเร็จ กรุณาลองใหม่"
     );
+
   }
+
 }
 
 
 /* =====================================================
-   LOAD PRODUCTS - SUPABASE
+   LOAD / FILTER PRODUCTS
 ===================================================== */
 
 async function loadData() {
@@ -2261,8 +2614,12 @@ async function loadData() {
     error
   } =
     await supabaseClient
-      .from("products")
-      .select("*")
+      .from(
+        "products"
+      )
+      .select(
+        "*"
+      )
       .order(
         "created_at",
         {
@@ -2270,21 +2627,24 @@ async function loadData() {
         }
       );
 
-  if (error) {
+
+  if (
+    error
+  ) {
+
     throw error;
+
   }
+
 
   products =
     (data || [])
       .map(
         databaseRowToProduct
       );
+
 }
 
-
-/* =====================================================
-   FILTER
-===================================================== */
 
 function getFilteredProducts() {
 
@@ -2293,13 +2653,16 @@ function getFilteredProducts() {
       .trim()
       .toLowerCase();
 
+
   const type =
     typeFilter.value;
+
 
   const karat =
     karatFilter.value;
 
-  let result =
+
+  const result =
     products.filter(
       item => {
 
@@ -2310,32 +2673,44 @@ function getFilteredProducts() {
               search
             ) ||
           String(
-            item.name || ""
+            item.name ||
+            ""
           )
-            .toLowerCase()
-            .includes(
-              search
-            );
+          .toLowerCase()
+          .includes(
+            search
+          );
+
 
         const matchType =
           !type ||
-          item.type === type;
+          item.type ===
+          type;
+
 
         const matchKarat =
           !karat ||
           (
-            isGoldProductType(item.type) &&
-            (item.karat || "24K") ===
+            isGoldProductType(
+              item.type
+            ) &&
+            (
+              item.karat ||
+              "24K"
+            ) ===
             karat
           );
+
 
         return (
           matchSearch &&
           matchType &&
           matchKarat
         );
+
       }
     );
+
 
   switch(
     sortSelect.value
@@ -2351,6 +2726,7 @@ function getFilteredProducts() {
 
       break;
 
+
     case "cost-low":
 
       result.sort(
@@ -2361,6 +2737,7 @@ function getFilteredProducts() {
 
       break;
 
+
     case "weight-high":
 
       result.sort(
@@ -2370,6 +2747,7 @@ function getFilteredProducts() {
       );
 
       break;
+
 
     default:
 
@@ -2382,53 +2760,12 @@ function getFilteredProducts() {
             a.createdAt
           )
       );
+
   }
+
 
   return result;
-}
 
-
-searchInput.addEventListener(
-  "input",
-  renderAll
-);
-
-typeFilter.addEventListener(
-  "change",
-  renderAll
-);
-
-karatFilter.addEventListener(
-  "change",
-  renderAll
-);
-
-sortSelect.addEventListener(
-  "change",
-  renderAll
-);
-
-
-/* =====================================================
-   TYPE BADGE CLASS
-===================================================== */
-
-function getTypeBadgeClass(type) {
-
-  switch(type) {
-
-    case "ทองคำ":
-      return "badge-gold";
-
-    case "หลุดเบ็ดเตล็ด":
-      return "badge-lost-misc";
-
-    case "หลุดทองคำ":
-      return "badge-lost-gold";
-
-    default:
-      return "badge-misc";
-  }
 }
 
 
@@ -2436,18 +2773,51 @@ function getTypeBadgeClass(type) {
    TABLE
 ===================================================== */
 
+function getTypeBadgeClass(type) {
+
+  switch(type) {
+
+    case "ทองคำ":
+
+      return "badge-gold";
+
+
+    case "หลุดเบ็ดเตล็ด":
+
+      return "badge-lost-misc";
+
+
+    case "หลุดทองคำ":
+
+      return "badge-lost-gold";
+
+
+    default:
+
+      return "badge-misc";
+
+  }
+
+}
+
+
 function renderTable() {
 
   const list =
     getFilteredProducts();
 
+
   tableBody.innerHTML =
     "";
 
+
   emptyState.style.display =
     list.length
-      ? "none"
-      : "block";
+      ?
+      "none"
+      :
+      "block";
+
 
   list.forEach(
     product => {
@@ -2457,6 +2827,7 @@ function renderTable() {
           "tr"
         );
 
+
       const date =
         new Date(
           product.createdAt
@@ -2464,6 +2835,13 @@ function renderTable() {
         .toLocaleDateString(
           "th-TH"
         );
+
+
+      const typeClass =
+        getTypeBadgeClass(
+          product.type
+        );
+
 
       const imageHTML =
         product.image
@@ -2484,10 +2862,6 @@ function renderTable() {
           </div>
           `;
 
-      const typeClass =
-        getTypeBadgeClass(
-          product.type
-        );
 
       tr.innerHTML =
       `
@@ -2527,22 +2901,35 @@ function renderTable() {
       <td>
 
         <span class="karat-badge">
+
           ${
-            isGoldProductType(product.type)
-              ? (product.karat || "24K")
-              : "-"
+            isGoldProductType(
+              product.type
+            )
+              ?
+              product.karat ||
+              "24K"
+              :
+              "-"
           }
+
         </span>
 
       </td>
 
 
       <td>
+
         ${
-          isGoldProductType(product.type)
-            ? numberFormat(product.weight) + " g"
-            : "-"
+          isGoldProductType(
+            product.type
+          )
+            ?
+            `${numberFormat(product.weight)} g`
+            :
+            "-"
         }
+
       </td>
 
 
@@ -2567,11 +2954,19 @@ function renderTable() {
 
 
       <td class="cost-baht">
+
         ${
-          isGoldProductType(product.type)
-            ? numberFormat(product.costPerBaht)
-            : "-"
+          isGoldProductType(
+            product.type
+          )
+            ?
+            numberFormat(
+              product.costPerBaht
+            )
+            :
+            "-"
         }
+
       </td>
 
 
@@ -2587,6 +2982,7 @@ function renderTable() {
           <button
             class="action-btn edit-btn"
             onclick="editProduct('${product.id}')"
+            type="button"
           >
             ✏️
           </button>
@@ -2595,6 +2991,7 @@ function renderTable() {
           <button
             class="action-btn delete-btn"
             onclick="deleteProduct('${product.id}')"
+            type="button"
           >
             🗑️
           </button>
@@ -2605,32 +3002,41 @@ function renderTable() {
 
       `;
 
+
       tableBody.appendChild(
         tr
       );
+
     }
   );
+
 }
 
 
 /* =====================================================
-   KPI
+   KPI / REPORT
 ===================================================== */
 
-function renderKPI() {
+function getSummaryData() {
 
   const count =
     products.length;
 
+
   const sumCost =
     products.reduce(
-      (sum,item) =>
+      (
+        sum,
+        item
+      ) =>
         sum +
         Number(
-          item.cost
+          item.cost ||
+          0
         ),
       0
     );
+
 
   const goldProducts =
     products.filter(
@@ -2640,25 +3046,36 @@ function renderKPI() {
         )
     );
 
+
   const sumWeight =
     goldProducts.reduce(
-      (sum,item) =>
+      (
+        sum,
+        item
+      ) =>
         sum +
         Number(
-          item.weight
+          item.weight ||
+          0
         ),
       0
     );
 
+
   const goldCost =
     goldProducts.reduce(
-      (sum,item) =>
+      (
+        sum,
+        item
+      ) =>
         sum +
         Number(
-          item.cost
+          item.cost ||
+          0
         ),
       0
     );
+
 
   const avg =
     sumWeight > 0
@@ -2671,25 +3088,107 @@ function renderKPI() {
       :
       0;
 
+
+  return {
+
+    count,
+
+    sumCost,
+
+    sumWeight,
+
+    avg
+
+  };
+
+}
+
+
+function renderKPI() {
+
+  const summary =
+    getSummaryData();
+
+
   totalItems.textContent =
     numberFormat(
-      count
+      summary.count
     );
+
 
   totalCost.textContent =
     numberFormat(
-      sumCost
+      summary.sumCost
     );
+
 
   totalWeight.textContent =
     numberFormat(
-      sumWeight
+      summary.sumWeight
     );
+
 
   averageCost.textContent =
     numberFormat(
-      avg
+      summary.avg
     );
+
+}
+
+
+function renderReportSummary() {
+
+  const summary =
+    getSummaryData();
+
+
+  if (
+    reportTotalItems
+  ) {
+
+    reportTotalItems.textContent =
+      numberFormat(
+        summary.count
+      );
+
+  }
+
+
+  if (
+    reportTotalCost
+  ) {
+
+    reportTotalCost.textContent =
+      numberFormat(
+        summary.sumCost
+      );
+
+  }
+
+
+  if (
+    reportGoldWeight
+  ) {
+
+    reportGoldWeight.textContent =
+      numberFormat(
+        summary.sumWeight
+      );
+
+  }
+
+
+  if (
+    reportAverageCost
+  ) {
+
+    reportAverageCost.textContent =
+      numberFormat(
+        summary.avg
+      );
+
+  }
+
 }
 
 
@@ -2699,25 +3198,56 @@ function renderKPI() {
 
 function drawChart() {
 
+  if (
+    !chart
+  ) {
+
+    return;
+
+  }
+
+
+  const rect =
+    chart.getBoundingClientRect();
+
+
+  if (
+    rect.width <= 0
+  ) {
+
+    return;
+
+  }
+
+
   const ctx =
     chart.getContext(
       "2d"
     );
 
-  const rect =
-    chart.getBoundingClientRect();
 
   const dpr =
     window.devicePixelRatio ||
     1;
 
+
+  const width =
+    rect.width;
+
+
+  const height =
+    250;
+
+
   chart.width =
-    rect.width *
+    width *
     dpr;
 
+
   chart.height =
-    250 *
+    height *
     dpr;
+
 
   ctx.setTransform(
     dpr,
@@ -2728,11 +3258,6 @@ function drawChart() {
     0
   );
 
-  const width =
-    rect.width;
-
-  const height =
-    250;
 
   ctx.clearRect(
     0,
@@ -2741,6 +3266,7 @@ function drawChart() {
     height
   );
 
+
   const categories = [
     "เบ็ดเตล็ด",
     "ทองคำ",
@@ -2748,53 +3274,73 @@ function drawChart() {
     "หลุดทองคำ"
   ];
 
+
   const counts =
     categories.map(
       type =>
         products.filter(
           item =>
-            item.type === type
+            item.type ===
+            type
         ).length
     );
 
+
   if (
-    products.length === 0
+    products.length ===
+    0
   ) {
 
     ctx.fillStyle =
       "#999";
 
+
     ctx.font =
       '13px Arial,"Noto Sans Thai",sans-serif';
+
 
     ctx.textAlign =
       "center";
 
+
     ctx.fillText(
       "เพิ่มสินค้าเพื่อแสดงกราฟ",
-      width / 2,
-      height / 2
+      width /
+      2,
+      height /
+      2
     );
 
+
     return;
+
   }
 
+
   const padding = {
+
     left:48,
+
     right:22,
+
     top:28,
+
     bottom:58
+
   };
+
 
   const chartWidth =
     width -
     padding.left -
     padding.right;
 
+
   const chartHeight =
     height -
     padding.top -
     padding.bottom;
+
 
   const maxCount =
     Math.max(
@@ -2802,34 +3348,45 @@ function drawChart() {
       1
     );
 
+
   const step =
     Math.max(
       1,
       Math.ceil(
-        maxCount / 4
+        maxCount /
+        4
       )
     );
 
+
   const axisMax =
-    step * 4;
+    step *
+    4;
+
 
   ctx.strokeStyle =
     "#eae7df";
 
+
   ctx.lineWidth =
     1;
+
 
   ctx.fillStyle =
     "#888";
 
+
   ctx.font =
     '10px Arial,"Noto Sans Thai",sans-serif';
+
 
   ctx.textAlign =
     "right";
 
+
   ctx.textBaseline =
     "middle";
+
 
   for (
     let i = 0;
@@ -2839,18 +3396,25 @@ function drawChart() {
 
     const value =
       axisMax -
-      step * i;
+      step *
+      i;
+
 
     const y =
       padding.top +
-      chartHeight / 4 * i;
+      chartHeight /
+      4 *
+      i;
+
 
     ctx.beginPath();
+
 
     ctx.moveTo(
       padding.left,
       y
     );
+
 
     ctx.lineTo(
       width -
@@ -2858,24 +3422,34 @@ function drawChart() {
       y
     );
 
+
     ctx.stroke();
 
+
     ctx.fillText(
-      String(value),
-      padding.left - 8,
+      String(
+        value
+      ),
+      padding.left -
+      8,
       y
     );
+
   }
+
 
   const slotWidth =
     chartWidth /
     categories.length;
 
+
   const barWidth =
     Math.min(
       78,
-      slotWidth * 0.56
+      slotWidth *
+      0.56
     );
+
 
   const barColors = [
     "#6b7f99",
@@ -2884,34 +3458,46 @@ function drawChart() {
     "#9a1520"
   ];
 
+
   categories.forEach(
-    (type,index) => {
+    (
+      type,
+      index
+    ) => {
 
       const count =
         counts[index];
+
 
       const barHeight =
         count /
         axisMax *
         chartHeight;
 
+
       const x =
         padding.left +
-        slotWidth * index +
+        slotWidth *
+        index +
         (
           slotWidth -
           barWidth
-        ) / 2;
+        ) /
+        2;
+
 
       const y =
         padding.top +
         chartHeight -
         barHeight;
 
+
       ctx.fillStyle =
         barColors[index];
 
+
       ctx.beginPath();
+
 
       if (
         typeof ctx.roundRect ===
@@ -2923,10 +3509,17 @@ function drawChart() {
           y,
           barWidth,
           barHeight,
-          [8,8,0,0]
+          [
+            8,
+            8,
+            0,
+            0
+          ]
         );
 
-      } else {
+      }
+
+      else {
 
         ctx.rect(
           x,
@@ -2934,86 +3527,104 @@ function drawChart() {
           barWidth,
           barHeight
         );
+
       }
 
+
       ctx.fill();
+
 
       ctx.fillStyle =
         "#222";
 
+
       ctx.font =
         'bold 12px Arial,"Noto Sans Thai",sans-serif';
+
 
       ctx.textAlign =
         "center";
 
+
       ctx.textBaseline =
         "bottom";
 
+
       ctx.fillText(
-        String(count),
+        String(
+          count
+        ),
         x +
-        barWidth / 2,
+        barWidth /
+        2,
         Math.max(
-          y - 6,
+          y -
+          6,
           14
         )
       );
 
+
       ctx.fillStyle =
         "#666";
+
 
       ctx.font =
         '10px Arial,"Noto Sans Thai",sans-serif';
 
+
       ctx.textBaseline =
         "top";
+
 
       ctx.fillText(
         type,
         x +
-        barWidth / 2,
+        barWidth /
+        2,
         padding.top +
         chartHeight +
         13
       );
+
     }
   );
+
 
   ctx.fillStyle =
     "#888";
 
+
   ctx.font =
     '10px Arial,"Noto Sans Thai",sans-serif';
+
 
   ctx.textAlign =
     "left";
 
+
   ctx.textBaseline =
     "alphabetic";
+
 
   ctx.fillText(
     "จำนวน (รายการ)",
     padding.left,
     14
   );
+
 }
 
 
 /* =====================================================
-   CSV
+   CSV EXPORT
 ===================================================== */
-
-exportButton.addEventListener(
-  "click",
-  exportCSV
-);
-
 
 function exportCSV() {
 
   if (
-    products.length === 0
+    products.length ===
+    0
   ) {
 
     alert(
@@ -3021,34 +3632,40 @@ function exportCSV() {
     );
 
     return;
+
   }
 
-  const rows =
-  [[
 
-    "รหัสสินค้า",
+  const rows = [
 
-    "ชื่อสินค้า",
+    [
 
-    "ประเภท",
+      "รหัสสินค้า",
 
-    "กะรัต",
+      "ชื่อสินค้า",
 
-    "น้ำหนักกรัม",
+      "ประเภท",
 
-    "หน่วยนับ",
+      "กะรัต",
 
-    "ต้นทุน",
+      "น้ำหนักกรัม",
 
-    "ดอกเบี้ย",
+      "หน่วยนับ",
 
-    "ราคาขาย",
+      "ต้นทุน",
 
-    "ต้นทุนต่อบาท",
+      "ดอกเบี้ย",
 
-    "วันที่"
+      "ราคาขาย",
 
-  ]];
+      "ต้นทุนต่อบาท",
+
+      "วันที่"
+
+    ]
+
+  ];
+
 
   products.forEach(
     product => {
@@ -3057,29 +3674,46 @@ function exportCSV() {
 
         product.code,
 
-        product.name || "",
+        product.name ||
+        "",
 
         product.type,
 
-        isGoldProductType(product.type)
-          ? (product.karat || "24K")
-          : "",
+        isGoldProductType(
+          product.type
+        )
+          ?
+          product.karat ||
+          "24K"
+          :
+          "",
 
-        isGoldProductType(product.type)
-          ? product.weight
-          : "",
+        isGoldProductType(
+          product.type
+        )
+          ?
+          product.weight
+          :
+          "",
 
-        product.unit || "ชิ้น",
+        product.unit ||
+        "ชิ้น",
 
         product.cost,
 
-        product.interest || 0,
+        product.interest ||
+        0,
 
-        product.salePrice || 0,
+        product.salePrice ||
+        0,
 
-        isGoldProductType(product.type)
-          ? product.costPerBaht
-          : "",
+        isGoldProductType(
+          product.type
+        )
+          ?
+          product.costPerBaht
+          :
+          "",
 
         new Date(
           product.createdAt
@@ -3089,111 +3723,194 @@ function exportCSV() {
         )
 
       ]);
+
     }
   );
+
 
   const csv =
     "\uFEFF" +
 
-    rows.map(
-      row =>
+    rows
+      .map(
+        row =>
 
-        row.map(
-          value =>
+          row
+            .map(
+              value =>
 
-            `"${String(value)
-            .replace(
-              /"/g,
-              '""'
-            )}"`
+                `"${String(value)
+                .replace(
+                  /"/g,
+                  '""'
+                )}"`
 
-        )
-        .join(",")
+            )
+            .join(",")
 
-    )
-    .join("\n");
+      )
+      .join("\n");
+
 
   const blob =
     new Blob(
-      [csv],
+      [
+        csv
+      ],
       {
         type:
           "text/csv;charset=utf-8;"
       }
     );
 
+
   const url =
     URL.createObjectURL(
       blob
     );
+
 
   const link =
     document.createElement(
       "a"
     );
 
+
   link.href =
     url;
+
 
   link.download =
     `gold-data-${new Date()
       .toISOString()
-      .slice(0,10)}.csv`;
+      .slice(
+        0,
+        10
+      )}.csv`;
+
 
   link.click();
+
 
   URL.revokeObjectURL(
     url
   );
+
 }
 
 
 /* =====================================================
-   SAFE HTML
+   PRODUCT IMAGE LIGHTBOX
 ===================================================== */
 
-function escapeHTML(text) {
+function openProductImage(
+  imageUrl
+) {
 
-  return String(text)
+  if (
+    !imageUrl
+  ) {
 
-    .replace(
-      /&/g,
-      "&amp;"
-    )
+    return;
 
-    .replace(
-      /</g,
-      "&lt;"
-    )
+  }
 
-    .replace(
-      />/g,
-      "&gt;"
-    )
 
-    .replace(
-      /"/g,
-      "&quot;"
-    )
+  imageModalImage.src =
+    imageUrl;
 
-    .replace(
-      /'/g,
-      "&#039;"
+
+  imageModal.classList.add(
+    "open"
+  );
+
+
+  imageModal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+function closeProductImage() {
+
+  imageModal.classList.remove(
+    "open"
+  );
+
+
+  imageModal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  imageModalImage.src =
+    "";
+
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
+
+function showPage(
+  pageName
+) {
+
+  appPages.forEach(
+    page => {
+
+      page.classList.toggle(
+        "active",
+        page.dataset.page ===
+        pageName
+      );
+
+    }
+  );
+
+
+  navTabs.forEach(
+    tab => {
+
+      tab.classList.toggle(
+        "active",
+        tab.dataset.page ===
+        pageName
+      );
+
+    }
+  );
+
+
+  if (
+    pageName ===
+    "dashboard"
+  ) {
+
+    requestAnimationFrame(
+      drawChart
     );
-}
+
+  }
 
 
-/* =====================================================
-   RENDER
-===================================================== */
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 
-function renderAll() {
-
-  renderKPI();
-
-  renderTable();
-
-  drawChart();
 }
 
 
@@ -3211,189 +3928,571 @@ function getVisibleFormFields() {
   .filter(
     element =>
       !element.disabled &&
-      element.offsetParent !== null
+      element.offsetParent !==
+      null
   );
+
 }
 
 
-function focusFormField(element) {
+function focusFormField(
+  element
+) {
 
-  if (!element) {
+  if (
+    !element
+  ) {
+
     return;
+
   }
+
 
   element.focus();
 
+
   if (
-    element.tagName === "INPUT" &&
+    element.tagName ===
+    "INPUT" &&
     [
       "text",
       "search",
       "number",
       "tel",
       "email"
-    ].includes(
+    ]
+    .includes(
       element.type
     )
   ) {
 
     element.select();
+
   }
+
 }
 
 
-function focusNextFormField(currentElement) {
+function focusNextFormField(
+  currentElement
+) {
 
   const fields =
     getVisibleFormFields();
+
 
   const currentIndex =
     fields.indexOf(
       currentElement
     );
 
+
   if (
-    currentIndex === -1
+    currentIndex ===
+    -1
   ) {
+
     return;
+
   }
+
 
   const nextField =
     fields[
-      currentIndex + 1
+      currentIndex +
+      1
     ];
 
-  if (nextField) {
+
+  if (
+    nextField
+  ) {
 
     focusFormField(
       nextField
     );
 
-  } else {
+  }
+
+  else {
 
     saveButton.focus();
+
   }
+
 }
 
 
-function focusPreviousFormField(currentElement) {
+function focusPreviousFormField(
+  currentElement
+) {
 
   const fields =
     getVisibleFormFields();
+
 
   const currentIndex =
     fields.indexOf(
       currentElement
     );
 
+
   if (
-    currentIndex <= 0
+    currentIndex <=
+    0
   ) {
+
     return;
+
   }
+
 
   focusFormField(
     fields[
-      currentIndex - 1
+      currentIndex -
+      1
     ]
   );
+
 }
 
 
-function isEmptyInputAtStart(element) {
+function isEmptyInputAtStart(
+  element
+) {
 
   if (
-    element.tagName !== "INPUT" ||
-    element.type === "file"
+    element.tagName !==
+    "INPUT" ||
+    element.type ===
+    "file"
   ) {
+
     return false;
+
   }
+
 
   const value =
     String(
-      element.value || ""
+      element.value ||
+      ""
     );
 
-  if (value.length > 0) {
-    return false;
-  }
 
   if (
-    typeof element.selectionStart === "number"
+    value.length >
+    0
   ) {
 
-    return element.selectionStart === 0;
+    return false;
+
   }
 
+
+  if (
+    typeof element.selectionStart ===
+    "number"
+  ) {
+
+    return (
+      element.selectionStart ===
+      0
+    );
+
+  }
+
+
   return true;
+
 }
 
 
-document.querySelector(
-  ".form-card"
-)
-.addEventListener(
+/* =====================================================
+   RENDER ALL
+===================================================== */
+
+function renderAll() {
+
+  renderKPI();
+
+  renderReportSummary();
+
+  renderTable();
+
+  drawChart();
+
+}
+
+
+/* =====================================================
+   EVENTS
+===================================================== */
+
+loginButton.addEventListener(
+  "click",
+  login
+);
+
+
+logoutButton.addEventListener(
+  "click",
+  logout
+);
+
+
+loginEmail.addEventListener(
   "keydown",
   event => {
 
-    if (event.isComposing) {
-      return;
+    if (
+      event.key ===
+      "Enter"
+    ) {
+
+      event.preventDefault();
+
+      loginPassword.focus();
+
     }
 
-    const target =
-      event.target;
+  }
+);
+
+
+loginPassword.addEventListener(
+  "keydown",
+  event => {
 
     if (
-      !target.matches(
-        "input:not([type='file']), select"
+      event.key ===
+      "Enter"
+    ) {
+
+      event.preventDefault();
+
+      login();
+
+    }
+
+  }
+);
+
+
+supabaseClient.auth.onAuthStateChange(
+  (
+    event,
+    session
+  ) => {
+
+    if (
+      event ===
+      "SIGNED_OUT" ||
+      !session
+    ) {
+
+      appInitialized =
+        false;
+
+      products =
+        [];
+
+      showLogin();
+
+    }
+
+  }
+);
+
+
+refreshGoldButton.addEventListener(
+  "click",
+  fetchLiveGoldPrice
+);
+
+
+goldPageRefreshButton
+  ?.addEventListener(
+    "click",
+    fetchLiveGoldPrice
+  );
+
+
+productType.addEventListener(
+  "change",
+  updateConditionalFields
+);
+
+
+imageInput.addEventListener(
+  "change",
+  handleImageInputChange
+);
+
+
+saveButton.addEventListener(
+  "click",
+  saveProduct
+);
+
+
+cancelEditButton.addEventListener(
+  "click",
+  resetForm
+);
+
+
+searchInput.addEventListener(
+  "input",
+  renderAll
+);
+
+
+typeFilter.addEventListener(
+  "change",
+  renderAll
+);
+
+
+karatFilter.addEventListener(
+  "change",
+  renderAll
+);
+
+
+sortSelect.addEventListener(
+  "change",
+  renderAll
+);
+
+
+exportButton.addEventListener(
+  "click",
+  exportCSV
+);
+
+
+reportExportButton
+  ?.addEventListener(
+    "click",
+    exportCSV
+  );
+
+
+imageModalClose.addEventListener(
+  "click",
+  closeProductImage
+);
+
+
+imageModal.addEventListener(
+  "click",
+  event => {
+
+    if (
+      event.target ===
+      imageModal ||
+      event.target ===
+      imageModalImage
+    ) {
+
+      closeProductImage();
+
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key ===
+      "Escape" &&
+      imageModal.classList.contains(
+        "open"
       )
     ) {
-      return;
+
+      closeProductImage();
+
     }
 
-    if (
-      event.key === "Enter" ||
-      event.key === "ArrowDown"
-    ) {
+  }
+);
 
-      event.preventDefault();
 
-      focusNextFormField(
-        target
+tableBody.addEventListener(
+  "click",
+  event => {
+
+    const clickedImage =
+      event.target.closest(
+        ".product-image-clickable"
       );
 
-      return;
-    }
 
     if (
-      event.key === "ArrowUp"
+      !clickedImage
     ) {
-
-      event.preventDefault();
-
-      focusPreviousFormField(
-        target
-      );
 
       return;
+
     }
+
+
+    openProductImage(
+      clickedImage.dataset.imageUrl
+    );
+
+  }
+);
+
+
+navTabs.forEach(
+  tab => {
+
+    tab.addEventListener(
+      "click",
+      () => {
+
+        showPage(
+          tab.dataset.page
+        );
+
+      }
+    );
+
+  }
+);
+
+
+const formCard =
+  document.querySelector(
+    ".form-card"
+  );
+
+
+if (
+  formCard
+) {
+
+  formCard.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.isComposing
+      ) {
+
+        return;
+
+      }
+
+
+      const target =
+        event.target;
+
+
+      if (
+        !target.matches(
+          "input:not([type='file']), select"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      if (
+        event.key ===
+        "Enter" ||
+        event.key ===
+        "ArrowDown"
+      ) {
+
+        event.preventDefault();
+
+
+        focusNextFormField(
+          target
+        );
+
+
+        return;
+
+      }
+
+
+      if (
+        event.key ===
+        "ArrowUp"
+      ) {
+
+        event.preventDefault();
+
+
+        focusPreviousFormField(
+          target
+        );
+
+
+        return;
+
+      }
+
+
+      if (
+        (
+          event.key ===
+          "Backspace" ||
+          event.key ===
+          "Delete"
+        ) &&
+        isEmptyInputAtStart(
+          target
+        )
+      ) {
+
+        event.preventDefault();
+
+
+        focusPreviousFormField(
+          target
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    const activePage =
+      document.querySelector(
+        ".app-page.active"
+      );
+
 
     if (
-      (
-        event.key === "Backspace" ||
-        event.key === "Delete"
-      ) &&
-      isEmptyInputAtStart(
-        target
-      )
+      activePage
+        ?.dataset
+        .page ===
+      "dashboard"
     ) {
 
-      event.preventDefault();
+      drawChart();
 
-      focusPreviousFormField(
-        target
-      );
     }
+
   }
 );
 
@@ -3405,9 +4504,10 @@ document.querySelector(
 checkLogin();
 
 
-window.addEventListener(
-  "resize",
-  drawChart
+setInterval(
+  fetchLiveGoldPrice,
+  60 *
+  1000
 );
 
 
