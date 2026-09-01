@@ -1105,3 +1105,273 @@ tbody tr:hover {
   }
 }
 
+/* =====================================================
+   MAIN NAVIGATION / APP PAGES
+===================================================== */
+
+.app-nav-wrap {
+  position:sticky;
+  top:0;
+  z-index:900;
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 4px 18px rgba(0,0,0,.04);
+  backdrop-filter:blur(14px);
+}
+
+.app-nav {
+  width:min(1450px,94%);
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding:10px 0;
+}
+
+.app-nav::-webkit-scrollbar {
+  display:none;
+}
+
+.nav-tab {
+  flex:0 0 auto;
+  border:0;
+  border-radius:11px;
+  padding:10px 15px;
+  background:transparent;
+  color:#666;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.nav-tab:hover {
+  background:#f6f2e8;
+  color:var(--red);
+}
+
+.nav-tab.active {
+  background:var(--red);
+  color:#fff;
+  box-shadow:0 6px 16px rgba(143,16,24,.18);
+}
+
+.app-page {
+  display:none;
+}
+
+.app-page.active {
+  display:block;
+}
+
+.page-heading {
+  margin-bottom:20px;
+}
+
+.page-heading h2 {
+  margin:0;
+  font-size:25px;
+  letter-spacing:-.4px;
+}
+
+.page-heading p {
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.dashboard-chart {
+  margin-top:0;
+}
+
+.feature-placeholder {
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  padding:28px;
+}
+
+.feature-icon {
+  width:58px;
+  height:58px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  border-radius:17px;
+  background:var(--gold-light);
+  font-size:28px;
+}
+
+.feature-placeholder h3,
+.report-action-card h3,
+.gold-page-detail h3 {
+  margin:0 0 7px;
+}
+
+.feature-placeholder p,
+.report-action-card p,
+.gold-page-detail p {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+}
+
+.feature-tags {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:16px;
+}
+
+.feature-tags span {
+  padding:7px 10px;
+  border-radius:999px;
+  background:#f5f2eb;
+  color:#655b4b;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.report-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.report-action-card {
+  padding:22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.report-action-card .export-button {
+  flex:0 0 auto;
+}
+
+.gold-page-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.gold-page-card {
+  padding:26px;
+}
+
+.gold-page-label {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.gold-page-price {
+  display:flex;
+  align-items:flex-end;
+  gap:9px;
+  margin-top:10px;
+}
+
+.gold-page-price strong {
+  font-size:38px;
+  line-height:1;
+  color:var(--red);
+  letter-spacing:-1.5px;
+}
+
+.gold-page-price span {
+  margin-bottom:5px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.gold-page-detail {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:22px;
+  padding:24px;
+}
+
+.gold-page-detail a {
+  display:inline-block;
+  margin-top:12px;
+  color:var(--red);
+  font-size:11px;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.gold-page-live {
+  width:max-content;
+  margin-bottom:12px;
+  background:rgba(19,134,74,.12);
+  color:var(--green);
+}
+
+.gold-page-refresh {
+  width:auto;
+  min-width:180px;
+}
+
+@media(min-width:1051px) {
+  .form-card {
+    top:82px;
+  }
+}
+
+@media(max-width:1050px) {
+  .report-grid {
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+@media(max-width:700px) {
+  .app-nav {
+    width:100%;
+    padding:9px 14px;
+  }
+
+  .nav-tab {
+    padding:9px 12px;
+    font-size:11px;
+  }
+
+  .page-heading h2 {
+    font-size:22px;
+  }
+
+  .feature-placeholder {
+    flex-direction:column;
+    padding:20px;
+  }
+
+  .report-grid {
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+  }
+
+  .report-action-card,
+  .gold-page-detail {
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .gold-page-grid {
+    grid-template-columns:1fr;
+  }
+
+  .gold-page-price strong {
+    font-size:32px;
+  }
+
+  .gold-page-refresh {
+    width:100%;
+  }
+}
+
