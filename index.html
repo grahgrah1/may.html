@@ -1,838 +1,542 @@
 <!DOCTYPE html>
+
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gold &amp; Pawn Manager</title>
 
-<title>Gold & Pawn Manager</title>
-
-<link rel="stylesheet" href="style.css">
-</head>
-
+<link href="style.css" rel="stylesheet"/></head>
 <body>
-
-
 <div id="loginScreen">
-
-  <div class="login-card">
-
-    <div class="login-logo">
+<div class="login-card">
+<div class="login-logo">
       🏆
     </div>
-
-    <h2>
-      Gold & Pawn Manager
+<h2>
+      Gold &amp; Pawn Manager
     </h2>
-
-    <p>
+<p>
       เข้าสู่ระบบเพื่อจัดการข้อมูลสินค้า
     </p>
-
-    <div class="login-field">
-
-      <label for="loginEmail">
+<div class="login-field">
+<label for="loginEmail">
         Email
       </label>
-
-      <input
-        id="loginEmail"
-        type="email"
-        autocomplete="email"
-        placeholder="กรอกอีเมล"
-      >
-
-    </div>
-
-    <div class="login-field">
-
-      <label for="loginPassword">
+<input autocomplete="email" id="loginEmail" placeholder="กรอกอีเมล" type="email"/>
+</div>
+<div class="login-field">
+<label for="loginPassword">
         Password
       </label>
-
-      <input
-        id="loginPassword"
-        type="password"
-        autocomplete="current-password"
-        placeholder="กรอกรหัสผ่าน"
-      >
-
-    </div>
-
-    <button
-      id="loginButton"
-      type="button"
-    >
+<input autocomplete="current-password" id="loginPassword" placeholder="กรอกรหัสผ่าน" type="password"/>
+</div>
+<button id="loginButton" type="button">
       เข้าสู่ระบบ
     </button>
-
-    <div id="loginMessage"></div>
-
-  </div>
-
+<div id="loginMessage"></div>
 </div>
-
-
-<div
-  id="appScreen"
-  style="display:none"
->
-
-
+</div>
+<div id="appScreen" style="display:none">
 <header>
-
 <div class="header-inner">
-
-  <div class="brand">
-
-    <div class="logo">
+<div class="brand">
+<div class="logo">
       🏆
     </div>
-
-    <div>
-
-      <h1>
-        Gold & Pawn Manager
+<div>
+<h1>
+        Gold &amp; Pawn Manager
       </h1>
-
-      <p>
+<p>
         ระบบจัดการต้นทุนทองคำและสินค้าหลุดจำนำ
       </p>
-
-    </div>
-
-  </div>
-
-
-  <div class="gold-price-box">
-
-    <div class="gold-price-top">
-
-      <div class="gold-price-title">
+</div>
+</div>
+<div class="gold-price-box">
+<div class="gold-price-top">
+<div class="gold-price-title">
         ราคาทองคำแท่ง 96.5% วันนี้
       </div>
-
-      <div class="live-badge">
-
-        <div class="live-dot"></div>
+<div class="live-badge">
+<div class="live-dot"></div>
 
         LIVE
 
       </div>
-
-    </div>
-
-
-    <div class="gold-main-price">
-
-      <span>
+</div>
+<div class="gold-main-price">
+<span>
         ขายออก
       </span>
-
-      <strong id="goldSellPrice">
+<strong id="goldSellPrice">
         --
       </strong>
-
-      <small>
+<small>
         บาท
       </small>
-
-    </div>
-
-
-    <div class="gold-buy-row">
-
-      <div class="gold-buy-label">
+</div>
+<div class="gold-buy-row">
+<div class="gold-buy-label">
         รับซื้อ
       </div>
-
-      <div
-        class="gold-buy-value"
-        id="goldBuyPrice"
-      >
+<div class="gold-buy-value" id="goldBuyPrice">
         --
       </div>
-
-    </div>
-
-
-    <div class="gold-meta">
-
-      <span id="goldPriceStatus">
+</div>
+<div class="gold-meta">
+<span id="goldPriceStatus">
         กำลังโหลดราคาทอง...
       </span>
-
-      <button
-        type="button"
-        class="refresh-price"
-        id="refreshGoldButton"
-      >
+<button class="refresh-price" id="refreshGoldButton" type="button">
         ↻ รีเฟรช
       </button>
-
-    </div>
-
-
-    <div class="gold-source">
-
-      <span id="goldSourceText">
+</div>
+<div class="gold-source">
+<span id="goldSourceText">
         ข้อมูลอ้างอิงราคาทองประเทศไทย
       </span>
-
-      <a
-        id="goldSourceLink"
-        target="_blank"
-        rel="noopener"
-      >
+<a id="goldSourceLink" rel="noopener" target="_blank">
         แหล่งข้อมูล
       </a>
-
-    </div>
-
-  </div>
-
-
-  <div class="account-box">
-
-    <div class="account-label">
+</div>
+</div>
+<div class="account-box">
+<div class="account-label">
       ผู้ใช้งาน
     </div>
-
-    <span id="currentUserEmail">
+<span id="currentUserEmail">
       -
     </span>
-
-    <button
-      id="logoutButton"
-      class="logout-button"
-      type="button"
-    >
+<button class="logout-button" id="logoutButton" type="button">
       ออกจากระบบ
     </button>
-
-  </div>
-
 </div>
-
-</header>
-
-
-<main>
-
-
+</div>
+</header><div class="app-nav-wrap"><nav aria-label="เมนูหลัก" class="app-nav"><button class="nav-tab active" data-page="dashboard" type="button">📊 Dashboard</button><button class="nav-tab" data-page="products" type="button">📦 สินค้า</button><button class="nav-tab" data-page="sales" type="button">💸 การขาย</button><button class="nav-tab" data-page="reports" type="button">📈 รายงาน</button><button class="nav-tab" data-page="gold" type="button">🪙 ราคาทอง</button></nav></div>
+<main><section class="app-page active" data-page="dashboard">
+<div class="page-heading">
+<h2>Dashboard</h2>
+<p>ภาพรวมสินค้า ต้นทุน และสถานะคลังในปัจจุบัน</p>
+</div>
 <section class="kpi-grid">
-
-  <div class="kpi">
-
-    <div class="kpi-icon">
+<div class="kpi">
+<div class="kpi-icon">
       📦
     </div>
-
-    <div class="kpi-label">
+<div class="kpi-label">
       สินค้าทั้งหมด
     </div>
-
-    <div
-      class="kpi-value"
-      id="totalItems"
-    >
+<div class="kpi-value" id="totalItems">
       0
     </div>
-
-    <div class="kpi-sub">
+<div class="kpi-sub">
       รายการ
     </div>
-
-  </div>
-
-
-  <div class="kpi">
-
-    <div class="kpi-icon">
+</div>
+<div class="kpi">
+<div class="kpi-icon">
       💰
     </div>
-
-    <div class="kpi-label">
+<div class="kpi-label">
       ต้นทุนรวม
     </div>
-
-    <div
-      class="kpi-value"
-      id="totalCost"
-    >
+<div class="kpi-value" id="totalCost">
       0
     </div>
-
-    <div class="kpi-sub">
+<div class="kpi-sub">
       บาท
     </div>
-
-  </div>
-
-
-  <div class="kpi">
-
-    <div class="kpi-icon">
+</div>
+<div class="kpi">
+<div class="kpi-icon">
       ⚖️
     </div>
-
-    <div class="kpi-label">
+<div class="kpi-label">
       น้ำหนักรวม
     </div>
-
-    <div
-      class="kpi-value"
-      id="totalWeight"
-    >
+<div class="kpi-value" id="totalWeight">
       0
     </div>
-
-    <div class="kpi-sub">
+<div class="kpi-sub">
       กรัม
     </div>
-
-  </div>
-
-
-  <div class="kpi">
-
-    <div class="kpi-icon">
+</div>
+<div class="kpi">
+<div class="kpi-icon">
       📊
     </div>
-
-    <div class="kpi-label">
+<div class="kpi-label">
       ต้นทุนเฉลี่ย / บาททอง
     </div>
-
-    <div
-      class="kpi-value"
-      id="averageCost"
-    >
+<div class="kpi-value" id="averageCost">
       0
     </div>
-
-    <div class="kpi-sub">
+<div class="kpi-sub">
       บาท
     </div>
-
-  </div>
-
-</section>
-
-
-<section class="layout">
-
-
-<aside class="card form-card">
-
-<h2 id="formTitle">
-  ➕ เพิ่มรายการสินค้า
-</h2>
-
-<p>
-  กรอกข้อมูลสินค้า ระบบจะคำนวณต้นทุนต่อบาทให้อัตโนมัติ
-</p>
-
-
-<div class="form-group">
-
-  <label>
-    ประเภทสินค้า
-  </label>
-
-  <select id="productType">
-
-    <option value="เบ็ดเตล็ด">
-      เบ็ดเตล็ด
-    </option>
-
-    <option value="ทองคำ">
-      ทองคำ
-    </option>
-
-    <option value="หลุดเบ็ดเตล็ด">
-      หลุดเบ็ดเตล็ด
-    </option>
-
-    <option value="หลุดทองคำ">
-      หลุดทองคำ
-    </option>
-
-  </select>
-
 </div>
-
-
-<div class="form-group">
-
-  <label>
-    รหัสสินค้า
-  </label>
-
-  <input
-    id="productCode"
-    type="text"
-    autocomplete="off"
-    placeholder="เช่น A001"
-  >
-
-</div>
-
-
-<div class="form-group">
-
-  <label>
-    ชื่อสินค้า
-  </label>
-
-  <input
-    id="productName"
-    type="text"
-    autocomplete="off"
-    placeholder="เช่น สร้อยคอทองคำ / iPhone 12"
-  >
-
-</div>
-
-
-<div class="two-column" id="goldDetailsRow">
-
-<div class="form-group" id="goldKaratGroup">
-
-<label>
-  กะรัตทอง
-</label>
-
-<select id="goldKarat">
-
-  <option value="24K">
-    24K
-  </option>
-
-  <option value="23K">
-    23K
-  </option>
-
-  <option value="18K">
-    18K
-  </option>
-
-  <option value="14K">
-    14K
-  </option>
-
-  <option value="9K">
-    9K
-  </option>
-
-</select>
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-  น้ำหนัก (กรัม)
-</label>
-
-<input
-  id="weight"
-  type="text"
-  inputmode="decimal"
-  autocomplete="off"
-  placeholder="เช่น 15.08"
->
-
-</div>
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-  หน่วยนับ
-</label>
-
-<select id="unit">
-
-  <option value="ชิ้น">
-    ชิ้น
-  </option>
-
-  <option value="อัน">
-    อัน
-  </option>
-
-  <option value="วง">
-    วง
-  </option>
-
-  <option value="เส้น">
-    เส้น
-  </option>
-
-  <option value="ตัว">
-    ตัว
-  </option>
-
-  <option value="ผืน">
-    ผืน
-  </option>
-
-  <option value="เครื่อง">
-    เครื่อง
-  </option>
-
-</select>
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-  ต้นทุนซื้อ (บาท)
-</label>
-
-<input
-  id="cost"
-  type="text"
-  inputmode="decimal"
-  autocomplete="off"
-  placeholder="เช่น 56,375"
->
-
-</div>
-
-
-<div class="form-group" id="interestGroup">
-
-<label>
-  ดอกเบี้ย (บาท)
-</label>
-
-<input
-  id="interest"
-  type="text"
-  inputmode="decimal"
-  autocomplete="off"
-  placeholder="เช่น 500"
->
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-  ราคาขาย (บาท)
-</label>
-
-<input
-  id="salePrice"
-  type="text"
-  inputmode="decimal"
-  autocomplete="off"
-  placeholder="เช่น 65,000"
->
-
-</div>
-
-
-<div class="form-group">
-
-<label>
-  รูปสินค้า
-</label>
-
-<input
-  id="imageInput"
-  type="file"
-  accept="image/jpeg,image/png,image/webp,image/gif"
->
-
-<img
-  id="imagePreview"
-  class="image-preview"
-  alt="Preview"
->
-
-</div>
-
-
-<button
-  class="primary-button"
-  id="saveButton"
-  type="button"
->
-  บันทึกรายการ
-</button>
-
-
-<button
-  class="secondary-button"
-  id="cancelEditButton"
-  type="button"
-  style="display:none"
->
-  ยกเลิกการแก้ไข
-</button>
-
-</aside>
-
-
-<div class="right-column">
-
-
-<section class="card chart-card">
-
+</section><section class="card chart-card dashboard-chart">
 <div class="section-header">
-
 <h2>
   จำนวนสินค้าในแต่ละประเภท
 </h2>
-
 <p>
   กราฟแท่งแสดงจำนวนสินค้าทั้งหมด แยกตามประเภทสินค้า
 </p>
-
 </div>
-
-
-<canvas
-  id="costChart"
-></canvas>
-
-</section>
-
-
-<section class="card table-card">
-
-
+<canvas id="costChart"></canvas>
+</section></section><section class="app-page" data-page="products">
+<div class="page-heading">
+<h2>สินค้า</h2>
+<p>เพิ่ม แก้ไข ค้นหา และจัดการสินค้าทั้งหมดในคลัง</p>
+</div>
+<section class="layout product-layout"><aside class="card form-card">
+<h2 id="formTitle">
+  ➕ เพิ่มรายการสินค้า
+</h2>
+<p>
+  กรอกข้อมูลสินค้า ระบบจะคำนวณต้นทุนต่อบาทให้อัตโนมัติ
+</p>
+<div class="form-group">
+<label>
+    ประเภทสินค้า
+  </label>
+<select id="productType">
+<option value="เบ็ดเตล็ด">
+      เบ็ดเตล็ด
+    </option>
+<option value="ทองคำ">
+      ทองคำ
+    </option>
+<option value="หลุดเบ็ดเตล็ด">
+      หลุดเบ็ดเตล็ด
+    </option>
+<option value="หลุดทองคำ">
+      หลุดทองคำ
+    </option>
+</select>
+</div>
+<div class="form-group">
+<label>
+    รหัสสินค้า
+  </label>
+<input autocomplete="off" id="productCode" placeholder="เช่น A001" type="text"/>
+</div>
+<div class="form-group">
+<label>
+    ชื่อสินค้า
+  </label>
+<input autocomplete="off" id="productName" placeholder="เช่น สร้อยคอทองคำ / iPhone 12" type="text"/>
+</div>
+<div class="two-column" id="goldDetailsRow">
+<div class="form-group" id="goldKaratGroup">
+<label>
+  กะรัตทอง
+</label>
+<select id="goldKarat">
+<option value="24K">
+    24K
+  </option>
+<option value="23K">
+    23K
+  </option>
+<option value="18K">
+    18K
+  </option>
+<option value="14K">
+    14K
+  </option>
+<option value="9K">
+    9K
+  </option>
+</select>
+</div>
+<div class="form-group">
+<label>
+  น้ำหนัก (กรัม)
+</label>
+<input autocomplete="off" id="weight" inputmode="decimal" placeholder="เช่น 15.08" type="text"/>
+</div>
+</div>
+<div class="form-group">
+<label>
+  หน่วยนับ
+</label>
+<select id="unit">
+<option value="ชิ้น">
+    ชิ้น
+  </option>
+<option value="อัน">
+    อัน
+  </option>
+<option value="วง">
+    วง
+  </option>
+<option value="เส้น">
+    เส้น
+  </option>
+<option value="ตัว">
+    ตัว
+  </option>
+<option value="ผืน">
+    ผืน
+  </option>
+<option value="เครื่อง">
+    เครื่อง
+  </option>
+</select>
+</div>
+<div class="form-group">
+<label>
+  ต้นทุนซื้อ (บาท)
+</label>
+<input autocomplete="off" id="cost" inputmode="decimal" placeholder="เช่น 56,375" type="text"/>
+</div>
+<div class="form-group" id="interestGroup">
+<label>
+  ดอกเบี้ย (บาท)
+</label>
+<input autocomplete="off" id="interest" inputmode="decimal" placeholder="เช่น 500" type="text"/>
+</div>
+<div class="form-group">
+<label>
+  ราคาขาย (บาท)
+</label>
+<input autocomplete="off" id="salePrice" inputmode="decimal" placeholder="เช่น 65,000" type="text"/>
+</div>
+<div class="form-group">
+<label>
+  รูปสินค้า
+</label>
+<input accept="image/jpeg,image/png,image/webp,image/gif" id="imageInput" type="file"/>
+<img alt="Preview" class="image-preview" id="imagePreview"/>
+</div>
+<button class="primary-button" id="saveButton" type="button">
+  บันทึกรายการ
+</button>
+<button class="secondary-button" id="cancelEditButton" style="display:none" type="button">
+  ยกเลิกการแก้ไข
+</button>
+</aside><div class="right-column"><section class="card table-card">
 <div class="toolbar">
-
 <div class="toolbar-left">
-
-
-<input
-  class="search"
-  id="searchInput"
-  type="search"
-  placeholder="🔍 ค้นหารหัสหรือชื่อสินค้า..."
->
-
-
+<input class="search" id="searchInput" placeholder="🔍 ค้นหารหัสหรือชื่อสินค้า..." type="search"/>
 <select id="typeFilter">
-
 <option value="">
   ทุกประเภท
 </option>
-
 <option value="เบ็ดเตล็ด">
   เบ็ดเตล็ด
 </option>
-
 <option value="ทองคำ">
   ทองคำ
 </option>
-
 <option value="หลุดเบ็ดเตล็ด">
   หลุดเบ็ดเตล็ด
 </option>
-
 <option value="หลุดทองคำ">
   หลุดทองคำ
 </option>
-
 </select>
-
-
 <select id="karatFilter">
-
 <option value="">
   ทุกกะรัต
 </option>
-
 <option value="24K">
   24K
 </option>
-
 <option value="23K">
   23K
 </option>
-
 <option value="18K">
   18K
 </option>
-
 <option value="14K">
   14K
 </option>
-
 <option value="9K">
   9K
 </option>
-
 </select>
-
-
 <select id="sortSelect">
-
 <option value="newest">
   ล่าสุด
 </option>
-
 <option value="cost-high">
   ต้นทุน/บาท สูง → ต่ำ
 </option>
-
 <option value="cost-low">
   ต้นทุน/บาท ต่ำ → สูง
 </option>
-
 <option value="weight-high">
   น้ำหนักมาก → น้อย
 </option>
-
 </select>
-
 </div>
-
-
-<button
-  class="export-button"
-  id="exportButton"
-  type="button"
->
+<button class="export-button" id="exportButton" type="button">
   ⬇ Export CSV
 </button>
-
 </div>
-
-
 <div class="table-wrapper">
-
 <table>
-
 <thead>
-
 <tr>
-
-  <th>
+<th>
     สินค้า
   </th>
-
-  <th>
+<th>
     ประเภท
   </th>
-
-  <th>
+<th>
     กะรัต
   </th>
-
-  <th>
+<th>
     น้ำหนัก
   </th>
-
-  <th>
+<th>
     หน่วยนับ
   </th>
-
-  <th>
+<th>
     ต้นทุน
   </th>
-
-  <th>
+<th>
     ดอกเบี้ย
   </th>
-
-  <th>
+<th>
     ราคาขาย
   </th>
-
-  <th>
+<th>
     ต้นทุน/บาท
   </th>
-
-  <th>
+<th>
     วันที่
   </th>
-
-  <th></th>
-
+<th></th>
 </tr>
-
 </thead>
-
-
 <tbody id="tableBody">
 </tbody>
-
 </table>
-
 </div>
-
-
-<div
-  class="empty"
-  id="emptyState"
->
+<div class="empty" id="emptyState">
   📦 ยังไม่มีรายการสินค้า
 </div>
-
-
-</section>
-
+</section></div></section></section><section class="app-page" data-page="sales">
+<div class="page-heading">
+<h2>การขาย</h2>
+<p>จัดการสินค้าที่ขายออกและเตรียมบันทึกกำไรจากการขาย</p>
 </div>
-
-</section>
-
-</main>
-
+<section class="feature-placeholder card">
+<div class="feature-icon">💸</div>
+<div>
+<h3>ระบบการขาย</h3>
+<p>
+      หน้านี้เตรียมไว้สำหรับเลือกสินค้าจากคลัง บันทึกราคาขายจริง วันที่ขาย
+      และคำนวณกำไรจากต้นทุนสินค้าอัตโนมัติ
+    </p>
+<div class="feature-tags">
+<span>ราคาขายจริง</span>
+<span>วันที่ขาย</span>
+<span>กำไร</span>
+<span>ประวัติการขาย</span>
 </div>
-
-
-
+</div>
+</section>
+</section><section class="app-page" data-page="reports">
+<div class="page-heading">
+<h2>รายงาน</h2>
+<p>สรุปข้อมูลคลังสินค้าและต้นทุนจากข้อมูลจริงในระบบ</p>
+</div>
+<section class="report-grid">
+<div class="kpi">
+<div class="kpi-icon">📦</div>
+<div class="kpi-label">สินค้าทั้งหมด</div>
+<div class="kpi-value" id="reportTotalItems">0</div>
+<div class="kpi-sub">รายการ</div>
+</div>
+<div class="kpi">
+<div class="kpi-icon">💰</div>
+<div class="kpi-label">ต้นทุนรวม</div>
+<div class="kpi-value" id="reportTotalCost">0</div>
+<div class="kpi-sub">บาท</div>
+</div>
+<div class="kpi">
+<div class="kpi-icon">⚖️</div>
+<div class="kpi-label">น้ำหนักทองรวม</div>
+<div class="kpi-value" id="reportGoldWeight">0</div>
+<div class="kpi-sub">กรัม</div>
+</div>
+<div class="kpi">
+<div class="kpi-icon">📊</div>
+<div class="kpi-label">ต้นทุนเฉลี่ย / บาททอง</div>
+<div class="kpi-value" id="reportAverageCost">0</div>
+<div class="kpi-sub">บาท</div>
+</div>
+</section>
+<section class="card report-action-card">
+<div>
+<h3>ส่งออกรายงานสินค้า</h3>
+<p>ดาวน์โหลดข้อมูลสินค้าทั้งหมดเป็นไฟล์ CSV สำหรับเปิดใน Excel</p>
+</div>
+<button class="export-button" id="reportExportButton" type="button">
+    ⬇ Export CSV
+  </button>
+</section>
+</section><section class="app-page" data-page="gold">
+<div class="page-heading">
+<h2>ราคาทอง</h2>
+<p>ติดตามราคาทองคำแท่ง 96.5% ที่ระบบดึงมาใช้อ้างอิง</p>
+</div>
+<section class="gold-page-grid">
+<div class="card gold-page-card">
+<div class="gold-page-label">ราคาขายออก</div>
+<div class="gold-page-price">
+<strong id="goldPageSellPrice">--</strong>
+<span>บาท</span>
+</div>
+</div>
+<div class="card gold-page-card">
+<div class="gold-page-label">ราคารับซื้อ</div>
+<div class="gold-page-price">
+<strong id="goldPageBuyPrice">--</strong>
+<span>บาท</span>
+</div>
+</div>
+</section>
+<section class="card gold-page-detail">
+<div>
+<div class="live-badge gold-page-live">
+<div class="live-dot"></div>
+      LIVE
+    </div>
+<h3>ราคาทองคำแท่ง 96.5%</h3>
+<p id="goldPageStatus">กำลังโหลดราคาทอง...</p>
+<a id="goldPageSourceLink" rel="noopener" target="_blank">
+      เปิดแหล่งข้อมูล
+    </a>
+</div>
+<button class="primary-button gold-page-refresh" id="goldPageRefreshButton" type="button">
+    ↻ รีเฟรชราคาทอง
+  </button>
+</section>
+</section></main>
+</div>
 <!-- =====================================================
      PRODUCT IMAGE LIGHTBOX
 ===================================================== -->
-
-<div
-  id="imageModal"
-  class="image-modal"
-  aria-hidden="true"
->
-
-  <div class="image-modal-content">
-
-    <button
-      id="imageModalClose"
-      class="image-modal-close"
-      type="button"
-      aria-label="ปิดรูปภาพ"
-    >
+<div aria-hidden="true" class="image-modal" id="imageModal">
+<div class="image-modal-content">
+<button aria-label="ปิดรูปภาพ" class="image-modal-close" id="imageModalClose" type="button">
       ×
     </button>
-
-    <img
-      id="imageModalImage"
-      src=""
-      alt="รูปสินค้าแบบขยาย"
-    >
-
-  </div>
-
+<img alt="รูปสินค้าแบบขยาย" id="imageModalImage" src=""/>
 </div>
-
-
+</div>
 <!-- =====================================================
      SUPABASE LIBRARY
 ===================================================== -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
-<script src="app.js"></script>
-
-</body>
+<script src="app.js"></script></body>
 </html>
